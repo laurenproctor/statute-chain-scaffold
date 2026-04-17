@@ -42,10 +42,7 @@ export default async function RequestsPage() {
   return (
     <main className="page">
       <header className="site-header">
-        <div className="site-header-row">
-          <h1>Ingest Console</h1>
-          <a href="/" className="corpus-link">← resolver</a>
-        </div>
+        <h1>Ingest Console</h1>
         <p className="tagline">{rows.length} citation{rows.length !== 1 ? 's' : ''} in queue.</p>
       </header>
 

@@ -481,13 +481,7 @@ export default function Home() {
   return (
     <main className="page">
       <header className="site-header">
-        <div className="site-header-row">
-          <h1>Statute Chain</h1>
-          <div style={{ display: 'flex', gap: 16 }}>
-            <a href="/compare" className="corpus-link">Compare →</a>
-            <a href="/corpus" className="corpus-link">Corpus →</a>
-          </div>
-        </div>
+        <h1>Statute Explorer</h1>
         <p className="tagline">Enter a legal citation to explore its dependency chain.</p>
       </header>
 

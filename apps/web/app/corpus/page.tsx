@@ -67,10 +67,7 @@ export default async function CorpusPage() {
   return (
     <main className="page">
       <header className="site-header">
-        <div className="site-header-row">
-          <h1>Corpus Status</h1>
-          <a href="/" className="corpus-link">← resolver</a>
-        </div>
+        <h1>Corpus Status</h1>
         <p className="tagline">Ingested provisions and citation graph.</p>
       </header>
 

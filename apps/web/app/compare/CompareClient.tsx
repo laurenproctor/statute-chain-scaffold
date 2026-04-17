@@ -365,13 +365,7 @@ export function CompareClient() {
   return (
     <main className="page compare-page">
       <header className="site-header">
-        <div className="site-header-row">
-          <h1>Compare Mode</h1>
-          <div style={{ display: 'flex', gap: 16 }}>
-            <a href="/" className="corpus-link">← resolver</a>
-            <a href="/corpus" className="corpus-link">Corpus →</a>
-          </div>
-        </div>
+        <h1>Compare Laws</h1>
         <p className="tagline">Compare two statutes side by side.</p>
       </header>
 
