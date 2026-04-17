@@ -218,37 +218,35 @@ function ResolveCard({ data, onSelectSection }: { data: ResolvedProvision; onSel
   )
 }
 
-function NodeRow({ node, edges }: { node: ChainNode; edges: ChainGraph['edges'] }) {
+function NodeRow({ node, edges, onSelect }: { node: ChainNode; edges: ChainGraph['edges']; onSelect?: (id: string) => void }) {
   const [open, setOpen] = useState(node.depth === 0)
   const children = edges.filter((e) => e.from === node.canonical_id).map((e) => e.to)
   const subtitle = knownDescription(node.canonical_id) ?? extractSubtitle(node.text)
+  const isMissing = node.status === 'not_ingested' || node.status === 'not_found'
 
   return (
-    <div className="node-row" style={{ paddingLeft: node.depth * 20 }}>
+    <div className={`node-row${isMissing ? ' node-row-missing' : ''}`} style={{ paddingLeft: node.depth * 20 }}>
       <div
         className="node-header"
-        onClick={() => node.text && setOpen((o) => !o)}
-        style={{ cursor: node.text ? 'pointer' : 'default' }}
+        onClick={() => node.text ? setOpen((o) => !o) : onSelect?.(node.canonical_id)}
+        style={{ cursor: node.text || onSelect ? 'pointer' : 'default' }}
       >
         <span className="node-connector">{node.depth === 0 ? '◉' : '└'}</span>
         <span className="node-label">{formatCanonicalId(node.canonical_id)}</span>
         {statusBadge(node.status)}
-        <ConfidencePip value={node.confidence} />
+        {!isMissing && <ConfidencePip value={node.confidence} />}
         {node.text && <span className="toggle-hint">{open ? '▲' : '▼'}</span>}
+        {!node.text && onSelect && !isMissing && <span className="toggle-hint">→</span>}
       </div>
       <div className="node-canonical">{node.canonical_id}</div>
       {subtitle && !open && <div className="node-subtitle">{subtitle}</div>}
       {node.status === 'alias_resolved' && node.resolved_from && (
-        <div className="node-meta">
-          alias of <span className="mono">{node.resolved_from}</span>
-        </div>
+        <div className="node-meta">alias of <span className="mono">{node.resolved_from}</span></div>
       )}
       {node.status === 'ambiguous' && node.candidates && (
         <div className="node-meta">
           candidates:{' '}
-          {node.candidates.map((c) => (
-            <span key={c} className="mono candidate">{c} </span>
-          ))}
+          {node.candidates.map((c) => <span key={c} className="mono candidate">{c} </span>)}
         </div>
       )}
       {open && node.text && (
@@ -258,8 +256,11 @@ function NodeRow({ node, edges }: { node: ChainNode; edges: ChainGraph['edges'] 
       )}
       {children.length > 0 && (
         <div className="node-children">
-          → {children.map((id) => (
-            <span key={id} className="mono child-ref">{id} </span>
+          links to:{' '}
+          {children.map((id) => (
+            <span key={id} className="child-label" onClick={() => onSelect?.(id)}>
+              {formatCanonicalId(id)}
+            </span>
           ))}
         </div>
       )}
@@ -302,7 +303,7 @@ function ResultSummary({ data }: { data: QueryResponse }) {
   )
 }
 
-function ChainView({ data }: { data: QueryResponse }) {
+function ChainView({ data, onSelectNode }: { data: QueryResponse; onSelectNode?: (id: string) => void }) {
   const { chain } = data
   const sorted = Object.values(chain.nodes).sort(
     (a, b) => a.depth - b.depth || a.canonical_id.localeCompare(b.canonical_id),
@@ -320,14 +321,14 @@ function ChainView({ data }: { data: QueryResponse }) {
       </div>
       <div className="nodes-list">
         {sorted.map((node) => (
-          <NodeRow key={node.canonical_id} node={node} edges={chain.edges} />
+          <NodeRow key={node.canonical_id} node={node} edges={chain.edges} {...(onSelectNode ? { onSelect: onSelectNode } : {})} />
         ))}
       </div>
       {chain.unresolved.length > 0 && (
         <div className="unresolved">
-          <div className="unresolved-label">not yet ingested</div>
+          <div className="unresolved-label">Referenced but not yet loaded</div>
           {chain.unresolved.map((id) => (
-            <div key={id} className="mono muted" style={{ fontSize: 12 }}>{id}</div>
+            <div key={id} className="mono muted" style={{ fontSize: 12 }}>{formatCanonicalId(id)}</div>
           ))}
         </div>
       )}
@@ -429,8 +430,11 @@ export default function Home() {
   return (
     <main className="page">
       <header className="site-header">
-        <h1>Statute Chain</h1>
-        <p className="tagline">Paste a citation. Expand the chain.</p>
+        <div className="site-header-row">
+          <h1>Statute Chain</h1>
+          <a href="/corpus" className="corpus-link">Corpus status →</a>
+        </div>
+        <p className="tagline">Enter a legal citation to explore its dependency chain.</p>
       </header>
 
       <form className="search-form" onSubmit={handleSubmit}>
@@ -439,10 +443,22 @@ export default function Home() {
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="e.g. NY Penal Law 220.16 or 26 U.S.C. § 501(c)(3)"
+          placeholder="e.g. 21 U.S.C. § 802 or NY Penal Law 220.16"
           autoFocus
           spellCheck={false}
         />
+        <div className="example-pills">
+          {['21 U.S.C. § 802', 'NY Penal Law 220.16', '21 U.S.C. § 812'].map((ex) => (
+            <button
+              key={ex}
+              type="button"
+              className="example-pill"
+              onClick={() => setInput(ex)}
+            >
+              {ex}
+            </button>
+          ))}
+        </div>
         <div className="form-controls">
           <button
             className="submit-btn"
@@ -472,8 +488,8 @@ export default function Home() {
           <ResultSummary data={result} />
 
           <section className="section">
-            <div className="section-title">Chain</div>
-            <ChainView data={result} />
+            <div className="section-title">Referenced statutes</div>
+            <ChainView data={result} onSelectNode={selectSection} />
           </section>
 
           {result.resolved.article_sections && result.resolved.article_sections.length > 0 && (

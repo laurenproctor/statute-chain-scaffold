@@ -25,8 +25,11 @@ body {
 .page { max-width: 760px; margin: 0 auto; padding: 48px 24px 80px; }
 
 .site-header { margin-bottom: 32px; }
+.site-header-row { display: flex; align-items: baseline; justify-content: space-between; }
 .site-header h1 { font-size: 22px; font-weight: 600; letter-spacing: -0.3px; }
 .tagline { color: var(--muted); margin-top: 4px; font-size: 13px; }
+.corpus-link { font-size: 12px; color: var(--muted); text-decoration: none; transition: color 0.15s; }
+.corpus-link:hover { color: var(--text); }
 
 /* Form */
 .search-form { display: flex; flex-direction: column; gap: 10px; }
@@ -38,6 +41,13 @@ body {
 }
 .citation-input:focus { border-color: #444; }
 .citation-input::placeholder { color: var(--muted); }
+.citation-input { font-size: 16px; padding: 14px 16px; }
+.example-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+.example-pill {
+  padding: 4px 10px; background: none; border: 1px solid var(--border); border-radius: 12px;
+  color: var(--muted); font-size: 11px; cursor: pointer; transition: color 0.15s, border-color 0.15s;
+}
+.example-pill:hover { color: var(--text); border-color: #444; }
 .form-controls { display: flex; align-items: center; gap: 12px; justify-content: flex-end; }
 .depth-label { display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: 12px; }
 .depth-input {
@@ -195,6 +205,12 @@ body {
 
 /* Node label hierarchy */
 .node-label { font-size: 13px; }
-.node-canonical { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-top: 1px; }
+.node-canonical { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-top: 1px; padding-left: 20px; }
 .node-subtitle { font-size: 11px; color: #888; font-style: italic; margin-top: 3px; padding-left: 20px; }
 .article-section-item { display: block; font-size: 12px; color: var(--text); padding: 1px 0; }
+.node-row-missing { opacity: 0.55; }
+.child-label {
+  display: inline-block; margin-right: 8px; font-size: 11px; color: var(--blue);
+  cursor: pointer; font-family: var(--mono);
+}
+.child-label:hover { text-decoration: underline; }
