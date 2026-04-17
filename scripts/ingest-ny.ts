@@ -15,26 +15,24 @@ import { ingestNyProvisions, type NyFixtureRow } from '../packages/legal-core/sr
 import type { DbClient } from '../packages/legal-core/src/resolver/resolveCitation.js'
 
 // ── Minimal Postgres client ───────────────────────────────────────────────────
-// Uses `pg` if available; falls back to a no-op dry-run client.
-
 async function makeDbClient(): Promise<DbClient & { end?: () => Promise<void> }> {
+  const url = process.env['DATABASE_URL']
+  if (!url) {
+    console.warn('DATABASE_URL not set — running in dry-run mode (no DB writes)')
+    return { async query<T>(): Promise<T[]> { return [] } }
+  }
   try {
-    const { default: pg } = await import('pg')
-    const pool = new pg.Pool({ connectionString: process.env['DATABASE_URL'] })
+    const { getDb } = await import('../packages/database/src/index.js')
+    const sql = getDb() as { unsafe: (q: string, p?: unknown[]) => Promise<unknown[]>; end: () => Promise<void> }
     return {
-      async query<T>(sql: string, params?: unknown[]): Promise<T[]> {
-        const res = await pool.query(sql, params as unknown[])
-        return res.rows as T[]
+      async query<T>(q: string, params?: unknown[]): Promise<T[]> {
+        return sql.unsafe(q, params) as Promise<T[]>
       },
-      end: () => pool.end(),
+      end: () => sql.end(),
     }
-  } catch {
-    console.warn('pg not found — running in dry-run mode (no DB writes)')
-    return {
-      async query<T>(_sql: string, _params?: unknown[]): Promise<T[]> {
-        return []
-      },
-    }
+  } catch (err) {
+    console.warn('DB init failed — dry-run mode:', err)
+    return { async query<T>(): Promise<T[]> { return [] } }
   }
 }
 

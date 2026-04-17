@@ -67,7 +67,7 @@ const FEDERAL_USC_RE =
 // N.Y. prefix is optional; code name required; § optional
 
 const NY_LONG_RE =
-  /^(?:N\.Y\.\s+)?([\w.& ]+?(?:law))\s*(?:§\s*)?(\d+(?:\.\d+)*)(.*)$/i
+  /^(?:N\.?Y\.?\s+)?([\w.& ]+?(?:law))\s*(?:§\s*)?(\d+(?:\.\d+)*)(.*)$/i
 
 const NY_ABBREV_RE =
   /^(CPLR|PHL|VTL|PL|GBL|EL)\s+(?:§\s*)?(\d+(?:\.\d+)*)(.*)$/i

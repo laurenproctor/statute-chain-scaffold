@@ -1,5 +1,13 @@
 {
   "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "paths": {
+      "@statute-chain/types":      ["./packages/types/src/index.ts"],
+      "@statute-chain/database":   ["./packages/database/src/index.ts"],
+      "@statute-chain/parser":     ["./packages/parser/src/index.ts"],
+      "@statute-chain/legal-core": ["./packages/legal-core/src/index.ts"]
+    }
+  },
   "files": [],
   "references": [
     { "path": "packages/types" },

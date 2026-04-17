@@ -4,16 +4,47 @@
     "target": "ES2017",
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "jsx": "preserve",
     "incremental": true,
-    "plugins": [{ "name": "next" }],
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
     "paths": {
-      "@statute-chain/types": ["../../packages/types/src/index.ts"],
-      "@statute-chain/legal-core": ["../../packages/legal-core/src/index.ts"],
-      "@/*": ["./*"]
-    }
+      "@statute-chain/database": [
+        "../../packages/database/src/index.ts"
+      ],
+      "@statute-chain/legal-core": [
+        "../../packages/legal-core/src/index.ts"
+      ],
+      "@statute-chain/parser": [
+        "../../packages/parser/src/index.ts"
+      ],
+      "@statute-chain/types": [
+        "../../packages/types/src/index.ts"
+      ],
+      "@/*": [
+        "./*"
+      ]
+    },
+    "allowJs": true,
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
