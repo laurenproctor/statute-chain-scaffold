@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.base.json",
+  "files": [],
+  "references": [
+    { "path": "packages/types" },
+    { "path": "packages/database" },
+    { "path": "packages/legal-core" },
+    { "path": "apps/web" }
+  ]
+}

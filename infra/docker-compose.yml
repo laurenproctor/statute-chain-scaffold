@@ -1,0 +1,17 @@
+version: "3.9"
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: statute_chain
+      POSTGRES_USER: statute_chain
+      POSTGRES_PASSWORD: statute_chain
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ../packages/database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+
+volumes:
+  pgdata:
