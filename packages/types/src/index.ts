@@ -37,7 +37,6 @@ export type ResolvedProvision = {
   resolved_from?: string
   candidates?: string[]
   article_sections?: string[]
-  outbound_citations: string[]        // backward compat — mirrors legal_relationships target_ids
   legal_relationships: LegalRelationship[]
   provenance: {
     source: string
@@ -105,11 +104,15 @@ export type LegalRelationshipType =
   | 'uses_term'
   | 'depends_on'
   | 'incorporates'
+  | 'amends'
+  | 'repeals'
 
 export type LegalRelationshipSourceMethod =
   | 'parser'
   | 'definition_extractor'
   | 'manual'
+  | 'inferred'
+  | 'imported'
 
 export type LegalRelationship = {
   target_id: string
