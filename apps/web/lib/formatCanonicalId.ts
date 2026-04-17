@@ -32,6 +32,22 @@ export function formatCanonicalId(id: string): string {
   return id
 }
 
+const KNOWN_DESCRIPTIONS: Record<string, string> = {
+  'federal/usc/21/802': 'definitions',
+  'federal/usc/21/812': 'schedules of controlled substances',
+  'federal/usc/26/501': 'tax-exempt organizations',
+  'ny/penal/220.00':    'article 220 definitions',
+  'ny/penal/220.16':    'criminal possession of a controlled substance',
+  'ny/penal/220.18':    'criminal possession — second degree',
+  'ny/phl/3302':        'definitions',
+  'ny/phl/3306':        'NY controlled substance schedules',
+  'ny/phl/3307':        'schedules — additions and deletions',
+}
+
+export function knownDescription(canonicalId: string): string | undefined {
+  return KNOWN_DESCRIPTIONS[canonicalId]
+}
+
 // Returns a subtitle derived from statute text, or undefined if nothing useful.
 // Preference order:
 //   1. Title-like first line (short, starts uppercase, no mid-sentence periods)

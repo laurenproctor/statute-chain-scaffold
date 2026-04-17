@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import type { ParsedCitation, ResolvedProvision, ChainGraph, ChainNode } from '@statute-chain/types'
-import { formatCanonicalId, extractSubtitle } from '../lib/formatCanonicalId'
+import { formatCanonicalId, extractSubtitle, knownDescription } from '../lib/formatCanonicalId'
 
 interface QueryResponse {
   parsed: ParsedCitation
@@ -138,7 +138,7 @@ function ResolveCard({ data }: { data: ResolvedProvision }) {
 function NodeRow({ node, edges }: { node: ChainNode; edges: ChainGraph['edges'] }) {
   const [open, setOpen] = useState(node.depth === 0)
   const children = edges.filter((e) => e.from === node.canonical_id).map((e) => e.to)
-  const subtitle = extractSubtitle(node.text)
+  const subtitle = knownDescription(node.canonical_id) ?? extractSubtitle(node.text)
 
   return (
     <div className="node-row" style={{ paddingLeft: node.depth * 20 }}>
