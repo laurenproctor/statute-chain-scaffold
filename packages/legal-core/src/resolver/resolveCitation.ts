@@ -18,6 +18,36 @@ type AliasRow = { canonical_id: string }
 type AmbiguousRow = { candidate_ids: string[] }
 type ChildRow = { canonical_id: string }
 
+// Builds a human label for an article-level canonical_id.
+// ny/penal/220 → "NY Penal Law Article 220"
+// federal/usc/21/8 → "21 U.S.C. Part 8"  (generic fallback)
+function articleLabel(canonicalId: string): string {
+  const parts = canonicalId.split('/')
+  const jurisdiction = parts[0]
+  const code = parts[1]
+
+  const NY_NAMES: Record<string, string> = {
+    penal: 'NY Penal Law', phl: 'NY Public Health Law',
+    cplr: 'NY Civil Practice Law & Rules', vtl: 'NY Vehicle & Traffic Law',
+    ed: 'NY Education Law', gbl: 'NY General Business Law',
+    corr: 'NY Correction Law', exec: 'NY Executive Law', tax: 'NY Tax Law',
+  }
+
+  if (jurisdiction === 'ny' && code) {
+    const section = parts.slice(2).join('/')
+    const name = NY_NAMES[code] ?? `NY ${code}`
+    return `${name} Article ${section}`
+  }
+
+  if (jurisdiction === 'federal' && code === 'usc' && parts.length >= 4) {
+    const title = parts[2]
+    const section = parts.slice(3).join('/')
+    return `${title} U.S.C. Part ${section}`
+  }
+
+  return canonicalId
+}
+
 async function lookupByCanonicalId(
   canonicalId: string,
   parseConfidence: number,
@@ -42,11 +72,21 @@ async function lookupByCanonicalId(
       `SELECT canonical_id FROM provisions WHERE canonical_id LIKE $1 ORDER BY canonical_id`,
       [`${canonicalId}.%`],
     )
+    if (children.length > 0) {
+      return {
+        canonical_id: canonicalId,
+        status: 'article_partial',
+        label: articleLabel(canonicalId),
+        confidence: parseConfidence,
+        article_sections: children.map((c) => c.canonical_id),
+        outbound_citations,
+        provenance: { source: 'unknown' },
+      }
+    }
     return {
       canonical_id: canonicalId,
       status: 'not_ingested',
       confidence: parseConfidence,
-      ...(children.length > 0 && { article_sections: children.map((c) => c.canonical_id) }),
       outbound_citations,
       provenance: { source: 'unknown' },
     }

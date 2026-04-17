@@ -18,6 +18,7 @@ function statusBadge(status: ChainNode['status']) {
     not_found: 'badge-missing',
     ambiguous: 'badge-ambiguous',
     parse_failed: 'badge-error',
+    article_partial: 'badge-ambiguous',
   }
   const labels: Record<string, string> = {
     ingested: 'found',
@@ -26,6 +27,7 @@ function statusBadge(status: ChainNode['status']) {
     not_found: 'not found',
     ambiguous: 'ambiguous',
     parse_failed: 'parse error',
+    article_partial: 'article',
   }
   return (
     <span className={`badge ${cls[status] ?? 'badge-missing'}`}>
@@ -119,6 +121,14 @@ function ResolveCard({ data }: { data: ResolvedProvision }) {
           </span>
         </div>
       )}
+      {data.status === 'article_partial' && data.article_sections && (
+        <div className="preview-row">
+          <span className="label">note</span>
+          <span className="muted" style={{ fontSize: 12 }}>
+            {data.label ?? formatCanonicalId(data.canonical_id)} not directly loaded
+          </span>
+        </div>
+      )}
       {data.article_sections && data.article_sections.length > 0 && (
         <div className="preview-row">
           <span className="label">sections</span>
@@ -199,7 +209,7 @@ function NodeRow({ node, edges }: { node: ChainNode; edges: ChainGraph['edges'] 
 function ResultSummary({ data }: { data: QueryResponse }) {
   const { chain, resolved } = data
   const nodes = Object.values(chain.nodes)
-  const foundCount = nodes.filter((n) => n.status === 'ingested' || n.status === 'alias_resolved').length
+  const foundCount = nodes.filter((n) => n.status === 'ingested' || n.status === 'alias_resolved' || n.status === 'article_partial').length
   const missingCount = nodes.filter((n) => n.status === 'not_ingested' || n.status === 'not_found').length + chain.unresolved.length
   const federalCount = nodes.filter((n) => n.canonical_id.startsWith('federal/')).length
 

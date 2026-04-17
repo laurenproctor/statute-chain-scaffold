@@ -234,9 +234,9 @@ describe('article-level lookup — no exact row but children exist', () => {
     citations: [],
   })
 
-  it('returns not_ingested status', async () => {
+  it('returns article_partial status', async () => {
     const result = await resolveCitation(articleCitation, db)
-    expect(result.status).toBe('not_ingested')
+    expect(result.status).toBe('article_partial')
   })
 
   it('populates article_sections with child canonical_ids', async () => {
@@ -244,9 +244,15 @@ describe('article-level lookup — no exact row but children exist', () => {
     expect(result.article_sections).toEqual(['ny/penal/220.00', 'ny/penal/220.16'])
   })
 
-  it('does not include article_sections when no children exist', async () => {
+  it('includes a human-readable label', async () => {
+    const result = await resolveCitation(articleCitation, db)
+    expect(result.label).toBe('NY Penal Law Article 220')
+  })
+
+  it('falls back to not_ingested when no children exist', async () => {
     const emptyDb = makeDb({ provisions: [], citations: [] })
     const result = await resolveCitation(articleCitation, emptyDb)
+    expect(result.status).toBe('not_ingested')
     expect(result.article_sections).toBeUndefined()
   })
 })

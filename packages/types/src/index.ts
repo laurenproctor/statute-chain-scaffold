@@ -26,15 +26,17 @@ export type IngestionStatus =
   | 'ambiguous'
   | 'not_found'
   | 'parse_failed'
+  | 'article_partial'
 
 export type ResolvedProvision = {
   canonical_id: string
   status: IngestionStatus
   confidence: number
   text?: string
+  label?: string
   resolved_from?: string
   candidates?: string[]
-  article_sections?: string[]  // child canonical_ids when exact row missing but children exist
+  article_sections?: string[]
   outbound_citations: string[]
   provenance: {
     source: string
