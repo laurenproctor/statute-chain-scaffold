@@ -97,6 +97,30 @@ body {
 }
 .section-subtitle { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
 
+/* Why Linked trust panel */
+.why-linked { margin-top: 3px; }
+.why-btn {
+  background: none; border: none; padding: 0;
+  font-size: 10px; color: var(--muted); cursor: pointer;
+  letter-spacing: 0.03em; transition: color 0.12s;
+}
+.why-btn:hover { color: var(--blue); }
+.why-panel {
+  margin-top: 5px; padding: 8px 10px;
+  background: #131313; border: 1px solid var(--border);
+  border-radius: 4px; font-size: 11px;
+}
+.why-row { color: #ccc; margin-bottom: 6px; line-height: 1.5; }
+.why-meta {
+  display: grid; grid-template-columns: 60px 1fr;
+  gap: 2px 8px; font-size: 10px;
+}
+.why-label { color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; align-self: center; }
+.why-value { color: #aaa; }
+.why-conf-high   { color: var(--green); }
+.why-conf-medium { color: var(--amber); }
+.why-conf-low    { color: var(--muted); }
+
 /* Parse preview */
 .parse-preview {
   background: var(--surface); border: 1px solid var(--border); border-radius: 6px;

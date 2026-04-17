@@ -11,6 +11,77 @@ interface QueryResponse {
   chain: ChainGraph
 }
 
+// ── Relationship trust helpers ────────────────────────────────────────────────
+
+function confidenceLabel(value: number | undefined): 'High' | 'Medium' | 'Low' {
+  if (value === undefined) return 'High' // parser-direct citations default High
+  if (value >= 0.9) return 'High'
+  if (value >= 0.7) return 'Medium'
+  return 'Low'
+}
+
+type RelationshipMeta = {
+  explanation: string
+  type: string
+  confidence: 'High' | 'Medium' | 'Low'
+  method: string
+}
+
+function nodeRelationship(node: ChainNode): RelationshipMeta {
+  switch (node.status) {
+    case 'alias_resolved':
+      return {
+        explanation: 'This citation resolves to the linked canonical authority.',
+        type: 'alias',
+        confidence: confidenceLabel(node.confidence),
+        method: 'parser',
+      }
+    case 'ambiguous':
+      return {
+        explanation: 'This citation matched multiple authorities; the closest match is shown.',
+        type: 'references',
+        confidence: 'Medium',
+        method: 'parser',
+      }
+    case 'not_ingested':
+    case 'not_found':
+      return {
+        explanation: 'Referenced in the text of this statute but not yet loaded in corpus.',
+        type: 'references',
+        confidence: 'High',
+        method: 'parser',
+      }
+    default:
+      return {
+        explanation: 'Referenced directly in the text of this statute.',
+        type: 'references',
+        confidence: 'High',
+        method: 'parser',
+      }
+  }
+}
+
+function WhyLinked({ meta }: { meta: RelationshipMeta }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <div className="why-linked">
+      <button className="why-btn" onClick={() => setOpen(o => !o)}>
+        {open ? '▲ Why linked?' : '▼ Why linked?'}
+      </button>
+      {open && (
+        <div className="why-panel">
+          <div className="why-row">{meta.explanation}</div>
+          <div className="why-meta">
+            <span className="why-label">Type</span><span className="why-value">{meta.type}</span>
+            <span className="why-label">Confidence</span><span className={`why-value why-conf-${meta.confidence.toLowerCase()}`}>{meta.confidence}</span>
+            <span className="why-label">Method</span><span className="why-value">{meta.method}</span>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 function ConfidencePip({ value }: { value: number }) {
   const pct = Math.round(value * 100)
   const color = pct >= 90 ? 'var(--green)' : pct >= 60 ? 'var(--amber)' : 'var(--muted)'
@@ -247,6 +318,7 @@ function ResolveCard({ data, onSelectSection }: { data: ResolvedProvision; onSel
 
 function NodeRow({ node, edges, onSelect }: { node: ChainNode; edges: ChainGraph['edges']; onSelect?: (id: string) => void }) {
   const [open, setOpen] = useState(node.depth === 0)
+  const whyMeta = node.depth > 0 ? nodeRelationship(node) : null
   const children = edges.filter((e) => e.from === node.canonical_id).map((e) => e.to)
   const subtitle = knownDescription(node.canonical_id) ?? extractSubtitle(node.text)
   const isMissing = node.status === 'not_ingested' || node.status === 'not_found'
@@ -266,6 +338,7 @@ function NodeRow({ node, edges, onSelect }: { node: ChainNode; edges: ChainGraph
         {!node.text && onSelect && !isMissing && <span className="toggle-hint">→</span>}
       </div>
       {subtitle && !open && <div className="node-subtitle">{subtitle}</div>}
+      {whyMeta && <WhyLinked meta={whyMeta} />}
       {isMissing && (
         <div className="node-missing-note">
           Recognized citation — full text not yet loaded in corpus.

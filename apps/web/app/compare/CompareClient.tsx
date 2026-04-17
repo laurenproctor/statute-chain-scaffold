@@ -6,6 +6,44 @@ import type { ParsedCitation, ResolvedProvision, ChainGraph } from '@statute-cha
 import { formatCanonicalId, sourceAttribution } from '../../lib/formatCanonicalId'
 import { statusBadge, ConfidenceLabel } from '../../components/ui'
 
+// ── Trust helpers ─────────────────────────────────────────────────────────────
+
+function confidenceLabel(v: number | undefined): 'High' | 'Medium' | 'Low' {
+  if (v === undefined) return 'High'
+  if (v >= 0.9) return 'High'
+  if (v >= 0.7) return 'Medium'
+  return 'Low'
+}
+
+type AuthorityContext = 'shared' | 'left' | 'right'
+
+const CONTEXT_EXPLANATION: Record<AuthorityContext, string> = {
+  shared: 'Referenced in the text of both statutes.',
+  left:   'Referenced in the text of Law A only.',
+  right:  'Referenced in the text of Law B only.',
+}
+
+function AuthorityWhyLinked({ context }: { context: AuthorityContext }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <div className="why-linked">
+      <button className="why-btn" onClick={() => setOpen(o => !o)}>
+        {open ? '▲ Why linked?' : '▼ Why linked?'}
+      </button>
+      {open && (
+        <div className="why-panel">
+          <div className="why-row">{CONTEXT_EXPLANATION[context]}</div>
+          <div className="why-meta">
+            <span className="why-label">Type</span><span className="why-value">references</span>
+            <span className="why-label">Confidence</span><span className={`why-value why-conf-${confidenceLabel(undefined).toLowerCase()}`}>{confidenceLabel(undefined)}</span>
+            <span className="why-label">Method</span><span className="why-value">parser</span>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 interface QueryResponse {
@@ -201,31 +239,32 @@ function AuthorityOverlap({ left, right }: { left: QueryResponse; right: QueryRe
         <div className="authority-group-label authority-shared">Shared Authorities ({shared.length})</div>
         {shared.length === 0
           ? <span className="muted" style={{ fontSize: 12 }}>None</span>
-          : shared.map(id => <AuthorityItem key={id} id={id} />)}
+          : shared.map(id => <AuthorityItem key={id} id={id} context="shared" />)}
       </div>
       <div className="authority-group">
         <div className="authority-group-label authority-left">Unique to Law A ({onlyLeft.length})</div>
         {onlyLeft.length === 0
           ? <span className="muted" style={{ fontSize: 12 }}>None</span>
-          : onlyLeft.map(id => <AuthorityItem key={id} id={id} />)}
+          : onlyLeft.map(id => <AuthorityItem key={id} id={id} context="left" />)}
       </div>
       <div className="authority-group">
         <div className="authority-group-label authority-right">Unique to Law B ({onlyRight.length})</div>
         {onlyRight.length === 0
           ? <span className="muted" style={{ fontSize: 12 }}>None</span>
-          : onlyRight.map(id => <AuthorityItem key={id} id={id} />)}
+          : onlyRight.map(id => <AuthorityItem key={id} id={id} context="right" />)}
       </div>
     </div>
   )
 }
 
-function AuthorityItem({ id }: { id: string }) {
+function AuthorityItem({ id, context }: { id: string; context: AuthorityContext }) {
   return (
     <div className="authority-item">
       <a href={`/?q=${encodeURIComponent(id)}`} className="authority-item-link">
         {formatCanonicalId(id)}
       </a>
       <span className="authority-item-canonical">{id}</span>
+      <AuthorityWhyLinked context={context} />
     </div>
   )
 }
