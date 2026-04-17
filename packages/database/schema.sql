@@ -34,7 +34,9 @@ create table if not exists citation_requests (
   latest_raw_input text not null,
   requested_at     timestamptz not null default now(),
   request_count    int not null default 1,
-  status           text not null default 'requested'
+  status           text not null default 'requested',
+  source_mode      text not null default 'manual',
+  last_error       text
 );
 
 create table if not exists missing_nodes (

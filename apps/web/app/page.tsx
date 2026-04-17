@@ -3,37 +3,12 @@
 import { useState, useEffect, useRef } from 'react'
 import type { ParsedCitation, ResolvedProvision, ChainGraph, ChainNode } from '@statute-chain/types'
 import { formatCanonicalId, extractSubtitle, knownDescription, sourceAttribution } from '../lib/formatCanonicalId'
+import { statusBadge, ConfidenceLabel } from '../components/ui'
 
 interface QueryResponse {
   parsed: ParsedCitation
   resolved: ResolvedProvision
   chain: ChainGraph
-}
-
-function statusBadge(status: ChainNode['status']) {
-  const cls: Record<string, string> = {
-    ingested: 'badge-ingested',
-    alias_resolved: 'badge-alias',
-    not_ingested: 'badge-missing',
-    not_found: 'badge-missing',
-    ambiguous: 'badge-ambiguous',
-    parse_failed: 'badge-error',
-    article_partial: 'badge-ambiguous',
-  }
-  const labels: Record<string, string> = {
-    ingested: 'found',
-    alias_resolved: 'alias',
-    not_ingested: 'not ingested',
-    not_found: 'not found',
-    ambiguous: 'ambiguous',
-    parse_failed: 'parse error',
-    article_partial: 'article',
-  }
-  return (
-    <span className={`badge ${cls[status] ?? 'badge-missing'}`}>
-      {labels[status] ?? status}
-    </span>
-  )
 }
 
 function ConfidencePip({ value }: { value: number }) {
@@ -44,12 +19,6 @@ function ConfidencePip({ value }: { value: number }) {
       {pct}%
     </span>
   )
-}
-
-function ConfidenceLabel({ value }: { value: number }) {
-  if (value >= 0.90) return <span className="confidence-label confidence-high">High confidence match</span>
-  if (value >= 0.60) return <span className="confidence-label confidence-mid">Moderate confidence match</span>
-  return <span className="confidence-label confidence-low">Low confidence match</span>
 }
 
 function RequestLoadButton({ canonicalId, rawInput }: { canonicalId: string; rawInput: string }) {
@@ -514,7 +483,10 @@ export default function Home() {
       <header className="site-header">
         <div className="site-header-row">
           <h1>Statute Chain</h1>
-          <a href="/corpus" className="corpus-link">Corpus status →</a>
+          <div style={{ display: 'flex', gap: 16 }}>
+            <a href="/compare" className="corpus-link">Compare →</a>
+            <a href="/corpus" className="corpus-link">Corpus →</a>
+          </div>
         </div>
         <p className="tagline">Enter a legal citation to explore its dependency chain.</p>
       </header>

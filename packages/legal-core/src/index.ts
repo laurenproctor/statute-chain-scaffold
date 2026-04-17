@@ -1,4 +1,8 @@
 export { resolveCitation } from './resolver/resolveCitation.js'
+export { ingestNyProvisions } from './ingest/ny.js'
+export type { NyFixtureRow, IngestResult } from './ingest/ny.js'
+export { ingestFederalProvisions } from './ingest/federal.js'
+export type { FederalFixtureRow } from './ingest/federal.js'
 export type { DbClient } from './resolver/resolveCitation.js'
 export { buildChain } from './chain/buildChain.js'
 export { logMissingNodes, scoreMissingNode, getTopMissing } from './ingest/missing.js'
