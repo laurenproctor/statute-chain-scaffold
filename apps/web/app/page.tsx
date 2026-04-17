@@ -1,16 +1,13 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import type { ParsedCitation, ChainGraph, ChainNode } from '@statute-chain/types'
+import type { ParsedCitation, ResolvedProvision, ChainGraph, ChainNode } from '@statute-chain/types'
 
-// ── Types ─────────────────────────────────────────────────────────────────────
-
-interface ChainResponse {
+interface QueryResponse {
   parsed: ParsedCitation
-  graph: ChainGraph
+  resolved: ResolvedProvision
+  chain: ChainGraph
 }
-
-// ── Helpers ───────────────────────────────────────────────────────────────────
 
 function statusBadge(status: ChainNode['status']) {
   const cls: Record<string, string> = {
@@ -44,9 +41,7 @@ function ConfidencePip({ value }: { value: number }) {
   )
 }
 
-// ── Parse Preview ─────────────────────────────────────────────────────────────
-
-function ParsePreview({ data }: { data: ParsedCitation }) {
+function ParseCard({ data }: { data: ParsedCitation }) {
   return (
     <div className="parse-preview">
       <div className="preview-row">
@@ -87,7 +82,52 @@ function ParsePreview({ data }: { data: ParsedCitation }) {
   )
 }
 
-// ── Chain Node Row ────────────────────────────────────────────────────────────
+function ResolveCard({ data }: { data: ResolvedProvision }) {
+  return (
+    <div className="resolve-card">
+      <div className="preview-row">
+        <span className="label">status</span>
+        <span>{statusBadge(data.status)}</span>
+      </div>
+      <div className="preview-row">
+        <span className="label">canonical id</span>
+        <span className="mono">{data.canonical_id}</span>
+      </div>
+      <div className="preview-row">
+        <span className="label">confidence</span>
+        <ConfidencePip value={data.confidence} />
+      </div>
+      {data.resolved_from && (
+        <div className="preview-row">
+          <span className="label">alias of</span>
+          <span className="mono">{data.resolved_from}</span>
+        </div>
+      )}
+      {data.candidates && data.candidates.length > 0 && (
+        <div className="preview-row">
+          <span className="label">candidates</span>
+          <span>
+            {data.candidates.map((c) => (
+              <span key={c} className="mono candidate">{c} </span>
+            ))}
+          </span>
+        </div>
+      )}
+      <div className="preview-row">
+        <span className="label">source</span>
+        <span className="muted">{data.provenance.source}</span>
+      </div>
+      {data.outbound_citations.length > 0 && (
+        <div className="preview-row">
+          <span className="label">outbound</span>
+          <span className="muted" style={{ fontSize: 12 }}>
+            {data.outbound_citations.length} citation{data.outbound_citations.length !== 1 ? 's' : ''}
+          </span>
+        </div>
+      )}
+    </div>
+  )
+}
 
 function NodeRow({ node, edges }: { node: ChainNode; edges: ChainGraph['edges'] }) {
   const [open, setOpen] = useState(node.depth === 0)
@@ -135,33 +175,31 @@ function NodeRow({ node, edges }: { node: ChainNode; edges: ChainGraph['edges'] 
   )
 }
 
-// ── Chain View ────────────────────────────────────────────────────────────────
-
-function ChainView({ data }: { data: ChainResponse }) {
-  const { graph } = data
-  const sorted = Object.values(graph.nodes).sort(
+function ChainView({ data }: { data: QueryResponse }) {
+  const { chain } = data
+  const sorted = Object.values(chain.nodes).sort(
     (a, b) => a.depth - b.depth || a.canonical_id.localeCompare(b.canonical_id),
   )
 
   return (
     <div className="chain-view">
       <div className="chain-meta">
-        <span>{graph.total_nodes} node{graph.total_nodes !== 1 ? 's' : ''}</span>
-        <span>{graph.edges.length} edge{graph.edges.length !== 1 ? 's' : ''}</span>
-        <span>{graph.query_ms}ms</span>
-        {graph.truncated && (
-          <span className="text-amber">truncated · {graph.truncation_reason}</span>
+        <span>{chain.total_nodes} node{chain.total_nodes !== 1 ? 's' : ''}</span>
+        <span>{chain.edges.length} edge{chain.edges.length !== 1 ? 's' : ''}</span>
+        <span>{chain.query_ms}ms</span>
+        {chain.truncated && (
+          <span className="text-amber">truncated · {chain.truncation_reason}</span>
         )}
       </div>
       <div className="nodes-list">
         {sorted.map((node) => (
-          <NodeRow key={node.canonical_id} node={node} edges={graph.edges} />
+          <NodeRow key={node.canonical_id} node={node} edges={chain.edges} />
         ))}
       </div>
-      {graph.unresolved.length > 0 && (
+      {chain.unresolved.length > 0 && (
         <div className="unresolved">
           <div className="unresolved-label">not yet ingested</div>
-          {graph.unresolved.map((id) => (
+          {chain.unresolved.map((id) => (
             <div key={id} className="mono muted" style={{ fontSize: 12 }}>{id}</div>
           ))}
         </div>
@@ -170,13 +208,26 @@ function ChainView({ data }: { data: ChainResponse }) {
   )
 }
 
-// ── Page ──────────────────────────────────────────────────────────────────────
+function DebugPanel({ data }: { data: QueryResponse }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <>
+      <button className="debug-toggle" onClick={() => setOpen((o) => !o)}>
+        {open ? '▲ hide JSON' : '▼ show JSON'}
+      </button>
+      {open && (
+        <div className="debug-panel">
+          <pre>{JSON.stringify(data, null, 2)}</pre>
+        </div>
+      )}
+    </>
+  )
+}
 
 export default function Home() {
   const [input, setInput] = useState('')
-  const [depth, setDepth] = useState(3)
-  const [parseData, setParseData] = useState<ParsedCitation | null>(null)
-  const [chainData, setChainData] = useState<ChainResponse | null>(null)
+  const [parsePreview, setParsePreview] = useState<ParsedCitation | null>(null)
+  const [result, setResult] = useState<QueryResponse | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -184,10 +235,10 @@ export default function Home() {
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current)
     const trimmed = input.trim()
-    if (!trimmed) { setParseData(null); return }
+    if (!trimmed) { setParsePreview(null); return }
     debounceRef.current = setTimeout(async () => {
       const res = await fetch(`/api/parse?q=${encodeURIComponent(trimmed)}`)
-      if (res.ok) setParseData(await res.json() as ParsedCitation)
+      if (res.ok) setParsePreview(await res.json() as ParsedCitation)
     }, 200)
   }, [input])
 
@@ -197,18 +248,18 @@ export default function Home() {
     if (!trimmed) return
     setLoading(true)
     setError(null)
-    setChainData(null)
+    setResult(null)
     try {
-      const res = await fetch('/api/chain', {
+      const res = await fetch('/api/query', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ citation: trimmed, depth }),
+        body: JSON.stringify({ query: trimmed }),
       })
       if (!res.ok) {
         const body = await res.json() as { error: string }
         setError(body.error)
       } else {
-        setChainData(await res.json() as ChainResponse)
+        setResult(await res.json() as QueryResponse)
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Network error')
@@ -235,17 +286,6 @@ export default function Home() {
           spellCheck={false}
         />
         <div className="form-controls">
-          <label className="depth-label">
-            depth
-            <input
-              type="number"
-              className="depth-input"
-              min={1}
-              max={10}
-              value={depth}
-              onChange={(e) => setDepth(Number(e.target.value))}
-            />
-          </label>
           <button
             className="submit-btn"
             type="submit"
@@ -256,21 +296,34 @@ export default function Home() {
         </div>
       </form>
 
-      {parseData && !chainData && (
+      {parsePreview && !result && (
         <section className="section">
           <div className="section-title">Parse preview</div>
-          <ParsePreview data={parseData} />
+          <ParseCard data={parsePreview} />
         </section>
       )}
 
       {error && <div className="error-banner">{error}</div>}
 
-      {chainData && (
-        <section className="section">
-          <div className="section-title">Chain</div>
-          <ParsePreview data={chainData.parsed} />
-          <ChainView data={chainData} />
-        </section>
+      {result && (
+        <>
+          <section className="section">
+            <div className="section-title">Parse</div>
+            <ParseCard data={result.parsed} />
+          </section>
+
+          <section className="section">
+            <div className="section-title">Resolve</div>
+            <ResolveCard data={result.resolved} />
+          </section>
+
+          <section className="section">
+            <div className="section-title">Chain</div>
+            <ChainView data={result} />
+          </section>
+
+          <DebugPanel data={result} />
+        </>
       )}
     </main>
   )
