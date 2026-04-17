@@ -11,7 +11,8 @@ create table if not exists provisions (
   ingested_at         timestamptz default now()
 );
 
-create table if not exists citations (
+-- typed edges between provisions
+create table if not exists legal_references (
   from_canonical_id   text not null references provisions(canonical_id),
   to_canonical_id     text not null,
   depth_found         int,
@@ -21,12 +22,6 @@ create table if not exists citations (
   explanation         text not null default 'Referenced directly in text',
   primary key (from_canonical_id, to_canonical_id)
 );
--- Migration for existing databases:
--- ALTER TABLE citations
---   ADD COLUMN IF NOT EXISTS relationship_type text NOT NULL DEFAULT 'references',
---   ADD COLUMN IF NOT EXISTS source_method text NOT NULL DEFAULT 'parser',
---   ADD COLUMN IF NOT EXISTS confidence numeric(4,3),
---   ADD COLUMN IF NOT EXISTS explanation text NOT NULL DEFAULT 'Referenced directly in text';
 
 create table if not exists aliases (
   alias               text primary key,
