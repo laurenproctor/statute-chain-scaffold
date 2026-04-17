@@ -2,7 +2,7 @@ import type { ChainGraph, ChainNode, ChainEdge, BuildChainOptions } from '@statu
 import { resolveCitation, type DbClient } from '../resolver/resolveCitation.js'
 
 const DEFAULTS = {
-  maxDepth: 3,
+  maxDepth: 10,
   nodeCap: 75,
   timeoutMs: 1500,
 } as const
