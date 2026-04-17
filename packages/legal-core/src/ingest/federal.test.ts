@@ -1,9 +1,11 @@
 import { describe, it, expect } from 'vitest'
 import { readFileSync } from 'fs'
 import { resolve } from 'path'
-import { normalizeFederalProvision, ingestFederalProvisions, type FederalFixtureRow } from './federal.js'
+import { normalizeFederalProvision, ingestFederalProvisions, computeVersionHash, type FederalFixtureRow } from './federal.js'
 import { buildChain } from '../chain/buildChain.js'
+import { resolveCitation } from '../resolver/resolveCitation.js'
 import type { DbClient } from '../resolver/resolveCitation.js'
+import type { ParsedCitation } from '@statute-chain/types'
 
 // ── Fixture loader ────────────────────────────────────────────────────────────
 
@@ -47,6 +49,9 @@ describe('normalizeFederalProvision', () => {
   it('preserves text_content for 812', () => expect(p812.text_content).toContain('Schedule'))
   it('sets provenance_source from sourceUrl for 802', () => expect(p802.provenance_source).toBe(fix802.sourceUrl))
   it('sets provenance_source from sourceUrl for 812', () => expect(p812.provenance_source).toBe(fix812.sourceUrl))
+  it('includes a non-empty version_hash for 802', () => expect(p802.version_hash).toMatch(/^[0-9a-f]{64}$/))
+  it('includes a non-empty version_hash for 812', () => expect(p812.version_hash).toMatch(/^[0-9a-f]{64}$/))
+  it('802 and 812 have different version_hashes', () => expect(p802.version_hash).not.toBe(p812.version_hash))
 })
 
 // ── 3. ingestFederalProvisions (mock DB) ──────────────────────────────────────
@@ -56,9 +61,13 @@ describe('ingestFederalProvisions upsert', () => {
     const upserted: string[] = []
     const edges: Array<[string, string]> = []
 
+    const versionHashes: Record<string, string> = {}
     const db: DbClient = {
       async query<T>(sql: string, params?: unknown[]): Promise<T[]> {
-        if (sql.includes('INSERT INTO provisions')) upserted.push(params?.[0] as string)
+        if (sql.includes('INSERT INTO provisions')) {
+          upserted.push(params?.[0] as string)
+          versionHashes[params?.[0] as string] = params?.[6] as string
+        }
         if (sql.includes('INSERT INTO citations')) edges.push([params?.[0] as string, params?.[1] as string])
         return []
       },
@@ -68,6 +77,8 @@ describe('ingestFederalProvisions upsert', () => {
 
     expect(upserted).toContain('federal/usc/21/802')
     expect(upserted).toContain('federal/usc/21/812')
+    expect(versionHashes['federal/usc/21/802']).toMatch(/^[0-9a-f]{64}$/)
+    expect(versionHashes['federal/usc/21/812']).toMatch(/^[0-9a-f]{64}$/)
 
     expect(edges.some(([f, t]) => f === 'federal/usc/21/802' && t === 'federal/usc/21/812')).toBe(true)
     expect(edges.some(([f, t]) => f === 'federal/usc/21/802' && t === 'ny/phl/3302')).toBe(true)
@@ -223,5 +234,85 @@ describe('unsupported references', () => {
     const result = await ingestFederalProvisions([fix802, fix812], db)
     expect(result.errors).toHaveLength(0)
     expect(result.provisions).toBe(2)
+  })
+})
+
+// ── 7. Hash stability ─────────────────────────────────────────────────────────
+
+describe('computeVersionHash stability', () => {
+  it('same text always produces the same hash', () => {
+    expect(computeVersionHash(fix802.text)).toBe(computeVersionHash(fix802.text))
+  })
+
+  it('hash is 64-character lowercase hex (SHA-256)', () => {
+    expect(computeVersionHash(fix802.text)).toMatch(/^[0-9a-f]{64}$/)
+  })
+
+  it('different text produces a different hash', () => {
+    expect(computeVersionHash(fix802.text)).not.toBe(computeVersionHash(fix812.text))
+  })
+
+  it('single character change changes the hash', () => {
+    const original = computeVersionHash(fix802.text)
+    const modified = computeVersionHash(fix802.text + ' ')
+    expect(original).not.toBe(modified)
+  })
+})
+
+// ── 8. resolveCitation post-ingest ────────────────────────────────────────────
+
+function makeParsed(canonicalId: string): ParsedCitation {
+  return {
+    raw: canonicalId,
+    format: 'structured',
+    confidence: 1.0,
+    jurisdiction: 'federal',
+    code: 'usc/21',
+    section: canonicalId.split('/')[3] ?? '',
+    subsection_path: [],
+    canonical_id: canonicalId,
+  }
+}
+
+describe('resolveCitation after ingest', () => {
+  it('returns status ingested for 802 after ingest', async () => {
+    const db = makeInMemoryDb()
+    await ingestFederalProvisions([fix802, fix812], db)
+    const resolved = await resolveCitation(makeParsed('federal/usc/21/802'), db)
+    expect(resolved.status).toBe('ingested')
+  })
+
+  it('returns non-empty text for 802 after ingest', async () => {
+    const db = makeInMemoryDb()
+    await ingestFederalProvisions([fix802, fix812], db)
+    const resolved = await resolveCitation(makeParsed('federal/usc/21/802'), db)
+    expect(resolved.text).toBeTruthy()
+  })
+
+  it('outbound_citations for 802 includes federal/usc/21/812', async () => {
+    const db = makeInMemoryDb()
+    await ingestFederalProvisions([fix802, fix812], db)
+    const resolved = await resolveCitation(makeParsed('federal/usc/21/802'), db)
+    expect(resolved.outbound_citations).toContain('federal/usc/21/812')
+  })
+
+  it('returns status ingested for 812 after ingest', async () => {
+    const db = makeInMemoryDb()
+    await ingestFederalProvisions([fix802, fix812], db)
+    const resolved = await resolveCitation(makeParsed('federal/usc/21/812'), db)
+    expect(resolved.status).toBe('ingested')
+  })
+
+  it('outbound_citations for 812 includes federal/usc/21/802', async () => {
+    const db = makeInMemoryDb()
+    await ingestFederalProvisions([fix802, fix812], db)
+    const resolved = await resolveCitation(makeParsed('federal/usc/21/812'), db)
+    expect(resolved.outbound_citations).toContain('federal/usc/21/802')
+  })
+
+  it('returns status not_ingested for a provision never inserted', async () => {
+    const db = makeInMemoryDb()
+    const resolved = await resolveCitation(makeParsed('federal/usc/21/999'), db)
+    expect(resolved.status).toBe('not_ingested')
   })
 })

@@ -7,6 +7,7 @@ create table if not exists provisions (
   ingestion_status    text not null default 'ingested',
   confidence          numeric(3,2) not null default 1.0,
   provenance_source   text,
+  version_hash        text,
   ingested_at         timestamptz default now()
 );
 
