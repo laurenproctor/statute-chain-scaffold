@@ -72,3 +72,49 @@ export type BuildChainOptions = {
   nodeCap?: number
   timeoutMs?: number
 }
+
+// ── Legal Relationships ───────────────────────────────────────────────────────
+//
+// Scaffold for the Legal Relationships data model. Current system populates
+// only "references" relationships (parsed outbound citations). All other
+// relationship types are reserved for future rule-engine or LLM enrichment.
+//
+// TODO: DEFINITIONS GRAPH — terms defined by or relied on by a provision
+//   (e.g. "controlled substance" defined in 21 U.S.C. § 802, used by § 841)
+//
+// TODO: ELEMENTS GRAPH — offense elements (knowingly, possess, quantity threshold)
+//
+// TODO: DEFENSES / EXCEPTIONS GRAPH — authorized possession, prescription exemption
+//
+// TODO: PENALTY GRAPH — felony class, mandatory minimum, sentencing enhancement
+//
+// TODO: TEMPORAL GRAPH — amended_by, effective_date, repealed_on, historical_version
+//
+// TODO: JURISDICTION GRAPH — federal, NY, CA, local ordinances
+//
+// TODO: CROSSWALK GRAPH — equivalent / analogous laws across jurisdictions
+
+export type LegalRelationshipType =
+  | 'references'
+  | 'defines'
+  | 'uses_term'
+  | 'requires_element'
+  | 'creates_offense'
+  | 'creates_defense'
+  | 'creates_exception'
+  | 'enhances_penalty'
+  | 'reduces_penalty'
+  | 'cross_jurisdiction_match'
+  | 'implemented_by'
+  | 'limited_by'
+  | 'amended_by'
+  | 'version_of'
+
+export type LegalRelationship = {
+  source_id: string
+  target_id: string
+  relationship_type: LegalRelationshipType
+  confidence?: number
+  source_method?: 'parser' | 'rule_engine' | 'llm' | 'human_verified'
+  explanation?: string
+}

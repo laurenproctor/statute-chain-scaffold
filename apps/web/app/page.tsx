@@ -235,9 +235,9 @@ function ResolveCard({ data, onSelectSection }: { data: ResolvedProvision; onSel
       </div>
       {data.outbound_citations.length > 0 && (
         <div className="preview-row">
-          <span className="label">outbound</span>
+          <span className="label">references</span>
           <span className="muted" style={{ fontSize: 12 }}>
-            {data.outbound_citations.length} citation{data.outbound_citations.length !== 1 ? 's' : ''}
+            {data.outbound_citations.length} linked authorit{data.outbound_citations.length !== 1 ? 'ies' : 'y'}
           </span>
         </div>
       )}
@@ -482,7 +482,7 @@ export default function Home() {
     <main className="page">
       <header className="site-header">
         <h1>Statute Explorer</h1>
-        <p className="tagline">Enter a legal citation to explore its dependency chain.</p>
+        <p className="tagline">Enter a legal citation to explore its referenced authorities.</p>
       </header>
 
       <form className="search-form" onSubmit={handleSubmit}>

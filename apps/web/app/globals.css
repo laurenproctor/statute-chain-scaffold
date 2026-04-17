@@ -93,8 +93,9 @@ body {
 .section { margin-top: 32px; }
 .section-title {
   font-size: 11px; font-weight: 600; text-transform: uppercase;
-  letter-spacing: 0.08em; color: var(--muted); margin-bottom: 12px;
+  letter-spacing: 0.08em; color: var(--muted); margin-bottom: 4px;
 }
+.section-subtitle { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
 
 /* Parse preview */
 .parse-preview {
@@ -358,18 +359,18 @@ body {
 .diff-row-differ td { background: #161a1a; }
 .diff-row-differ .diff-category { color: var(--text); }
 
-/* Dependency overlap */
-.dep-overlap    { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
-@media (max-width: 680px) { .dep-overlap { grid-template-columns: 1fr; } }
-.dep-group      { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 12px 14px; }
-.dep-group-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 8px; }
-.dep-shared     { color: var(--blue); }
-.dep-left       { color: var(--amber); }
-.dep-right      { color: var(--green); }
-.dep-item       { margin-bottom: 4px; }
-.dep-item-link  { font-size: 12px; color: var(--text); text-decoration: none; }
-.dep-item-link:hover { color: var(--blue); text-decoration: underline; }
-.dep-item-canonical { display: block; font-family: var(--mono); font-size: 10px; color: var(--muted); }
+/* Referenced Authorities */
+.authority-overlap    { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+@media (max-width: 680px) { .authority-overlap { grid-template-columns: 1fr; } }
+.authority-group      { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 12px 14px; }
+.authority-group-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 8px; }
+.authority-shared     { color: var(--blue); }
+.authority-left       { color: var(--amber); }
+.authority-right      { color: var(--green); }
+.authority-item       { margin-bottom: 4px; }
+.authority-item-link  { font-size: 12px; color: var(--text); text-decoration: none; }
+.authority-item-link:hover { color: var(--blue); text-decoration: underline; }
+.authority-item-canonical { display: block; font-family: var(--mono); font-size: 10px; color: var(--muted); }
 
 /* Footer */
 .site-footer {

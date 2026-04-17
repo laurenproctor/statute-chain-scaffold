@@ -33,7 +33,7 @@ async function queryOne(q: string): Promise<QueryResponse> {
   return body
 }
 
-function depIds(result: QueryResponse): Set<string> {
+function referencedAuthorityIds(result: QueryResponse): Set<string> {
   const root = result.resolved.canonical_id
   return new Set(Object.keys(result.chain.nodes).filter(id => id !== root))
 }
@@ -100,14 +100,14 @@ function keyTakeaways(left: QueryResponse | null, right: QueryResponse | null): 
     bullets.push(`Different code families: ${codeLabel(left.parsed)} vs ${codeLabel(right.parsed)}`)
   }
 
-  // Shared dependencies
-  const lDeps = depIds(left)
-  const rDeps = depIds(right)
-  const sharedCount = [...lDeps].filter(id => rDeps.has(id)).length
+  // Shared referenced authorities
+  const lRefs = referencedAuthorityIds(left)
+  const rRefs = referencedAuthorityIds(right)
+  const sharedCount = [...lRefs].filter(id => rRefs.has(id)).length
   if (sharedCount > 0) {
-    bullets.push(`${sharedCount} shared referenced statute${sharedCount !== 1 ? 's' : ''}`)
-  } else if (lDeps.size > 0 || rDeps.size > 0) {
-    bullets.push('No shared referenced statutes')
+    bullets.push(`${sharedCount} shared referenced authorit${sharedCount !== 1 ? 'ies' : 'y'}`)
+  } else if (lRefs.size > 0 || rRefs.size > 0) {
+    bullets.push('No shared referenced authorities')
   }
 
   // Coverage breadth
@@ -182,50 +182,50 @@ function DiffTable({ left, right }: { left: QueryResponse; right: QueryResponse 
   )
 }
 
-// ── Dependency Overlap ────────────────────────────────────────────────────────
+// ── Referenced Authorities ────────────────────────────────────────────────────
 
-function DepOverlap({ left, right }: { left: QueryResponse; right: QueryResponse }) {
-  const lDeps = depIds(left)
-  const rDeps = depIds(right)
-  const shared   = [...lDeps].filter(id => rDeps.has(id)).sort()
-  const onlyLeft  = [...lDeps].filter(id => !rDeps.has(id)).sort()
-  const onlyRight = [...rDeps].filter(id => !lDeps.has(id)).sort()
+function AuthorityOverlap({ left, right }: { left: QueryResponse; right: QueryResponse }) {
+  const lRefs = referencedAuthorityIds(left)
+  const rRefs = referencedAuthorityIds(right)
+  const shared    = [...lRefs].filter(id => rRefs.has(id)).sort()
+  const onlyLeft  = [...lRefs].filter(id => !rRefs.has(id)).sort()
+  const onlyRight = [...rRefs].filter(id => !lRefs.has(id)).sort()
 
-  if (lDeps.size === 0 && rDeps.size === 0) {
+  if (lRefs.size === 0 && rRefs.size === 0) {
     return <p className="muted" style={{ fontSize: 13 }}>No linked authorities found on either side.</p>
   }
 
   return (
-    <div className="dep-overlap">
-      <div className="dep-group">
-        <div className="dep-group-label dep-shared">Shared references ({shared.length})</div>
+    <div className="authority-overlap">
+      <div className="authority-group">
+        <div className="authority-group-label authority-shared">Shared Authorities ({shared.length})</div>
         {shared.length === 0
           ? <span className="muted" style={{ fontSize: 12 }}>None</span>
-          : shared.map(id => <DepItem key={id} id={id} />)}
+          : shared.map(id => <AuthorityItem key={id} id={id} />)}
       </div>
-      <div className="dep-group">
-        <div className="dep-group-label dep-left">Only Law A ({onlyLeft.length})</div>
+      <div className="authority-group">
+        <div className="authority-group-label authority-left">Unique to Law A ({onlyLeft.length})</div>
         {onlyLeft.length === 0
           ? <span className="muted" style={{ fontSize: 12 }}>None</span>
-          : onlyLeft.map(id => <DepItem key={id} id={id} />)}
+          : onlyLeft.map(id => <AuthorityItem key={id} id={id} />)}
       </div>
-      <div className="dep-group">
-        <div className="dep-group-label dep-right">Only Law B ({onlyRight.length})</div>
+      <div className="authority-group">
+        <div className="authority-group-label authority-right">Unique to Law B ({onlyRight.length})</div>
         {onlyRight.length === 0
           ? <span className="muted" style={{ fontSize: 12 }}>None</span>
-          : onlyRight.map(id => <DepItem key={id} id={id} />)}
+          : onlyRight.map(id => <AuthorityItem key={id} id={id} />)}
       </div>
     </div>
   )
 }
 
-function DepItem({ id }: { id: string }) {
+function AuthorityItem({ id }: { id: string }) {
   return (
-    <div className="dep-item">
-      <a href={`/?q=${encodeURIComponent(id)}`} className="dep-item-link">
+    <div className="authority-item">
+      <a href={`/?q=${encodeURIComponent(id)}`} className="authority-item-link">
         {formatCanonicalId(id)}
       </a>
-      <span className="dep-item-canonical">{id}</span>
+      <span className="authority-item-canonical">{id}</span>
     </div>
   )
 }
@@ -436,8 +436,9 @@ export function CompareClient() {
           </section>
 
           <section className="section">
-            <div className="section-title">Dependency overlap</div>
-            <DepOverlap left={left.result!} right={right.result!} />
+            <div className="section-title">Referenced Authorities</div>
+            <p className="section-subtitle">Authorities, definitions, and linked provisions relevant to each law.</p>
+            <AuthorityOverlap left={left.result!} right={right.result!} />
           </section>
         </>
       )}
