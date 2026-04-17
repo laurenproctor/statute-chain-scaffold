@@ -27,6 +27,8 @@ async function lookupByCanonicalId(
     [canonicalId],
   )
 
+  // Query citations unconditionally — outbound edges are returned even when the provision
+  // text has not been ingested yet, so callers can continue traversing the chain.
   const citations = await db.query<CitationRow>(
     'SELECT to_canonical_id FROM citations WHERE from_canonical_id = $1',
     [canonicalId],
@@ -45,10 +47,13 @@ async function lookupByCanonicalId(
   }
 
   const row = provisions[0]
+  const dbConfidence = parseFloat(row.confidence)
+  // Fall back to 1.0 if DB value is missing or non-numeric (preserves parse confidence)
+  const safeDbConfidence = Number.isFinite(dbConfidence) ? dbConfidence : 1.0
   return {
     canonical_id: row.canonical_id,
     status: row.ingestion_status === 'ingested' ? 'ingested' : 'not_ingested',
-    confidence: parseConfidence * parseFloat(row.confidence),
+    confidence: parseConfidence * safeDbConfidence,
     text: row.text_content ?? undefined,
     outbound_citations,
     provenance: {

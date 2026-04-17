@@ -41,6 +41,7 @@ describe('resolveCitation — direct lookup', () => {
     expect(result.confidence).toBe(1.0)
     expect(result.provenance.source).toBe('ny-open-legislation')
     expect(result.provenance.ingested_at).toBe('2026-01-01T00:00:00Z')
+    expect((db.query as ReturnType<typeof vi.fn>)).toHaveBeenCalledTimes(2)
   })
 
   it('returns not_ingested when provision row missing', async () => {
