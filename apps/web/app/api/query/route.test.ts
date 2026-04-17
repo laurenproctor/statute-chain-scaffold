@@ -3,9 +3,10 @@ import { NextRequest } from 'next/server'
 
 // ── Mock dependencies ─────────────────────────────────────────────────────────
 
-vi.mock('@statute-chain/parser', () => ({
-  parseCitation: vi.fn(),
-}))
+vi.mock('@statute-chain/parser', async (importActual) => {
+  const actual = await importActual<typeof import('@statute-chain/parser')>()
+  return { ...actual, parseCitation: vi.fn() }
+})
 
 vi.mock('@statute-chain/legal-core', () => ({
   resolveCitation: vi.fn(),

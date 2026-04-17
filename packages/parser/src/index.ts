@@ -225,3 +225,5 @@ export function parseCitation(input: string): ParsedCitation {
 }
 
 export { extractCitationsFromText } from './extractCitations.js'
+export { normalizeInput } from './normalizeInput.js'
+export type { NormalizedInput } from './normalizeInput.js'

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { parseCitation } from '@statute-chain/parser'
+import { parseCitation, normalizeInput } from '@statute-chain/parser'
 import { resolveCitation, buildChain, logMissingNodes } from '@statute-chain/legal-core'
 import { getDbClient } from '../../../lib/db'
 
@@ -20,7 +20,8 @@ export async function POST(req: NextRequest) {
 
   try {
     const db = getDbClient()
-    const parsed = parseCitation(query)
+    const norm = normalizeInput(query)
+    const parsed = parseCitation(norm.normalized_text)
     const resolved = await resolveCitation(parsed, db)
     const startId = resolved.canonical_id ?? parsed.canonical_id ?? query
     const chain = await buildChain(startId, db, {})
@@ -29,7 +30,7 @@ export async function POST(req: NextRequest) {
       logMissingNodes(startId, chain.unresolved, db).catch(() => undefined)
     }
 
-    return NextResponse.json({ parsed, resolved, chain })
+    return NextResponse.json({ input: norm, parsed, resolved, chain })
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Internal error'
     return NextResponse.json({ error: message }, { status: 500 })
