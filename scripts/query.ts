@@ -1,5 +1,5 @@
 /**
- * Query a citation and print its chain.
+ * Query a statute reference and print its linked law chain.
  *
  * Usage:
  *   npx tsx scripts/query.ts "NY Penal Law 220.16"
@@ -20,7 +20,7 @@ const depthArg = args.find((_, i) => args[i - 1] === '--depth')
 const noDB = args.includes('--no-db')
 
 if (!citationArg) {
-  console.error('Usage: npx tsx scripts/query.ts "<citation>" [--depth N] [--no-db]')
+  console.error('Usage: npx tsx scripts/query.ts "<statute reference>" [--depth N] [--no-db]')
   process.exit(1)
 }
 

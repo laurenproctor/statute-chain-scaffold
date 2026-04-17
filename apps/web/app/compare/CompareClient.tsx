@@ -76,6 +76,26 @@ function referencedAuthorityIds(result: QueryResponse): Set<string> {
   return new Set(Object.keys(result.chain.nodes).filter(id => id !== root))
 }
 
+interface AuthorityComparison {
+  leftIds:  Set<string>
+  rightIds: Set<string>
+  shared:    string[]
+  onlyLeft:  string[]
+  onlyRight: string[]
+}
+
+function compareAuthorities(left: QueryResponse, right: QueryResponse): AuthorityComparison {
+  const leftIds  = referencedAuthorityIds(left)
+  const rightIds = referencedAuthorityIds(right)
+  return {
+    leftIds,
+    rightIds,
+    shared:    [...leftIds].filter(id => rightIds.has(id)).sort(),
+    onlyLeft:  [...leftIds].filter(id => !rightIds.has(id)).sort(),
+    onlyRight: [...rightIds].filter(id => !leftIds.has(id)).sort(),
+  }
+}
+
 function isLoaded(r: QueryResponse) {
   return r.resolved.status === 'ingested' || r.resolved.status === 'alias_resolved'
 }
@@ -106,7 +126,7 @@ function keyTakeaways(left: QueryResponse | null, right: QueryResponse | null): 
   if (!left && !right) return []
 
   // Recognition
-  if (left && right) bullets.push('Both citations recognized')
+  if (left && right) bullets.push('Both references recognized')
   else if (left)     bullets.push('Law A recognized — Law B could not be resolved')
   else               bullets.push('Law B recognized — Law A could not be resolved')
 
@@ -139,21 +159,20 @@ function keyTakeaways(left: QueryResponse | null, right: QueryResponse | null): 
   }
 
   // Shared referenced authorities
-  const lRefs = referencedAuthorityIds(left)
-  const rRefs = referencedAuthorityIds(right)
-  const sharedCount = [...lRefs].filter(id => rRefs.has(id)).length
+  const cmp = compareAuthorities(left, right)
+  const sharedCount = cmp.shared.length
   if (sharedCount > 0) {
     bullets.push(`${sharedCount} shared referenced authorit${sharedCount !== 1 ? 'ies' : 'y'}`)
-  } else if (lRefs.size > 0 || rRefs.size > 0) {
+  } else if (cmp.leftIds.size > 0 || cmp.rightIds.size > 0) {
     bullets.push('No shared referenced authorities')
   }
 
   // Coverage breadth
-  const lE = left.chain.edges.length
-  const rE = right.chain.edges.length
+  const lE = cmp.leftIds.size
+  const rE = cmp.rightIds.size
   if (lE !== rE && (lE > 0 || rE > 0)) {
-    if (lE > rE) bullets.push(`Law A has broader citation network (${lE} vs ${rE} linked authorities)`)
-    else         bullets.push(`Law B has broader citation network (${rE} vs ${lE} linked authorities)`)
+    if (lE > rE) bullets.push(`Law A has broader reference network (${lE} vs ${rE} linked authorities)`)
+    else         bullets.push(`Law B has broader reference network (${rE} vs ${lE} linked authorities)`)
   }
 
   return bullets
@@ -161,7 +180,7 @@ function keyTakeaways(left: QueryResponse | null, right: QueryResponse | null): 
 
 // ── Differences Table ─────────────────────────────────────────────────────────
 
-function DiffTable({ left, right }: { left: QueryResponse; right: QueryResponse }) {
+function DiffTable({ left, right, cmp }: { left: QueryResponse; right: QueryResponse; cmp: AuthorityComparison }) {
   const lAttr = sourceAttribution(left.resolved.provenance.source)
   const rAttr = sourceAttribution(right.resolved.provenance.source)
 
@@ -175,10 +194,10 @@ function DiffTable({ left, right }: { left: QueryResponse; right: QueryResponse 
     ['Loaded in corpus',
       isLoaded(left) ? <span className="text-green">Yes</span> : <span className="muted">No</span>,
       isLoaded(right) ? <span className="text-green">Yes</span> : <span className="muted">No</span>],
-    ['Citation confidence',
+    ['Reference confidence',
       <ConfidenceLabel key="lc" value={left.parsed.confidence} />,
       <ConfidenceLabel key="rc" value={right.parsed.confidence} />],
-    ['Linked authorities', String(left.chain.edges.length), String(right.chain.edges.length)],
+    ['Linked authorities', String(cmp.leftIds.size), String(cmp.rightIds.size)],
     ['Official source',
       lAttr?.official ? <span className="text-green">Yes</span> : <span className="muted">{lAttr ? 'Source available' : '—'}</span>,
       rAttr?.official ? <span className="text-green">Yes</span> : <span className="muted">{rAttr ? 'Source available' : '—'}</span>],
@@ -222,14 +241,10 @@ function DiffTable({ left, right }: { left: QueryResponse; right: QueryResponse 
 
 // ── Referenced Authorities ────────────────────────────────────────────────────
 
-function AuthorityOverlap({ left, right }: { left: QueryResponse; right: QueryResponse }) {
-  const lRefs = referencedAuthorityIds(left)
-  const rRefs = referencedAuthorityIds(right)
-  const shared    = [...lRefs].filter(id => rRefs.has(id)).sort()
-  const onlyLeft  = [...lRefs].filter(id => !rRefs.has(id)).sort()
-  const onlyRight = [...rRefs].filter(id => !lRefs.has(id)).sort()
+function AuthorityOverlap({ cmp }: { cmp: AuthorityComparison }) {
+  const { leftIds, rightIds, shared, onlyLeft, onlyRight } = cmp
 
-  if (lRefs.size === 0 && rRefs.size === 0) {
+  if (leftIds.size === 0 && rightIds.size === 0) {
     return <p className="muted" style={{ fontSize: 13 }}>No linked authorities found on either side.</p>
   }
 
@@ -271,7 +286,7 @@ function AuthorityItem({ id, context }: { id: string; context: AuthorityContext 
 
 // ── Side Panel ────────────────────────────────────────────────────────────────
 
-function SidePanel({ label, side }: { label: string; side: SideState }) {
+function SidePanel({ label, side, authorityCount }: { label: string; side: SideState; authorityCount?: number }) {
   if (side.loading) {
     return (
       <div className="compare-side compare-side-loading">
@@ -286,7 +301,7 @@ function SidePanel({ label, side }: { label: string; side: SideState }) {
       <div className="compare-side compare-side-missing">
         <div className="compare-side-label">{label}</div>
         <p className="compare-missing-msg">
-          {side.error ?? 'Enter a citation above to compare.'}
+          {side.error ?? 'Enter a statute reference above to compare.'}
         </p>
       </div>
     )
@@ -315,7 +330,7 @@ function SidePanel({ label, side }: { label: string; side: SideState }) {
 
       {missing && (
         <p className="compare-missing-msg" style={{ marginTop: 10 }}>
-          This citation was recognized but its full text is not yet loaded in corpus.
+          This reference was recognized but its full text is not yet loaded in corpus.
           {resolved.status !== 'not_found' && (
             <> <a href="/admin/requests" className="compare-missing-action">Request load →</a></>
           )}
@@ -338,9 +353,9 @@ function SidePanel({ label, side }: { label: string; side: SideState }) {
         </div>
       )}
 
-      {chain.edges.length > 0 && (
+      {authorityCount !== undefined && authorityCount > 0 && (
         <div className="compare-side-stat">
-          {chain.edges.length} linked authorit{chain.edges.length !== 1 ? 'ies' : 'y'}
+          {authorityCount} linked authorit{authorityCount !== 1 ? 'ies' : 'y'}
         </div>
       )}
     </div>
@@ -399,13 +414,14 @@ export function CompareClient() {
 
   const bothReady = left.result !== null && right.result !== null
   const anyReady  = left.result !== null || right.result !== null
+  const cmp = bothReady ? compareAuthorities(left.result!, right.result!) : null
   const takeaways = keyTakeaways(left.result, right.result)
 
   return (
     <main className="page compare-page">
       <header className="site-header">
         <h1>Compare Laws</h1>
-        <p className="tagline">Compare two statutes side by side.</p>
+        <p className="tagline">Compare multiple laws side by side.</p>
       </header>
 
       <form className="compare-form" onSubmit={handleSubmit}>
@@ -463,21 +479,21 @@ export function CompareClient() {
       )}
 
       <div className="compare-columns">
-        <SidePanel label="Law A" side={left} />
-        <SidePanel label="Law B" side={right} />
+        <SidePanel label="Law A" side={left} {...(cmp ? { authorityCount: cmp.leftIds.size } : {})} />
+        <SidePanel label="Law B" side={right} {...(cmp ? { authorityCount: cmp.rightIds.size } : {})} />
       </div>
 
-      {bothReady && (
+      {bothReady && cmp && (
         <>
           <section className="section">
             <div className="section-title">Differences</div>
-            <DiffTable left={left.result!} right={right.result!} />
+            <DiffTable left={left.result!} right={right.result!} cmp={cmp} />
           </section>
 
           <section className="section">
             <div className="section-title">Referenced Authorities</div>
             <p className="section-subtitle">Authorities, definitions, and linked provisions relevant to each law.</p>
-            <AuthorityOverlap left={left.result!} right={right.result!} />
+            <AuthorityOverlap cmp={cmp} />
           </section>
         </>
       )}

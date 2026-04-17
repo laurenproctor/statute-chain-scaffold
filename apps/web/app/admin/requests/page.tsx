@@ -43,7 +43,7 @@ export default async function RequestsPage() {
     <main className="page">
       <header className="site-header">
         <h1>Ingest Console</h1>
-        <p className="tagline">{rows.length} citation{rows.length !== 1 ? 's' : ''} in queue.</p>
+        <p className="tagline">{rows.length} load request{rows.length !== 1 ? 's' : ''} in queue.</p>
       </header>
 
       {error && <div className="error-banner">{error}</div>}

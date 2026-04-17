@@ -1,6 +1,6 @@
 # Statute Chain
 
-Statute Chain is a legal citation intelligence engine that parses statutes, resolves cross references, and builds dependency graphs that show how laws connect.
+Statute Chain is a legal intelligence platform that maps how statutes, code sections, and related laws connect — so professionals can understand the full meaning of a law faster.
 
 Instead of manually chasing definitions, schedules, incorporated sections, and chained references across multiple codes, Statute Chain maps them instantly.
 
@@ -8,11 +8,11 @@ Instead of manually chasing definitions, schedules, incorporated sections, and c
 
 ## Core Use Cases
 
-* Enter a citation like `NY Penal 220.16`
+* Enter a statute reference like `NY Penal 220.16`
 * Paste a public statute URL
-* Detect embedded citations in legal text
+* Detect embedded statute references in legal text
 * Resolve aliases and canonical references
-* Build citation dependency chains
+* Build linked law chains
 * Surface unresolved or missing references
 * Understand statutes faster
 
@@ -28,7 +28,7 @@ Many laws are difficult to interpret because they depend on:
 * prior offense references
 * nested subdivisions and paragraphs
 
-Statute Chain helps users move from raw citation text to structured understanding.
+Statute Chain helps users move from a raw statute reference to structured understanding.
 
 ---
 
@@ -64,7 +64,7 @@ https://www.nysenate.gov/legislation/laws/PEN/220.16
 Statute Chain will:
 
 1. Fetch visible statute text
-2. Detect citations
+2. Detect statute references
 3. Resolve references
 4. Build merged dependency graph
 5. Show unresolved items
@@ -76,7 +76,7 @@ Statute Chain will:
   "source_type": "url",
   "source_url": "https://www.nysenate.gov/legislation/laws/PEN/220.16",
   "extracted_title": "NY Penal Law 220.16",
-  "citations_found": [
+  "references_found": [
     {
       "raw": "section 3306",
       "format": "informal",
@@ -100,17 +100,17 @@ Statute Chain will:
 
 #### parser
 
-Responsible for citation intelligence.
+Responsible for reference intelligence.
 
 * `parseCitation()`
 * `scanAllCitations()`
-* structured + informal citation detection
+* structured + informal reference detection
 * confidence scoring
 * offsets + context windows
 
 #### resolver
 
-Maps citations to known statutes.
+Maps statute references to known laws.
 
 * canonical IDs
 * aliases
@@ -119,7 +119,7 @@ Maps citations to known statutes.
 
 #### chain
 
-Builds dependency graphs.
+Builds linked law graphs.
 
 * breadth first traversal
 * cycle prevention
@@ -129,7 +129,7 @@ Builds dependency graphs.
 
 #### database
 
-Stores provisions, citations, aliases, metadata.
+Stores provisions, references, aliases, metadata.
 
 #### web
 
@@ -200,7 +200,7 @@ pnpm test
 
 ## Example API Requests
 
-### Citation Query
+### Statute Reference Query
 
 ```json
 POST /api/query
@@ -246,7 +246,7 @@ Structural understanding.
 ## Roadmap
 
 * More jurisdictions
-* Better informal citation resolution
+* Better informal reference resolution
 * Visual graph UI
 * Saved research sessions
 * Attorney workflows

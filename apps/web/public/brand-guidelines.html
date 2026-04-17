@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brand Guidelines — Legal Intelligence Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #111111;
+    --paper: #FFFFFF;
+    --border: #E7E7E7;
+    --muted: #666666;
+    --navy: #1D2D50;
+    --green: #1F6B4F;
+    --red: #8D2E35;
+    --gold: #8C6A2B;
+    --surface: #F8F8F6;
+    --sans: 'Geist', system-ui, sans-serif;
+    --mono: 'Geist Mono', monospace;
+  }
+
+  html { font-size: 16px; }
+  body {
+    font-family: var(--sans);
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* NAV */
+  .doc-nav {
+    position: fixed;
+    top: 0; left: 0;
+    width: 220px;
+    height: 100vh;
+    border-right: 1px solid var(--border);
+    padding: 48px 28px;
+    background: var(--paper);
+    z-index: 100;
+    overflow-y: auto;
+  }
+  .doc-nav .wordmark {
+    font-family: var(--serif);
+    font-size: 15px;
+    letter-spacing: 0.04em;
+    color: var(--ink);
+    margin-bottom: 40px;
+    display: block;
+  }
+  .doc-nav ul { list-style: none; }
+  .doc-nav li { margin-bottom: 4px; }
+  .doc-nav a {
+    font-size: 12px;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    display: block;
+    padding: 5px 0;
+    border-left: 2px solid transparent;
+    padding-left: 12px;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .doc-nav a:hover { color: var(--ink); border-left-color: var(--ink); }
+  .doc-nav .nav-section {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #BBBBBB;
+    margin: 24px 0 8px;
+    padding-left: 12px;
+  }
+
+  /* MAIN */
+  .doc-main {
+    margin-left: 220px;
+    padding: 0;
+  }
+
+  /* COVER */
+  .cover {
+    background: var(--navy);
+    color: var(--paper);
+    padding: 120px 80px 100px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    right: -40px; top: -40px;
+    width: 480px; height: 480px;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 50%;
+  }
+  .cover::after {
+    content: '';
+    position: absolute;
+    right: 60px; top: 60px;
+    width: 300px; height: 300px;
+    border: 1px solid rgba(255,255,255,0.04);
+    border-radius: 50%;
+  }
+  .cover-label {
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 48px;
+  }
+  .cover h1 {
+    font-family: var(--serif);
+    font-size: 72px;
+    line-height: 1.0;
+    font-weight: 400;
+    color: var(--paper);
+    max-width: 640px;
+    margin-bottom: 32px;
+    letter-spacing: -0.01em;
+  }
+  .cover-sub {
+    font-size: 16px;
+    color: rgba(255,255,255,0.55);
+    max-width: 480px;
+    line-height: 1.7;
+    margin-bottom: 64px;
+  }
+  .cover-meta {
+    display: flex;
+    gap: 48px;
+  }
+  .cover-meta-item label {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+    display: block;
+    margin-bottom: 4px;
+  }
+  .cover-meta-item span {
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+  }
+
+  /* SECTIONS */
+  .section {
+    padding: 80px 80px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section:last-child { border-bottom: none; }
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #BBBBBB;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .section h2 {
+    font-family: var(--serif);
+    font-size: 40px;
+    font-weight: 400;
+    line-height: 1.1;
+    margin-bottom: 40px;
+    letter-spacing: -0.01em;
+  }
+  .section p {
+    font-size: 15px;
+    color: var(--muted);
+    max-width: 560px;
+    line-height: 1.8;
+    margin-bottom: 16px;
+  }
+
+  /* BRAND POSITIONING */
+  .positioning-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 40px;
+  }
+  .positioning-cell {
+    background: var(--paper);
+    padding: 32px;
+  }
+  .positioning-cell.dark {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .positioning-cell h3 {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+  .positioning-cell.dark h3 { color: rgba(255,255,255,0.4); }
+  .positioning-cell ul { list-style: none; }
+  .positioning-cell li {
+    font-size: 15px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    color: var(--ink);
+  }
+  .positioning-cell.dark li {
+    color: rgba(255,255,255,0.8);
+    border-bottom-color: rgba(255,255,255,0.08);
+  }
+  .positioning-cell li:last-child { border-bottom: none; }
+  .feel-item {
+    font-family: var(--serif);
+    font-size: 22px;
+    padding: 12px 0 !important;
+    letter-spacing: -0.01em;
+  }
+
+  /* COLOR SYSTEM */
+  .color-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-top: 40px;
+  }
+  .color-swatch {
+    border: 1px solid var(--border);
+  }
+  .color-swatch-block {
+    height: 80px;
+    position: relative;
+  }
+  .color-swatch-info {
+    padding: 14px 16px;
+    background: var(--paper);
+  }
+  .color-swatch-info .color-name {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    margin-bottom: 4px;
+    display: block;
+  }
+  .color-swatch-info .color-hex {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .color-swatch-info .color-usage {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 6px;
+    line-height: 1.5;
+  }
+  .color-role {
+    position: absolute;
+    top: 12px; left: 12px;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.5;
+  }
+
+  /* COLOR USAGE RULE */
+  .usage-rule {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 24px 32px;
+    margin-top: 24px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .usage-rule .ratio {
+    font-family: var(--serif);
+    font-size: 48px;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+  .usage-rule p {
+    font-size: 13px;
+    color: var(--muted);
+    max-width: 400px;
+    margin: 0;
+  }
+
+  /* TYPOGRAPHY */
+  .type-specimen {
+    border: 1px solid var(--border);
+    margin-top: 40px;
+  }
+  .type-row {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    border-bottom: 1px solid var(--border);
+  }
+  .type-row:last-child { border-bottom: none; }
+  .type-meta {
+    padding: 28px 24px;
+    border-right: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .type-meta .type-label {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #BBBBBB;
+    display: block;
+    margin-bottom: 8px;
+  }
+  .type-meta .type-spec {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+  .type-sample {
+    padding: 28px 32px;
+    display: flex;
+    align-items: center;
+  }
+
+  /* LOGO */
+  .logo-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 40px;
+  }
+  .logo-cell {
+    background: var(--paper);
+    padding: 48px 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+  }
+  .logo-cell.dark { background: var(--ink); }
+  .logo-cell.navy { background: var(--navy); }
+  .logo-cell label {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: block;
+  }
+  .logo-cell.dark label, .logo-cell.navy label { color: rgba(255,255,255,0.35); }
+  .logo-wordmark {
+    font-family: var(--serif);
+    font-size: 28px;
+    letter-spacing: 0.05em;
+    color: var(--ink);
+    font-weight: 400;
+  }
+  .logo-cell.dark .logo-wordmark,
+  .logo-cell.navy .logo-wordmark { color: var(--paper); }
+  .logo-wordmark.sm { font-size: 20px; }
+  .logo-wordmark.xs { font-size: 15px; letter-spacing: 0.08em; }
+
+  .logo-dont-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 24px;
+  }
+  .logo-dont-cell {
+    border: 1px solid var(--border);
+    padding: 32px 20px;
+    position: relative;
+  }
+  .logo-dont-cell::before {
+    content: 'Do not';
+    position: absolute;
+    top: 12px; left: 14px;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--red);
+  }
+  .logo-dont-cell .dont-wordmark {
+    font-family: var(--serif);
+    font-size: 22px;
+    margin-top: 20px;
+    display: block;
+  }
+  .stretched { transform: scaleX(1.4); display: inline-block; }
+  .italic-wrong { font-style: italic; }
+  .color-wrong { color: var(--gold); }
+
+  /* SPACING */
+  .spacing-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 0;
+    margin-top: 40px;
+    border: 1px solid var(--border);
+  }
+  .spacing-unit {
+    flex: 1;
+    border-right: 1px solid var(--border);
+    padding-bottom: 0;
+    position: relative;
+  }
+  .spacing-unit:last-child { border-right: none; }
+  .spacing-bar {
+    background: var(--navy);
+    width: 100%;
+    opacity: 0.15;
+  }
+  .spacing-label {
+    padding: 12px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+    text-align: center;
+  }
+
+  /* BUTTONS */
+  .button-showcase {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 40px;
+    padding: 48px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .btn {
+    font-family: var(--sans);
+    font-size: 13px;
+    letter-spacing: 0.03em;
+    padding: 10px 20px;
+    cursor: pointer;
+    border: none;
+    border-radius: 0;
+    transition: all 0.15s;
+  }
+  .btn-primary {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .btn-secondary {
+    background: var(--paper);
+    color: var(--ink);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--muted);
+    padding: 10px 4px;
+  }
+  .btn-destructive {
+    background: var(--red);
+    color: var(--paper);
+  }
+  .btn-spec-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 16px;
+  }
+  .btn-spec-cell {
+    background: var(--paper);
+    padding: 20px 24px;
+  }
+  .btn-spec-cell label {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #BBBBBB;
+    display: block;
+    margin-bottom: 8px;
+  }
+  .btn-spec-cell p {
+    font-size: 13px;
+    color: var(--muted);
+    max-width: 100%;
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  /* CARDS */
+  .card-showcase {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 40px;
+  }
+  .ui-card {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+  }
+  .ui-card-label {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #BBBBBB;
+    margin-bottom: 12px;
+  }
+  .ui-card-title {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+  .ui-card-body {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .ui-card-tag {
+    display: inline-block;
+    margin-top: 12px;
+    font-size: 11px;
+    padding: 3px 10px;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    border-radius: 2px;
+  }
+  .tag-conflict { border-color: var(--red); color: var(--red); }
+  .tag-positive { border-color: var(--green); color: var(--green); }
+
+  /* DATA VIZ */
+  .graph-demo {
+    border: 1px solid var(--border);
+    padding: 48px;
+    margin-top: 40px;
+    background: var(--paper);
+  }
+  .graph-legend {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .legend-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+  }
+  svg.graph { width: 100%; height: auto; }
+
+  /* VOICE */
+  .voice-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 40px;
+  }
+  .voice-cell {
+    background: var(--paper);
+    padding: 32px;
+  }
+  .voice-cell h3 {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .voice-example {
+    padding: 16px 20px;
+    border-left: 3px solid var(--border);
+    margin-bottom: 12px;
+  }
+  .voice-example p { font-size: 14px; color: var(--ink); margin: 0; line-height: 1.6; }
+  .voice-example.correct { border-left-color: var(--green); }
+  .voice-example.incorrect { border-left-color: var(--red); }
+  .voice-example.incorrect p { color: var(--muted); text-decoration: line-through; }
+
+  /* MOTION */
+  .motion-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 40px;
+  }
+  .motion-cell {
+    border: 1px solid var(--border);
+    padding: 32px 24px;
+  }
+  .motion-cell .motion-name {
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+  .motion-cell p {
+    font-size: 12px;
+    color: var(--muted);
+    margin: 0;
+    max-width: 100%;
+    line-height: 1.6;
+  }
+  .motion-cell code {
+    font-family: var(--mono);
+    font-size: 11px;
+    background: var(--surface);
+    padding: 2px 6px;
+    color: var(--ink);
+    display: block;
+    margin-top: 12px;
+  }
+
+  /* NAMING */
+  .name-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 40px;
+  }
+  .name-card {
+    border: 1px solid var(--border);
+    padding: 32px 24px;
+    position: relative;
+  }
+  .name-card.preferred {
+    border-color: var(--navy);
+  }
+  .name-card.preferred::after {
+    content: 'Preferred';
+    position: absolute;
+    top: 12px; right: 12px;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--navy);
+  }
+  .name-card .name {
+    font-family: var(--serif);
+    font-size: 26px;
+    font-weight: 400;
+    margin-bottom: 12px;
+  }
+  .name-card p {
+    font-size: 12px;
+    color: var(--muted);
+    margin: 0;
+    max-width: 100%;
+    line-height: 1.7;
+  }
+
+  /* UI PAGES */
+  .page-mockup {
+    border: 1px solid var(--border);
+    margin-top: 40px;
+    overflow: hidden;
+  }
+  .page-chrome {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .chrome-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--border);
+  }
+  .chrome-url {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    margin-left: 12px;
+  }
+  .mockup-body { padding: 40px 48px; }
+  .mockup-search-bar {
+    border: 1px solid var(--border);
+    padding: 14px 20px;
+    font-size: 15px;
+    color: var(--muted);
+    width: 100%;
+    margin-bottom: 12px;
+    background: var(--paper);
+  }
+  .mockup-suggestion {
+    font-size: 12px;
+    color: var(--muted);
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .suggestion-icon {
+    width: 16px; height: 16px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .compare-pane-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 40px;
+  }
+  .compare-pane {
+    background: var(--paper);
+    padding: 28px;
+  }
+  .compare-pane h4 {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  .compare-text {
+    font-size: 13px;
+    line-height: 1.8;
+    color: var(--ink);
+  }
+  .diff-highlight { background: rgba(31,107,79,0.1); color: var(--green); }
+  .diff-conflict { background: rgba(141,46,53,0.08); color: var(--red); }
+
+  /* TECH STACK */
+  .stack-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 40px;
+  }
+  .stack-cell {
+    background: var(--paper);
+    padding: 24px;
+  }
+  .stack-cell label {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #BBBBBB;
+    display: block;
+    margin-bottom: 12px;
+  }
+  .stack-item {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--ink);
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .stack-item:last-child { border-bottom: none; }
+
+  /* PAGE NUMBERS */
+  .page-number {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 80px;
+    border-top: 1px solid var(--border);
+  }
+  .page-number span {
+    font-size: 11px;
+    color: #CCCCCC;
+    letter-spacing: 0.06em;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .doc-nav { display: none; }
+    .doc-main { margin-left: 0; }
+    .section { padding: 48px 24px; }
+    .cover { padding: 64px 24px; }
+    .cover h1 { font-size: 44px; }
+    .color-grid { grid-template-columns: repeat(2, 1fr); }
+    .logo-grid, .logo-dont-grid { grid-template-columns: 1fr 1fr; }
+    .card-showcase, .motion-grid, .name-grid { grid-template-columns: 1fr 1fr; }
+    .stack-grid { grid-template-columns: repeat(2, 1fr); }
+    .positioning-grid, .voice-grid, .compare-pane-wrapper, .btn-spec-grid { grid-template-columns: 1fr; }
+    .type-row { grid-template-columns: 1fr; }
+    .mockup-body { padding: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="doc-nav">
+  <span class="wordmark">Brand Guidelines</span>
+  <ul>
+    <div class="nav-section">Identity</div>
+    <li><a href="#positioning">Positioning</a></li>
+    <li><a href="#naming">Naming</a></li>
+    <li><a href="#logo">Logo</a></li>
+    <div class="nav-section">Visual</div>
+    <li><a href="#color">Color System</a></li>
+    <li><a href="#typography">Typography</a></li>
+    <li><a href="#spacing">Spacing & Grid</a></li>
+    <div class="nav-section">Components</div>
+    <li><a href="#buttons">Buttons</a></li>
+    <li><a href="#cards">Cards</a></li>
+    <li><a href="#dataviz">Data Visualization</a></li>
+    <div class="nav-section">Product</div>
+    <li><a href="#pages">UI Pages</a></li>
+    <li><a href="#motion">Motion</a></li>
+    <li><a href="#voice">Voice & Tone</a></li>
+    <li><a href="#stack">Tech Stack</a></li>
+  </ul>
+</nav>
+
+<!-- MAIN -->
+<main class="doc-main">
+
+  <!-- COVER -->
+  <div class="cover" id="cover">
+    <p class="cover-label">Brand Guidelines — v1.0</p>
+    <h1>A clarity engine for law.</h1>
+    <p class="cover-sub">This document defines the visual identity, voice, and design principles for a premium legal intelligence platform. Use it as the single source of truth for all product and communication decisions.</p>
+    <div class="cover-meta">
+      <div class="cover-meta-item">
+        <label>Category</label>
+        <span>Legal Intelligence</span>
+      </div>
+      <div class="cover-meta-item">
+        <label>Positioning</label>
+        <span>Bloomberg Terminal meets Linear</span>
+      </div>
+      <div class="cover-meta-item">
+        <label>Audience</label>
+        <span>Solo attorneys · Firms · Enterprise</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- POSITIONING -->
+  <section class="section" id="positioning">
+    <p class="section-label">01 &nbsp; Brand Positioning</p>
+    <h2>What the product feels like in three seconds.</h2>
+    <p>Every product decision — visual, verbal, structural — should be tested against this north star. Users should feel this before they read anything.</p>
+
+    <div class="positioning-grid">
+      <div class="positioning-cell dark">
+        <h3>Feel in 3 seconds</h3>
+        <ul>
+          <li class="feel-item">This is sharp.</li>
+          <li class="feel-item">This saves time.</li>
+          <li class="feel-item">This understands complexity.</li>
+          <li class="feel-item">I trust this interface.</li>
+          <li class="feel-item">This is expensive for a reason.</li>
+        </ul>
+      </div>
+      <div class="positioning-cell">
+        <h3>Never feel like</h3>
+        <ul>
+          <li>Generic SaaS startup</li>
+          <li>Courthouse website</li>
+          <li>Law school project</li>
+          <li>Cluttered government portal</li>
+          <li>Crypto startup</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- NAMING -->
+  <section class="section" id="naming">
+    <p class="section-label">02 &nbsp; Naming</p>
+    <h2>Names that hold weight.</h2>
+    <p>The product name should feel like a legal term of art — precise, slightly institutional, and legible across contexts. Each candidate below carries different connotations.</p>
+
+    <div class="name-grid">
+      <div class="name-card preferred">
+        <div class="name">Greyledge</div>
+        <p>Evokes the edge between settled and uncertain law. Sophisticated without being opaque. Works well as a wordmark.</p>
+      </div>
+      <div class="name-card preferred">
+        <div class="name">Blackletter</div>
+        <p>Direct typographic reference. Signals legal tradition and authority. Strong visual identity anchor.</p>
+      </div>
+      <div class="name-card">
+        <div class="name">Provision</div>
+        <p>Clear, functional, and immediately legible for a legal research context. Easily shortened.</p>
+      </div>
+      <div class="name-card">
+        <div class="name">Letter & Spirit</div>
+        <p>Captures the interpretive tension at the center of legal practice. More editorial in tone.</p>
+      </div>
+      <div class="name-card">
+        <div class="name">Statute</div>
+        <p>Straightforward and direct. Strong recall. Works well for SEO and enterprise positioning.</p>
+      </div>
+      <div class="name-card">
+        <div class="name">Commonlaw</div>
+        <p>Clear and trustworthy. Check availability. May be competitive with existing names in the space.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOGO -->
+  <section class="section" id="logo">
+    <p class="section-label">03 &nbsp; Logo & Wordmark</p>
+    <h2>Wordmark only — for now.</h2>
+    <p>Use Geist, set at a slightly wider tracking than default, for the wordmark. Lowercase or title case. Calm confidence. No symbol until the brand is established.</p>
+
+    <div class="logo-grid">
+      <div class="logo-cell">
+        <label>On White</label>
+        <span class="logo-wordmark">Greyledge</span>
+      </div>
+      <div class="logo-cell dark">
+        <label>On Ink</label>
+        <span class="logo-wordmark">Greyledge</span>
+      </div>
+      <div class="logo-cell navy">
+        <label>On Navy</label>
+        <span class="logo-wordmark">Greyledge</span>
+      </div>
+      <div class="logo-cell">
+        <label>Medium Scale</label>
+        <span class="logo-wordmark sm">Greyledge</span>
+      </div>
+      <div class="logo-cell">
+        <label>Small Scale</label>
+        <span class="logo-wordmark xs">Greyledge</span>
+      </div>
+      <div class="logo-cell" style="background: var(--surface);">
+        <label>On Surface</label>
+        <span class="logo-wordmark sm">Greyledge</span>
+      </div>
+    </div>
+
+    <p style="margin-top: 32px;">Logo don'ts:</p>
+    <div class="logo-dont-grid">
+      <div class="logo-dont-cell">
+        <span class="dont-wordmark stretched">Greyledge</span>
+      </div>
+      <div class="logo-dont-cell">
+        <span class="dont-wordmark italic-wrong">Greyledge</span>
+      </div>
+      <div class="logo-dont-cell">
+        <span class="dont-wordmark color-wrong">Greyledge</span>
+      </div>
+    </div>
+    <p style="font-size: 12px; color: var(--muted); margin-top: 12px;">Do not stretch, italicize, or recolor the wordmark outside the approved palette.</p>
+  </section>
+
+  <!-- COLOR SYSTEM -->
+  <section class="section" id="color">
+    <p class="section-label">04 &nbsp; Color System</p>
+    <h2>95% neutral.<br>Accents signal meaning.</h2>
+    <p>The color system is built around restraint. Ink and Paper carry nearly all visual weight. Accents are reserved for semantic use only — status, conflict, hierarchy, premium context — not decoration.</p>
+
+    <div class="color-grid">
+      <div class="color-swatch">
+        <div class="color-swatch-block" style="background: #111111;">
+          <span class="color-role" style="color: rgba(255,255,255,0.45);">Core</span>
+        </div>
+        <div class="color-swatch-info">
+          <span class="color-name">Ink</span>
+          <span class="color-hex">#111111</span>
+          <p class="color-usage">Primary text, primary buttons, icon fills</p>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-swatch-block" style="background: #FFFFFF; border-bottom: 1px solid var(--border);">
+          <span class="color-role" style="color: #BBBBBB;">Core</span>
+        </div>
+        <div class="color-swatch-info">
+          <span class="color-name">Paper</span>
+          <span class="color-hex">#FFFFFF</span>
+          <p class="color-usage">Page background, card backgrounds, reversed text</p>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-swatch-block" style="background: #F8F8F6;">
+          <span class="color-role" style="color: #BBBBBB;">Core</span>
+        </div>
+        <div class="color-swatch-info">
+          <span class="color-name">Surface</span>
+          <span class="color-hex">#F8F8F6</span>
+          <p class="color-usage">Page sections, metadata panes, input backgrounds</p>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-swatch-block" style="background: #E7E7E7;">
+          <span class="color-role" style="color: #999;">Core</span>
+        </div>
+        <div class="color-swatch-info">
+          <span class="color-name">Soft Border</span>
+          <span class="color-hex">#E7E7E7</span>
+          <p class="color-usage">All card borders, dividers, table rules</p>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-swatch-block" style="background: #666666;">
+          <span class="color-role" style="color: rgba(255,255,255,0.4);">Core</span>
+        </div>
+        <div class="color-swatch-info">
+          <span class="color-name">Secondary Text</span>
+          <span class="color-hex">#666666</span>
+          <p class="color-usage">Metadata, captions, placeholder text</p>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-swatch-block" style="background: #1D2D50;">
+          <span class="color-role" style="color: rgba(255,255,255,0.4);">Accent</span>
+        </div>
+        <div class="color-swatch-info">
+          <span class="color-name">Navy Authority</span>
+          <span class="color-hex">#1D2D50</span>
+          <p class="color-usage">Hero backgrounds, selected graph nodes, premium surfaces</p>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-swatch-block" style="background: #1F6B4F;">
+          <span class="color-role" style="color: rgba(255,255,255,0.4);">Semantic</span>
+        </div>
+        <div class="color-swatch-info">
+          <span class="color-name">Green Positive</span>
+          <span class="color-hex">#1F6B4F</span>
+          <p class="color-usage">Aligned statutes, additive definitions, positive relationships</p>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-swatch-block" style="background: #8D2E35;">
+          <span class="color-role" style="color: rgba(255,255,255,0.4);">Semantic</span>
+        </div>
+        <div class="color-swatch-info">
+          <span class="color-name">Red Conflict</span>
+          <span class="color-hex">#8D2E35</span>
+          <p class="color-usage">Conflicting statutes, dependencies, contradiction markers</p>
+        </div>
+      </div>
+      <div class="color-swatch" style="grid-column: span 2;">
+        <div class="color-swatch-block" style="background: #8C6A2B; height: 60px;">
+          <span class="color-role" style="color: rgba(255,255,255,0.4);">Accent</span>
+        </div>
+        <div class="color-swatch-info">
+          <span class="color-name">Gold Premium</span>
+          <span class="color-hex">#8C6A2B</span>
+          <p class="color-usage">Enterprise tier markers, premium feature badges — use extremely sparingly</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="usage-rule">
+      <div class="ratio">95 / 5</div>
+      <p>Ninety-five percent of any view should be neutral — Ink, Paper, Surface, and borders. Reserve all accent and semantic colors for the five percent where they signal concrete meaning: conflict, alignment, authority, premium tier. Never use color for decoration.</p>
+    </div>
+  </section>
+
+  <!-- TYPOGRAPHY -->
+  <section class="section" id="typography">
+    <p class="section-label">05 &nbsp; Typography</p>
+    <h2>One typeface.<br>No exceptions.</h2>
+    <p>Geist handles everything — headlines, hero copy, wordmark, interface, body text. Geist Mono is reserved for statute citations, code, and technical references. Consistency across all type roles is what gives the product its unified, institutional feel.</p>
+
+    <div class="type-specimen">
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-label">Display / Hero</span>
+          <span class="type-spec">Geist<br>Weight: 400<br>Size: 64–72px<br>Leading: 1.0<br>Tracking: –0.01em</span>
+        </div>
+        <div class="type-sample">
+          <p style="font-family: 'Geist', sans-serif; font-size: 56px; font-weight: 400; line-height: 1.0; letter-spacing: -0.01em; color: var(--ink); max-width: 100%; margin: 0;">Understand the law behind the citation.</p>
+        </div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-label">Section Heading</span>
+          <span class="type-spec">Geist<br>Weight: 400<br>Size: 36–42px<br>Leading: 1.1</span>
+        </div>
+        <div class="type-sample">
+          <p style="font-family: 'Geist', sans-serif; font-size: 36px; font-weight: 400; line-height: 1.1; color: var(--ink); max-width: 100%; margin: 0;">6 material differences found across jurisdictions.</p>
+        </div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-label">UI Heading</span>
+          <span class="type-spec">Geist<br>Weight: 500<br>Size: 15–16px<br>Leading: 1.4</span>
+        </div>
+        <div class="type-sample">
+          <p style="font-family: 'Geist', sans-serif; font-size: 15px; font-weight: 500; line-height: 1.4; color: var(--ink); margin: 0;">Controlled Substance Definitions — Schedule II</p>
+        </div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-label">Body / Reading</span>
+          <span class="type-spec">Geist<br>Weight: 400<br>Size: 14–15px<br>Leading: 1.8<br>Max width: 72ch</span>
+        </div>
+        <div class="type-sample" style="max-width: 560px;">
+          <p style="font-family: 'Geist', sans-serif; font-size: 14px; font-weight: 400; line-height: 1.8; color: var(--ink); margin: 0;">For purposes of this section, "controlled substance analogue" means a substance which has a chemical structure substantially similar to the chemical structure of a controlled substance in Schedule I or II.</p>
+        </div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-label">Caption / Label</span>
+          <span class="type-spec">Geist<br>Weight: 400<br>Size: 11–12px<br>Tracking: 0.06–0.12em<br>Uppercase</span>
+        </div>
+        <div class="type-sample">
+          <p style="font-family: 'Geist', sans-serif; font-size: 11px; font-weight: 400; line-height: 1.6; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin: 0;">Last updated March 2024 &nbsp;·&nbsp; Source: 21 USC §812</p>
+        </div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-label">Citation / Code</span>
+          <span class="type-spec">Geist Mono<br>Weight: 400<br>Size: 12–13px<br>Leading: 1.6</span>
+        </div>
+        <div class="type-sample">
+          <p style="font-family: 'Geist Mono', monospace; font-size: 13px; line-height: 1.6; color: var(--ink); margin: 0;">NY Penal Law §220.65 &nbsp;→&nbsp; 21 USC §812(b)(1)</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SPACING -->
+  <section class="section" id="spacing">
+    <p class="section-label">06 &nbsp; Spacing & Grid</p>
+    <h2>The grid is the argument.</h2>
+    <p>Consistent spacing is how the interface communicates structure without words. Use the 8px base unit. For legal reading panes, cap text width at 72 characters — never full-width statutes.</p>
+
+    <div class="spacing-row">
+      <div class="spacing-unit">
+        <div class="spacing-bar" style="height: 8px;"></div>
+        <div class="spacing-label">8</div>
+      </div>
+      <div class="spacing-unit">
+        <div class="spacing-bar" style="height: 12px;"></div>
+        <div class="spacing-label">12</div>
+      </div>
+      <div class="spacing-unit">
+        <div class="spacing-bar" style="height: 16px;"></div>
+        <div class="spacing-label">16</div>
+      </div>
+      <div class="spacing-unit">
+        <div class="spacing-bar" style="height: 24px;"></div>
+        <div class="spacing-label">24</div>
+      </div>
+      <div class="spacing-unit">
+        <div class="spacing-bar" style="height: 32px;"></div>
+        <div class="spacing-label">32</div>
+      </div>
+      <div class="spacing-unit">
+        <div class="spacing-bar" style="height: 48px;"></div>
+        <div class="spacing-label">48</div>
+      </div>
+      <div class="spacing-unit">
+        <div class="spacing-bar" style="height: 64px;"></div>
+        <div class="spacing-label">64</div>
+      </div>
+      <div class="spacing-unit">
+        <div class="spacing-bar" style="height: 80px;"></div>
+        <div class="spacing-label">80</div>
+      </div>
+    </div>
+
+    <div style="margin-top: 32px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border);">
+      <div style="background: var(--paper); padding: 20px 24px;">
+        <label style="font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #BBBBBB; display: block; margin-bottom: 8px;">Max Width</label>
+        <span style="font-family: var(--mono); font-size: 13px;">1440px canvas<br>1280px content</span>
+      </div>
+      <div style="background: var(--paper); padding: 20px 24px;">
+        <label style="font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #BBBBBB; display: block; margin-bottom: 8px;">Side Padding</label>
+        <span style="font-family: var(--mono); font-size: 13px;">32px minimum</span>
+      </div>
+      <div style="background: var(--paper); padding: 20px 24px;">
+        <label style="font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #BBBBBB; display: block; margin-bottom: 8px;">Reading Width</label>
+        <span style="font-family: var(--mono); font-size: 13px;">72ch max<br>Never full-width</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- BUTTONS -->
+  <section class="section" id="buttons">
+    <p class="section-label">07 &nbsp; Button System</p>
+    <h2>Actions should feel deliberate.</h2>
+    <p>Buttons carry authority through restraint. No rounded corners, no gradients. The primary button is as close to the product's editorial character as a UI element can get.</p>
+
+    <div class="button-showcase">
+      <button class="btn btn-primary">Compare Laws</button>
+      <button class="btn btn-primary">Run Search</button>
+      <button class="btn btn-primary">Export Summary</button>
+      <button class="btn btn-secondary">View Source</button>
+      <button class="btn btn-secondary">Filter Results</button>
+      <button class="btn btn-ghost">Cancel</button>
+      <button class="btn btn-ghost">View all</button>
+      <button class="btn btn-destructive">Flag Conflict</button>
+    </div>
+
+    <div class="btn-spec-grid">
+      <div class="btn-spec-cell">
+        <label>Primary</label>
+        <p>Ink background, Paper text. Use for the main action on any view — Compare, Search, Export. One per view maximum.</p>
+      </div>
+      <div class="btn-spec-cell">
+        <label>Secondary</label>
+        <p>Paper background, Ink border. For supporting actions — View Source, Filter, Share. Can appear alongside Primary.</p>
+      </div>
+      <div class="btn-spec-cell">
+        <label>Ghost</label>
+        <p>Text only, Secondary Text color. For low-emphasis actions — Cancel, Skip, Dismiss. Never competes with Primary.</p>
+      </div>
+      <div class="btn-spec-cell">
+        <label>Destructive</label>
+        <p>Red Conflict background. Reserved for actions that mark or surface legal conflicts. Use sparingly — not for delete.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CARDS -->
+  <section class="section" id="cards">
+    <p class="section-label">08 &nbsp; Card Design</p>
+    <h2>Information has<br>a container.</h2>
+    <p>Cards are the primary container for legal content units. White background, light border, 14px radius, 20px padding. Status is communicated through tags — not color fills.</p>
+
+    <div class="card-showcase">
+      <div class="ui-card">
+        <div class="ui-card-label">Search Result</div>
+        <div class="ui-card-title">NY Penal Law §220.65</div>
+        <div class="ui-card-body">Criminal sale of a controlled substance. Defines Schedule I and II substances as covered by the provision.</div>
+        <span class="ui-card-tag">3 references</span>
+      </div>
+      <div class="ui-card">
+        <div class="ui-card-label">Comparison</div>
+        <div class="ui-card-title">Definition: Schedule II</div>
+        <div class="ui-card-body">Federal and NY definitions overlap on 4 substances but diverge on analogue classification standards.</div>
+        <span class="ui-card-tag tag-conflict">2 conflicts</span>
+      </div>
+      <div class="ui-card">
+        <div class="ui-card-label">Relationship</div>
+        <div class="ui-card-title">21 USC §812 → §813</div>
+        <div class="ui-card-body">Section 813 incorporates the Schedule II definitions from 812 and extends them to analogue substances.</div>
+        <span class="ui-card-tag tag-positive">Incorporates</span>
+      </div>
+    </div>
+
+    <div style="margin-top: 24px; border: 1px solid var(--border); padding: 20px 24px; background: var(--surface);">
+      <p style="font-size: 12px; color: var(--muted); margin: 0;">Card radius: <code style="font-family: var(--mono);">14px</code> &nbsp;·&nbsp; Padding: <code style="font-family: var(--mono);">20px</code> &nbsp;·&nbsp; Border: <code style="font-family: var(--mono);">1px solid #E7E7E7</code> &nbsp;·&nbsp; Background: <code style="font-family: var(--mono);">#FFFFFF</code> &nbsp;·&nbsp; Shadow: none</p>
+    </div>
+  </section>
+
+  <!-- DATA VIZ -->
+  <section class="section" id="dataviz">
+    <p class="section-label">09 &nbsp; Data Visualization</p>
+    <h2>No rainbow colors.<br>Meaning drives color.</h2>
+    <p>Graph nodes and relationship lines use only the semantic palette. Gray for neutral structure, Navy for selected or authoritative nodes, Green for aligned relationships, Red for conflicts. Never assign colors decoratively.</p>
+
+    <div class="graph-demo">
+      <div class="graph-legend">
+        <div class="legend-item"><div class="legend-dot" style="background: #1D2D50;"></div>Selected / Authority</div>
+        <div class="legend-item"><div class="legend-dot" style="background: #BBBBBB;"></div>Neutral / Structural</div>
+        <div class="legend-item"><div class="legend-dot" style="background: #1F6B4F;"></div>Positive Relationship</div>
+        <div class="legend-item"><div class="legend-dot" style="background: #8D2E35;"></div>Conflict</div>
+      </div>
+      <svg class="graph" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg">
+        <!-- Edges -->
+        <line x1="350" y1="130" x2="160" y2="70" stroke="#CCCCCC" stroke-width="1"/>
+        <line x1="350" y1="130" x2="160" y2="190" stroke="#CCCCCC" stroke-width="1"/>
+        <line x1="350" y1="130" x2="540" y2="70" stroke="#1F6B4F" stroke-width="1.5"/>
+        <line x1="350" y1="130" x2="540" y2="190" stroke="#8D2E35" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <!-- Center node -->
+        <circle cx="350" cy="130" r="36" fill="#1D2D50"/>
+        <text x="350" y="125" text-anchor="middle" fill="white" font-family="Geist Mono, monospace" font-size="10">21 USC</text>
+        <text x="350" y="139" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-family="Geist Mono, monospace" font-size="10">§812</text>
+        <!-- Left nodes -->
+        <circle cx="160" cy="70" r="28" fill="#F8F8F6" stroke="#CCCCCC" stroke-width="1"/>
+        <text x="160" y="65" text-anchor="middle" fill="#666" font-family="Geist Mono, monospace" font-size="9">NY Penal</text>
+        <text x="160" y="78" text-anchor="middle" fill="#666" font-family="Geist Mono, monospace" font-size="9">§220.65</text>
+        <circle cx="160" cy="190" r="28" fill="#F8F8F6" stroke="#CCCCCC" stroke-width="1"/>
+        <text x="160" y="185" text-anchor="middle" fill="#666" font-family="Geist Mono, monospace" font-size="9">21 USC</text>
+        <text x="160" y="198" text-anchor="middle" fill="#666" font-family="Geist Mono, monospace" font-size="9">§811</text>
+        <!-- Right nodes -->
+        <circle cx="540" cy="70" r="28" fill="#F8F8F6" stroke="#1F6B4F" stroke-width="1.5"/>
+        <text x="540" y="65" text-anchor="middle" fill="#1F6B4F" font-family="Geist Mono, monospace" font-size="9">21 USC</text>
+        <text x="540" y="78" text-anchor="middle" fill="#1F6B4F" font-family="Geist Mono, monospace" font-size="9">§813</text>
+        <circle cx="540" cy="190" r="28" fill="#F8F8F6" stroke="#8D2E35" stroke-width="1.5"/>
+        <text x="540" y="185" text-anchor="middle" fill="#8D2E35" font-family="Geist Mono, monospace" font-size="9">NY Pub</text>
+        <text x="540" y="198" text-anchor="middle" fill="#8D2E35" font-family="Geist Mono, monospace" font-size="9">Health §3306</text>
+        <!-- Edge labels -->
+        <text x="450" y="88" text-anchor="middle" fill="#1F6B4F" font-family="Geist, sans-serif" font-size="10">Incorporates</text>
+        <text x="455" y="175" text-anchor="middle" fill="#8D2E35" font-family="Geist, sans-serif" font-size="10">Conflicts</text>
+      </svg>
+    </div>
+  </section>
+
+  <!-- UI PAGES -->
+  <section class="section" id="pages">
+    <p class="section-label">10 &nbsp; UI Pages</p>
+    <h2>Search. Compare.<br>Graph. That's the MVP.</h2>
+    <p>Launch with three pages. Everything else follows once users understand the core value.</p>
+
+    <div style="margin-top: 32px; margin-bottom: 8px;">
+      <p style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);">Search Page</p>
+    </div>
+    <div class="page-mockup">
+      <div class="page-chrome">
+        <div class="chrome-dot"></div><div class="chrome-dot"></div><div class="chrome-dot"></div>
+        <span class="chrome-url">greyledge.com/search</span>
+      </div>
+      <div class="mockup-body">
+        <p style="font-family: 'Geist', sans-serif; font-size: 28px; font-weight: 400; text-align: center; margin-bottom: 28px; color: var(--ink);">Search any statute, citation, or definition.</p>
+        <input class="mockup-search-bar" type="text" placeholder="NY Penal Law §220.65 or 'federal schedule definitions'…" readonly>
+        <div class="mockup-suggestion"><div class="suggestion-icon"></div>NY Penal Law §220.65 — Criminal sale of controlled substance</div>
+        <div class="mockup-suggestion"><div class="suggestion-icon"></div>21 USC §812 — Schedules of controlled substances</div>
+        <div class="mockup-suggestion"><div class="suggestion-icon"></div>Compare NY and federal Schedule II definitions</div>
+      </div>
+    </div>
+
+    <div style="margin-top: 40px; margin-bottom: 8px;">
+      <p style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);">Compare Page</p>
+    </div>
+    <div class="compare-pane-wrapper">
+      <div class="compare-pane">
+        <h4>NY Law — Penal §220.65</h4>
+        <p class="compare-text">A person is guilty of criminal sale of a controlled substance when he knowingly and unlawfully sells a <span class="diff-highlight">narcotic drug</span>. For purposes of this article, "narcotic drug" means any controlled substance listed in <span class="diff-highlight">schedule II(b)(1)</span> of the public health law.</p>
+      </div>
+      <div class="compare-pane">
+        <h4>Federal — 21 USC §812</h4>
+        <p class="compare-text">Schedule II substances have a <span class="diff-highlight">high potential for abuse</span> which may lead to severe psychological or physical dependence. The term includes <span class="diff-conflict">controlled substance analogues</span>, as defined under §813, which NY law <span class="diff-conflict">does not expressly incorporate</span>.</p>
+      </div>
+    </div>
+    <div style="border: 1px solid var(--border); border-top: none; padding: 16px 28px; display: flex; gap: 24px; background: var(--surface);">
+      <span style="font-size: 12px; color: var(--green);">● 3 overlapping definitions</span>
+      <span style="font-size: 12px; color: var(--red);">● 2 dependency conflicts</span>
+      <span style="font-size: 12px; color: var(--muted);">● 6 material differences</span>
+    </div>
+  </section>
+
+  <!-- MOTION -->
+  <section class="section" id="motion">
+    <p class="section-label">11 &nbsp; Motion</p>
+    <h2>Subtle. Purposeful.<br>Nothing playful.</h2>
+    <p>Motion exists to communicate system response, not to entertain. Every animation should make the interface feel faster, not busier.</p>
+
+    <div class="motion-grid">
+      <div class="motion-cell">
+        <div class="motion-name">Card Hover Lift</div>
+        <p>Cards shift 1px up on hover. Communicates interactivity without distraction.</p>
+        <code>transform: translateY(-1px);<br>transition: 120ms ease-out;</code>
+      </div>
+      <div class="motion-cell">
+        <div class="motion-name">Panel Slide</div>
+        <p>Detail panels slide in from the right. Quick — 180ms. Never bouncy.</p>
+        <code>transform: translateX(0);<br>transition: 180ms ease-out;</code>
+      </div>
+      <div class="motion-cell">
+        <div class="motion-name">Search Fade-In</div>
+        <p>Search results fade in with slight upward movement. Staggered by 40ms per row.</p>
+        <code>opacity: 0 → 1;<br>transition: 200ms ease-out;</code>
+      </div>
+    </div>
+
+    <div style="margin-top: 16px; border: 1px solid var(--border); padding: 16px 24px; background: var(--surface);">
+      <p style="font-size: 12px; color: var(--muted); margin: 0;">Never: bounces, springs, overshoots, pulse effects, skeleton loaders with animation. These suggest uncertainty and make the product feel less trustworthy.</p>
+    </div>
+  </section>
+
+  <!-- VOICE -->
+  <section class="section" id="voice">
+    <p class="section-label">12 &nbsp; Voice & Tone</p>
+    <h2>Write like a brief,<br>not a pitch deck.</h2>
+    <p>The product voice is precise, intelligent, and brief. It never performs excitement. It earns trust through specificity and restraint.</p>
+
+    <div class="voice-grid">
+      <div class="voice-cell">
+        <h3>Write this way</h3>
+        <div class="voice-example correct"><p>6 material differences found between NY Penal §220.65 and 21 USC §812.</p></div>
+        <div class="voice-example correct"><p>Controlled substance analogue provisions apply under federal law but are not expressly incorporated by NY statute.</p></div>
+        <div class="voice-example correct"><p>Trace dependencies, compare statutes, move faster.</p></div>
+        <div class="voice-example correct"><p>Section 813 incorporates the Schedule II definitions from 812.</p></div>
+      </div>
+      <div class="voice-cell">
+        <h3>Never write this way</h3>
+        <div class="voice-example incorrect"><p>We're revolutionizing legal research with cutting-edge AI!</p></div>
+        <div class="voice-example incorrect"><p>Our AI-powered engine is a game-changer for legal professionals.</p></div>
+        <div class="voice-example incorrect"><p>Disrupting how attorneys navigate complex regulatory landscapes.</p></div>
+        <div class="voice-example incorrect"><p>Lightning fast. Blazingly accurate. Beautifully designed.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TECH STACK -->
+  <section class="section" id="stack">
+    <p class="section-label">13 &nbsp; Tech Stack</p>
+    <h2>What makes it feel expensive isn't the stack. It's the discipline.</h2>
+    <p>Use these technologies as the baseline. Custom styling over shadcn/ui defaults — never use components out of the box without adapting them to this identity.</p>
+
+    <div class="stack-grid">
+      <div class="stack-cell">
+        <label>Framework</label>
+        <div class="stack-item">Next.js</div>
+        <div class="stack-item">TypeScript</div>
+        <div class="stack-item">App Router</div>
+      </div>
+      <div class="stack-cell">
+        <label>Styling</label>
+        <div class="stack-item">Tailwind CSS</div>
+        <div class="stack-item">shadcn/ui</div>
+        <div class="stack-item">Custom tokens</div>
+      </div>
+      <div class="stack-cell">
+        <label>Typography</label>
+        <div class="stack-item">Geist</div>
+        <div class="stack-item">Geist Mono</div>
+        <div class="stack-item">All contexts</div>
+      </div>
+      <div class="stack-cell">
+        <label>Marketing Site</label>
+        <div class="stack-item">Geist</div>
+        <div class="stack-item">Geist Mono</div>
+        <div class="stack-item">Same color tokens</div>
+      </div>
+    </div>
+
+    <div style="margin-top: 24px; border-left: 3px solid var(--navy); padding: 20px 24px; background: var(--surface);">
+      <p style="font-size: 14px; color: var(--ink); margin: 0; line-height: 1.8; font-family: 'Geist', sans-serif;">Your moat is not code. It is making complex law feel simple and premium. The stack executes the vision — the vision doesn't follow from the stack.</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <div class="page-number">
+    <span>Brand Guidelines — v1.0</span>
+    <span>Confidential</span>
+  </div>
+
+</main>
+</body>
+</html>

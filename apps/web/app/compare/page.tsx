@@ -1,7 +1,7 @@
 import { Suspense } from 'react'
 import { CompareClient } from './CompareClient'
 
-export const metadata = { title: 'Compare — Statute Chain' }
+export const metadata = { title: 'Compare — Law Navigator' }
 
 export default function ComparePage() {
   return (

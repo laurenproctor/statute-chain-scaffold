@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
 
   const citation = body.citation?.trim()
   if (!citation) {
-    return NextResponse.json({ error: 'Missing field: citation' }, { status: 400 })
+    return NextResponse.json({ error: 'Missing field: reference' }, { status: 400 })
   }
 
   const depth = Math.min(Math.max(Number(body.depth ?? 3), 1), 10)

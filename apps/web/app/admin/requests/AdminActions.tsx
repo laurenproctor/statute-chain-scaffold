@@ -58,7 +58,7 @@ export function AdminActions({
         setLastError(body.error ?? 'Ingest failed')
       } else {
         setStatus('loaded')
-        setFeedback(`Loaded — ${body.provisions ?? 0} provision(s), ${body.citations ?? 0} citation(s)`)
+        setFeedback(`Loaded — ${body.provisions ?? 0} provision(s), ${body.citations ?? 0} reference(s)`)
       }
     } catch {
       setStatus('failed')
