@@ -376,6 +376,24 @@
   .site-header h1 { font-size: clamp(28px, 4vw, 40px); margin-bottom: 8px; }
   .tagline { color: var(--muted); font-size: 14px; line-height: 1.6; }
 
+  .page-eyebrow {
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #BBBBBB;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .page-eyebrow::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
   .section { margin-top: 40px; }
   .section-title {
     font-size: 11px;
