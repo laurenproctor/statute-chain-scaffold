@@ -14,6 +14,7 @@ function statusBadge(status: ChainNode['status']) {
     ingested: 'badge-ingested',
     alias_resolved: 'badge-alias',
     not_ingested: 'badge-missing',
+    not_found: 'badge-missing',
     ambiguous: 'badge-ambiguous',
     parse_failed: 'badge-error',
   }
@@ -21,6 +22,7 @@ function statusBadge(status: ChainNode['status']) {
     ingested: 'found',
     alias_resolved: 'alias',
     not_ingested: 'not ingested',
+    not_found: 'not found',
     ambiguous: 'ambiguous',
     parse_failed: 'parse error',
   }
@@ -211,7 +213,7 @@ function ChainView({ data }: { data: QueryResponse }) {
 function DebugPanel({ data }: { data: QueryResponse }) {
   const [open, setOpen] = useState(false)
   return (
-    <>
+    <div className="debug-wrapper">
       <button className="debug-toggle" onClick={() => setOpen((o) => !o)}>
         {open ? '▲ hide JSON' : '▼ show JSON'}
       </button>
@@ -220,7 +222,7 @@ function DebugPanel({ data }: { data: QueryResponse }) {
           <pre>{JSON.stringify(data, null, 2)}</pre>
         </div>
       )}
-    </>
+    </div>
   )
 }
 
