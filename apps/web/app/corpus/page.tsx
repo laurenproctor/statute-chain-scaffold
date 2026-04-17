@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic'
 interface CorpusData {
   provisionsTotal: number
   byJurisdiction: Record<string, number>
-  citationsTotal: number
+  referencesTotal: number
   canonicalIds: string[]
   lastIngestedAt: string | null
   recentAdditions: { canonical_id: string; ingested_at: string }[]
@@ -22,7 +22,7 @@ async function getCorpusData(): Promise<CorpusData> {
         `SELECT jurisdiction, COUNT(*)::text AS count FROM provisions GROUP BY jurisdiction ORDER BY jurisdiction`,
       ),
       db.query<{ count: string }>(
-        `SELECT COUNT(*)::text AS count FROM citations`,
+        `SELECT COUNT(*)::text AS count FROM legal_references`,
       ),
       db.query<{ canonical_id: string; ingested_at: string | null }>(
         `SELECT canonical_id, ingested_at FROM provisions ORDER BY ingested_at DESC NULLS LAST`,
@@ -37,7 +37,7 @@ async function getCorpusData(): Promise<CorpusData> {
       byJurisdiction: Object.fromEntries(
         provisionRows.map((r) => [r.jurisdiction, parseInt(r.count, 10)]),
       ),
-      citationsTotal: parseInt(citationRows[0]?.count ?? '0', 10),
+      referencesTotal: parseInt(citationRows[0]?.count ?? '0', 10),
       canonicalIds: allRows.map((r) => r.canonical_id),
       lastIngestedAt: allRows[0]?.ingested_at ?? null,
       recentAdditions: recentAdditionRows.map((r) => ({ canonical_id: r.canonical_id, ingested_at: r.ingested_at })),
@@ -46,7 +46,7 @@ async function getCorpusData(): Promise<CorpusData> {
     return {
       provisionsTotal: 0,
       byJurisdiction: {},
-      citationsTotal: 0,
+      referencesTotal: 0,
       canonicalIds: [],
       lastIngestedAt: null,
       recentAdditions: [],
@@ -68,7 +68,7 @@ export default async function CorpusPage() {
     <main className="page">
       <header className="site-header">
         <h1>Corpus Status</h1>
-        <p className="tagline">Ingested provisions and citation graph.</p>
+        <p className="tagline">Ingested provisions and reference graph.</p>
       </header>
 
       {data.error ? (
@@ -89,8 +89,8 @@ export default async function CorpusPage() {
                 </div>
               ))}
               <div className="preview-row">
-                <span className="label">citations</span>
-                <span>{data.citationsTotal}</span>
+                <span className="label">references</span>
+                <span>{data.referencesTotal}</span>
               </div>
               <div className="preview-row">
                 <span className="label">last ingest</span>

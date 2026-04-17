@@ -84,7 +84,7 @@ async function main() {
   console.log(`Ingesting ${rows.length} provision(s)…`)
   const result = await ingestNyProvisions(rows, db)
   console.log(`✓ provisions: ${result.provisions}`)
-  console.log(`✓ citations:  ${result.citations}`)
+  console.log(`✓ references: ${result.references}`)
   if (result.errors.length > 0) {
     console.error('Errors:')
     for (const e of result.errors) console.error(' ', e)

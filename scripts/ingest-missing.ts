@@ -103,7 +103,7 @@ async function main() {
   try {
     const missing = await getTopMissing(topN, db)
     if (missing.length === 0) {
-      console.log('No missing nodes — all citations resolved.')
+      console.log('No missing nodes — all references resolved.')
       return
     }
 
@@ -145,13 +145,13 @@ async function main() {
 
     if (nyRows.length > 0) {
       const r = await ingestNyProvisions(nyRows, db)
-      console.log(`✓ NY: ${r.provisions} provisions, ${r.citations} citations`)
+      console.log(`✓ NY: ${r.provisions} provisions, ${r.references} references`)
       if (r.errors.length > 0) r.errors.forEach((e) => console.error('  ', e))
     }
 
     if (federalRows.length > 0) {
       const r = await ingestFederalProvisions(federalRows, db)
-      console.log(`✓ Federal: ${r.provisions} provisions, ${r.citations} citations`)
+      console.log(`✓ Federal: ${r.provisions} provisions, ${r.references} references`)
       if (r.errors.length > 0) r.errors.forEach((e) => console.error('  ', e))
     }
 

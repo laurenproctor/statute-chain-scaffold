@@ -16,7 +16,7 @@ const fixtures = [
 const db = getDbClient()
 ingestFederalProvisions(fixtures, db).then((result) => {
   console.log(`provisions: ${result.provisions}`)
-  console.log(`citations:  ${result.citations}`)
+  console.log(`references: ${result.references}`)
   if (result.errors.length > 0) {
     console.error('errors:')
     result.errors.forEach((e) => console.error(' ', e))

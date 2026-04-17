@@ -12,7 +12,7 @@ export async function GET() {
         `SELECT jurisdiction, COUNT(*)::text AS count FROM provisions GROUP BY jurisdiction ORDER BY jurisdiction`,
       ),
       db.query<{ count: string }>(
-        `SELECT COUNT(*)::text AS count FROM citations`,
+        `SELECT COUNT(*)::text AS count FROM legal_references`,
       ),
       db.query<{ canonical_id: string; ingested_at: string | null }>(
         `SELECT canonical_id, ingested_at FROM provisions ORDER BY ingested_at DESC NULLS LAST`,
@@ -26,7 +26,7 @@ export async function GET() {
     const byJurisdiction = Object.fromEntries(
       provisionRows.map((r) => [r.jurisdiction, parseInt(r.count, 10)]),
     )
-    const citationsTotal = parseInt(citationRows[0]?.count ?? '0', 10)
+    const referencesTotal = parseInt(citationRows[0]?.count ?? '0', 10)
     const canonicalIds = allRows.map((r) => r.canonical_id)
     const lastIngestedAt = allRows[0]?.ingested_at ?? null
     const recentAdditions = recentAdditionRows.map((r) => ({
@@ -37,7 +37,7 @@ export async function GET() {
     return NextResponse.json({
       provisionsTotal,
       byJurisdiction,
-      citationsTotal,
+      referencesTotal,
       canonicalIds,
       lastIngestedAt,
       recentAdditions,

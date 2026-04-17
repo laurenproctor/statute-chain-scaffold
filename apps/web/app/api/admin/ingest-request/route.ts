@@ -79,7 +79,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const db = getDbClient()
-    let result: { provisions: number; citations: number; errors: string[] }
+    let result: { provisions: number; references: number; errors: string[] }
 
     if (capability.mode === 'live_api' && route.type === 'ny') {
       const row = await fetchNy(route.lawId, route.locationId)
@@ -104,7 +104,7 @@ export async function POST(req: NextRequest) {
       canonical_id,
       source_mode: capability.mode,
       provisions: result.provisions,
-      citations: result.citations,
+      references: result.references,
     })
   } catch (err) {
     const reason = err instanceof Error ? err.message : String(err)

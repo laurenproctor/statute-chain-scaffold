@@ -38,7 +38,6 @@ const mockResolved: ResolvedProvision = {
   status: 'ingested',
   confidence: 0.97,
   text: 'Exemption from tax on corporations…',
-  outbound_citations: [],
   legal_relationships: [],
   provenance: { source: 'test' },
 }
@@ -138,7 +137,7 @@ describe('POST /api/query', () => {
     const rawQuery = 'some informal ref'
     vi.mocked(parseCitation).mockReturnValueOnce({
       ...mockParsed,
-      canonical_id: undefined,
+      canonical_id: undefined as unknown as string,
       raw: rawQuery,
     })
     vi.mocked(resolveCitation).mockResolvedValueOnce({
