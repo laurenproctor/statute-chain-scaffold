@@ -125,3 +125,27 @@ body {
 .muted { color: var(--muted); }
 .text-green { color: var(--green); }
 .text-amber { color: var(--amber); }
+
+/* Resolve card */
+.resolve-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 6px;
+  padding: 14px 16px; display: grid; grid-template-columns: 100px 1fr;
+  gap: 6px 0; margin-bottom: 16px;
+}
+
+/* Debug */
+.debug-wrapper { margin-top: 20px; }
+.debug-toggle {
+  background: none; border: 1px solid var(--border); border-radius: 4px;
+  color: var(--muted); font-size: 11px; padding: 3px 8px;
+  cursor: pointer; transition: color 0.15s, border-color 0.15s;
+}
+.debug-toggle:hover { color: var(--text); border-color: #444; }
+.debug-panel {
+  margin-top: 8px; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 6px; padding: 16px; overflow-x: auto;
+}
+.debug-panel pre {
+  font-family: var(--mono); font-size: 11px; line-height: 1.6;
+  color: #aaa; white-space: pre; margin: 0;
+}
