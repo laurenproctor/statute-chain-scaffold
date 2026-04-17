@@ -33,6 +33,24 @@ export function parseCitation(input: string): ParseResult {
     }
   }
 
+  // Structured: Federal USC flexible — "21 USC 802" or "18 U.S.C. 922(g)(1)"
+  const uscFlexMatch = raw.match(/^(\d+)\s+U\.?S\.?C\.?\s*§?\s*(\d+[A-Za-z0-9\-.]*)((?:\([^)]+\))*)$/i)
+  if (uscFlexMatch) {
+    const title = uscFlexMatch[1]
+    const section = uscFlexMatch[2]
+    const subsection_path = parseSubsections(uscFlexMatch[3])
+    return {
+      raw,
+      format: 'structured',
+      confidence: 1.0,
+      jurisdiction: 'federal',
+      code: `usc/${title}`,
+      section,
+      subsection_path,
+      canonical_id: `federal/usc/${title}/${section}`,
+    }
+  }
+
   // Structured: NY statute — "N.Y. Penal Law § 265.02(b)"
   const nyMatch = raw.match(/^N\.Y\.\s+(.+?)\s+Law\s+§\s*(\d+(?:\.\d+)*)((?:\([^)]+\))*)$/)
   if (nyMatch) {

@@ -153,6 +153,71 @@ describe('parseCitation', () => {
     expect(result.canonical_id).toBe('federal/usc/42/265.02')
   })
 
+  it('21 U.S.C. § 802 → structured federal (already covered, confirm still passes)', () => {
+    const result = parseCitation('21 U.S.C. § 802')
+    expect(isParsed(result)).toBe(true)
+    if (!isParsed(result)) return
+    expect(result.format).toBe('structured')
+    expect(result.confidence).toBe(1.0)
+    expect(result.jurisdiction).toBe('federal')
+    expect(result.code).toBe('usc/21')
+    expect(result.section).toBe('802')
+    expect(result.canonical_id).toBe('federal/usc/21/802')
+  })
+
+  it('21 USC 802 → structured federal (no dots, no §)', () => {
+    const result = parseCitation('21 USC 802')
+    expect(isParsed(result)).toBe(true)
+    if (!isParsed(result)) return
+    expect(result.format).toBe('structured')
+    expect(result.confidence).toBe(1.0)
+    expect(result.jurisdiction).toBe('federal')
+    expect(result.code).toBe('usc/21')
+    expect(result.section).toBe('802')
+    expect(result.canonical_id).toBe('federal/usc/21/802')
+  })
+
+  it('21 USC §802 → structured federal (no dots, with §)', () => {
+    const result = parseCitation('21 USC §802')
+    expect(isParsed(result)).toBe(true)
+    if (!isParsed(result)) return
+    expect(result.format).toBe('structured')
+    expect(result.jurisdiction).toBe('federal')
+    expect(result.section).toBe('802')
+    expect(result.canonical_id).toBe('federal/usc/21/802')
+  })
+
+  it('26 USC 5845(a) → structured federal with subsection', () => {
+    const result = parseCitation('26 USC 5845(a)')
+    expect(isParsed(result)).toBe(true)
+    if (!isParsed(result)) return
+    expect(result.format).toBe('structured')
+    expect(result.section).toBe('5845')
+    expect(result.subsection_path).toEqual(['a'])
+    expect(result.canonical_id).toBe('federal/usc/26/5845')
+  })
+
+  it('18 U.S.C. 922(g)(1) → structured federal, no § symbol', () => {
+    const result = parseCitation('18 U.S.C. 922(g)(1)')
+    expect(isParsed(result)).toBe(true)
+    if (!isParsed(result)) return
+    expect(result.format).toBe('structured')
+    expect(result.jurisdiction).toBe('federal')
+    expect(result.code).toBe('usc/18')
+    expect(result.section).toBe('922')
+    expect(result.subsection_path).toEqual(['g', '1'])
+    expect(result.canonical_id).toBe('federal/usc/18/922')
+  })
+
+  it('21 U.S.C. §802 (no space after §) → structured federal', () => {
+    const result = parseCitation('21 U.S.C. §802')
+    expect(isParsed(result)).toBe(true)
+    if (!isParsed(result)) return
+    expect(result.format).toBe('structured')
+    expect(result.section).toBe('802')
+    expect(result.canonical_id).toBe('federal/usc/21/802')
+  })
+
   it('not a citation at all → ParseError', () => {
     const result = parseCitation('not a citation at all')
     expect(isError(result)).toBe(true)
