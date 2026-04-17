@@ -1,0 +1,36 @@
+'use client'
+
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+
+const LINKS = [
+  { href: '/law-navigator', label: 'Law Navigator'   },
+  { href: '/compare',      label: 'Compare Laws'    },
+  { href: '/browse',       label: 'Browse Codes'    },
+  { href: '/corpus',       label: 'Corpus'          },
+]
+
+export function Nav() {
+  const path = usePathname()
+
+  function isActive(href: string) {
+    return path === href || path.startsWith(href + '/')
+  }
+
+  return (
+    <nav className="site-nav">
+      <Link href="/" className="nav-brand">Greyledge</Link>
+      <div className="nav-links">
+        {LINKS.map(({ href, label }) => (
+          <Link
+            key={href}
+            href={href}
+            className={`nav-link${isActive(href) ? ' nav-link-active' : ''}`}
+          >
+            {label}
+          </Link>
+        ))}
+      </div>
+    </nav>
+  )
+}
