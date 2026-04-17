@@ -88,8 +88,19 @@ export async function buildChain(
       continue
     }
 
+    // Prefer legal_relationships for traversal; fall back to outbound_citations for compat
+    const relationships = resolved.legal_relationships.length > 0
+      ? resolved.legal_relationships
+      : resolved.outbound_citations.map(id => ({
+          target_id: id,
+          relationship_type: 'references' as const,
+          source_method: 'parser' as const,
+          explanation: 'Referenced directly in text',
+        }))
+
     // Record outbound edges and enqueue unvisited children
-    for (const childId of resolved.outbound_citations) {
+    for (const rel of relationships) {
+      const childId = rel.target_id
       const alreadyVisited = visited.has(childId)
       edges.push({
         from: nodeId,
@@ -98,6 +109,7 @@ export async function buildChain(
         resolved: alreadyVisited
           ? (nodes[childId]?.status === 'ingested' || nodes[childId]?.status === 'alias_resolved')
           : false, // will be updated implicitly as nodes are added
+        relationship: rel,
       })
 
       if (!alreadyVisited) {

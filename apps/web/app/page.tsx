@@ -27,7 +27,20 @@ type RelationshipMeta = {
   method: string
 }
 
-function nodeRelationship(node: ChainNode): RelationshipMeta {
+function nodeRelationship(node: ChainNode, edges: ChainGraph['edges']): RelationshipMeta {
+  // Prefer explanation from the actual relationship data stored on the inbound edge
+  const inboundEdge = edges.find(e => e.to === node.canonical_id)
+  if (inboundEdge?.relationship) {
+    const rel = inboundEdge.relationship
+    return {
+      explanation: rel.explanation,
+      type: rel.relationship_type,
+      confidence: confidenceLabel(rel.confidence),
+      method: rel.source_method,
+    }
+  }
+
+  // Fall back to status-based derivation (backward compat / missing relationship data)
   switch (node.status) {
     case 'alias_resolved':
       return {
@@ -318,7 +331,7 @@ function ResolveCard({ data, onSelectSection }: { data: ResolvedProvision; onSel
 
 function NodeRow({ node, edges, onSelect }: { node: ChainNode; edges: ChainGraph['edges']; onSelect?: (id: string) => void }) {
   const [open, setOpen] = useState(node.depth === 0)
-  const whyMeta = node.depth > 0 ? nodeRelationship(node) : null
+  const whyMeta = node.depth > 0 ? nodeRelationship(node, edges) : null
   const children = edges.filter((e) => e.from === node.canonical_id).map((e) => e.to)
   const subtitle = knownDescription(node.canonical_id) ?? extractSubtitle(node.text)
   const isMissing = node.status === 'not_ingested' || node.status === 'not_found'

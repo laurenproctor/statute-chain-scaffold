@@ -39,6 +39,7 @@ const mockResolved: ResolvedProvision = {
   confidence: 0.97,
   text: 'Exemption from tax on corporations…',
   outbound_citations: [],
+  legal_relationships: [],
   provenance: { source: 'test' },
 }
 

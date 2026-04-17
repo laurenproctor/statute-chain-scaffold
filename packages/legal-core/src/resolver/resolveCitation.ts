@@ -1,4 +1,4 @@
-import type { ParsedCitation, ResolvedProvision } from '@statute-chain/types'
+import type { ParsedCitation, ResolvedProvision, LegalRelationship, LegalRelationshipType, LegalRelationshipSourceMethod } from '@statute-chain/types'
 
 export interface DbClient {
   query<T>(sql: string, params?: unknown[]): Promise<T[]>
@@ -13,7 +13,14 @@ type ProvisionRow = {
   ingested_at: string | null
 }
 
-type CitationRow = { to_canonical_id: string }
+type CitationRow = {
+  to_canonical_id: string
+  relationship_type: string | null
+  source_method: string | null
+  confidence: string | null
+  explanation: string | null
+}
+
 type AliasRow = { canonical_id: string }
 type AmbiguousRow = { candidate_ids: string[] }
 type ChildRow = { canonical_id: string }
@@ -48,6 +55,16 @@ function articleLabel(canonicalId: string): string {
   return canonicalId
 }
 
+function buildRelationship(row: CitationRow): LegalRelationship {
+  return {
+    target_id: row.to_canonical_id,
+    relationship_type: (row.relationship_type ?? 'references') as LegalRelationshipType,
+    source_method: (row.source_method ?? 'parser') as LegalRelationshipSourceMethod,
+    confidence: row.confidence != null ? parseFloat(row.confidence) : undefined,
+    explanation: row.explanation ?? 'Referenced directly in text',
+  }
+}
+
 async function lookupByCanonicalId(
   canonicalId: string,
   parseConfidence: number,
@@ -61,10 +78,11 @@ async function lookupByCanonicalId(
   // Query citations unconditionally — outbound edges are returned even when the provision
   // text has not been ingested yet, so callers can continue traversing the chain.
   const citations = await db.query<CitationRow>(
-    'SELECT to_canonical_id FROM citations WHERE from_canonical_id = $1',
+    'SELECT to_canonical_id, relationship_type, source_method, confidence, explanation FROM citations WHERE from_canonical_id = $1',
     [canonicalId],
   )
 
+  const legal_relationships = citations.map(buildRelationship)
   const outbound_citations = citations.map((c) => c.to_canonical_id)
 
   if (provisions.length === 0) {
@@ -80,6 +98,7 @@ async function lookupByCanonicalId(
         confidence: parseConfidence,
         article_sections: children.map((c) => c.canonical_id),
         outbound_citations,
+        legal_relationships,
         provenance: { source: 'unknown' },
       }
     }
@@ -88,23 +107,25 @@ async function lookupByCanonicalId(
       status: 'not_ingested',
       confidence: parseConfidence,
       outbound_citations,
+      legal_relationships,
       provenance: { source: 'unknown' },
     }
   }
 
   const row = provisions[0]
-  const dbConfidence = parseFloat(row.confidence)
+  const dbConfidence = parseFloat(row!.confidence)
   // Fall back to 1.0 if DB value is missing or non-numeric (preserves parse confidence)
   const safeDbConfidence = Number.isFinite(dbConfidence) ? dbConfidence : 1.0
   return {
-    canonical_id: row.canonical_id,
-    status: row.ingestion_status === 'ingested' ? 'ingested' : 'not_ingested',
+    canonical_id: row!.canonical_id,
+    status: row!.ingestion_status === 'ingested' ? 'ingested' : 'not_ingested',
     confidence: parseConfidence * safeDbConfidence,
-    text: row.text_content ?? undefined,
+    text: row!.text_content ?? undefined,
     outbound_citations,
+    legal_relationships,
     provenance: {
-      source: row.provenance_source ?? 'unknown',
-      ingested_at: row.ingested_at ?? undefined,
+      source: row!.provenance_source ?? 'unknown',
+      ingested_at: row!.ingested_at ?? undefined,
     },
   }
 }
@@ -125,7 +146,7 @@ export async function resolveCitation(
   )
 
   if (aliases.length > 0) {
-    const result = await lookupByCanonicalId(aliases[0].canonical_id, parsed.confidence, db)
+    const result = await lookupByCanonicalId(aliases[0]!.canonical_id, parsed.confidence, db)
     return {
       ...result,
       status: 'alias_resolved',
@@ -144,8 +165,9 @@ export async function resolveCitation(
       canonical_id: parsed.raw,
       status: 'ambiguous',
       confidence: parsed.confidence * 0.5,
-      candidates: ambiguous[0].candidate_ids,
+      candidates: ambiguous[0]!.candidate_ids,
       outbound_citations: [],
+      legal_relationships: [],
       provenance: { source: 'unknown' },
     }
   }
@@ -156,6 +178,7 @@ export async function resolveCitation(
     status: 'not_ingested',
     confidence: parsed.confidence,
     outbound_citations: [],
+    legal_relationships: [],
     provenance: { source: 'unknown' },
   }
 }

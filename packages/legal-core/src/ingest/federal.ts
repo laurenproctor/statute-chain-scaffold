@@ -1,5 +1,6 @@
 import { createHash } from 'crypto'
 import { extractCitationsFromText } from '@statute-chain/parser'
+import type { LegalRelationship } from '@statute-chain/types'
 import type { DbClient } from '../resolver/resolveCitation.js'
 
 export interface FederalFixtureRow {
@@ -57,12 +58,20 @@ export async function ingestFederalProvisions(
       result.provisions++
 
       const outboundIds = extractCitationsFromText(p.text_content)
-      for (const toId of outboundIds.filter((id) => id !== p.canonical_id)) {
+      for (const targetId of outboundIds.filter((id) => id !== p.canonical_id)) {
+        const rel: LegalRelationship = {
+          target_id: targetId,
+          relationship_type: 'references',
+          source_method: 'parser',
+          confidence: 1.0,
+          explanation: 'Referenced directly in text',
+        }
         await db.query(
-          `INSERT INTO citations (from_canonical_id, to_canonical_id, depth_found)
-           VALUES ($1, $2, $3)
+          `INSERT INTO citations
+             (from_canonical_id, to_canonical_id, depth_found, relationship_type, source_method, confidence, explanation)
+           VALUES ($1, $2, 1, $3, $4, $5, $6)
            ON CONFLICT (from_canonical_id, to_canonical_id) DO NOTHING`,
-          [p.canonical_id, toId, 1],
+          [p.canonical_id, rel.target_id, rel.relationship_type, rel.source_method, rel.confidence ?? null, rel.explanation],
         )
         result.citations++
       }

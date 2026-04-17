@@ -1,4 +1,5 @@
 import { extractCitationsFromText } from '@statute-chain/parser'
+import type { LegalRelationship } from '@statute-chain/types'
 import type { DbClient } from '../resolver/resolveCitation.js'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -75,15 +76,15 @@ async function upsertProvision(p: ProvisionRow, db: DbClient): Promise<void> {
 
 async function upsertCitation(
   fromId: string,
-  toId: string,
-  depth: number,
+  rel: LegalRelationship,
   db: DbClient,
 ): Promise<void> {
   await db.query(
-    `INSERT INTO citations (from_canonical_id, to_canonical_id, depth_found)
-     VALUES ($1, $2, $3)
+    `INSERT INTO citations
+       (from_canonical_id, to_canonical_id, depth_found, relationship_type, source_method, confidence, explanation)
+     VALUES ($1, $2, 1, $3, $4, $5, $6)
      ON CONFLICT (from_canonical_id, to_canonical_id) DO NOTHING`,
-    [fromId, toId, depth],
+    [fromId, rel.target_id, rel.relationship_type, rel.source_method, rel.confidence ?? null, rel.explanation],
   )
 }
 
@@ -102,11 +103,15 @@ export async function ingestNyProvisions(
       result.provisions++
 
       const outboundIds = extractCitationsFromText(provision.text_content)
-      // Skip self-references
-      const toIngest = outboundIds.filter((id) => id !== provision.canonical_id)
-
-      for (const toId of toIngest) {
-        await upsertCitation(provision.canonical_id, toId, 1, db)
+      for (const targetId of outboundIds.filter((id) => id !== provision.canonical_id)) {
+        const rel: LegalRelationship = {
+          target_id: targetId,
+          relationship_type: 'references',
+          source_method: 'parser',
+          confidence: 1.0,
+          explanation: 'Referenced directly in text',
+        }
+        await upsertCitation(provision.canonical_id, rel, db)
         result.citations++
       }
     } catch (err) {

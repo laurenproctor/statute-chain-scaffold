@@ -37,7 +37,8 @@ export type ResolvedProvision = {
   resolved_from?: string
   candidates?: string[]
   article_sections?: string[]
-  outbound_citations: string[]
+  outbound_citations: string[]        // backward compat — mirrors legal_relationships target_ids
+  legal_relationships: LegalRelationship[]
   provenance: {
     source: string
     ingested_at?: string
@@ -49,6 +50,7 @@ export type ChainEdge = {
   to: string
   depth: number
   resolved: boolean
+  relationship?: LegalRelationship  // populated by buildChain when legal_relationships present
 }
 
 export type ChainNode = ResolvedProvision & {
@@ -94,27 +96,25 @@ export type BuildChainOptions = {
 //
 // TODO: CROSSWALK GRAPH — equivalent / analogous laws across jurisdictions
 
+// Phase 1 relationship types — parser-emitted references only.
+// Future types (requires_element, creates_offense, amended_by, etc.) are
+// reserved for rule-engine and LLM enrichment in later phases.
 export type LegalRelationshipType =
   | 'references'
   | 'defines'
   | 'uses_term'
-  | 'requires_element'
-  | 'creates_offense'
-  | 'creates_defense'
-  | 'creates_exception'
-  | 'enhances_penalty'
-  | 'reduces_penalty'
-  | 'cross_jurisdiction_match'
-  | 'implemented_by'
-  | 'limited_by'
-  | 'amended_by'
-  | 'version_of'
+  | 'depends_on'
+  | 'incorporates'
+
+export type LegalRelationshipSourceMethod =
+  | 'parser'
+  | 'definition_extractor'
+  | 'manual'
 
 export type LegalRelationship = {
-  source_id: string
   target_id: string
   relationship_type: LegalRelationshipType
+  source_method: LegalRelationshipSourceMethod
   confidence?: number
-  source_method?: 'parser' | 'rule_engine' | 'llm' | 'human_verified'
-  explanation?: string
+  explanation: string
 }
