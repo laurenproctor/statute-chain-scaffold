@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { parseCitation } from '@statute-chain/parser'
-import { buildChain } from '@statute-chain/legal-core'
+import { buildChain, logMissingNodes } from '@statute-chain/legal-core'
 import { getDbClient } from '../../../lib/db'
 
 export const runtime = 'nodejs'
@@ -24,6 +24,10 @@ export async function POST(req: NextRequest) {
 
   const db = getDbClient()
   const graph = await buildChain(startId, db, { maxDepth: depth })
+
+  if (graph.unresolved.length > 0) {
+    logMissingNodes(startId, graph.unresolved, db).catch(() => undefined)
+  }
 
   return NextResponse.json({ parsed, graph })
 }

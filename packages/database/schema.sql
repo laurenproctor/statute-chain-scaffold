@@ -27,3 +27,11 @@ create table if not exists ambiguous_citations (
   candidate_ids       text[] not null,
   created_at          timestamptz default now()
 );
+
+create table if not exists missing_nodes (
+  canonical_id        text primary key,
+  inbound_count       int not null default 1,
+  priority_score      numeric(8,4) not null default 0,
+  first_seen_at       timestamptz default now(),
+  last_seen_at        timestamptz default now()
+);

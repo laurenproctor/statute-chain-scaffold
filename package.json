@@ -13,7 +13,9 @@
     "test": "vitest run",
     "db:up": "docker compose -f infra/docker-compose.yml up -d",
     "db:down": "docker compose -f infra/docker-compose.yml down",
-    "db:seed": "tsx scripts/seed-db.ts"
+    "db:seed": "tsx scripts/seed-db.ts",
+    "ingest:ny": "tsx scripts/ingest-ny.ts",
+    "ingest:missing": "tsx scripts/ingest-missing.ts"
   },
   "devDependencies": {
     "typescript": "^5.4.0",
