@@ -975,4 +975,80 @@
     color: var(--muted);
     margin-top: 2px;
   }
+
+  /* ── Admin / Ingest Console ──────────────────────────────────── */
+  .admin-row-meta {
+    display: flex;
+    gap: 16px;
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 6px;
+    flex-wrap: wrap;
+  }
+
+  .admin-actions-col {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  .admin-source-badge {
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 2px;
+    border: 1px solid transparent;
+  }
+  .admin-source-live    { border-color: var(--positive); color: var(--positive); }
+  .admin-source-fixture { border-color: var(--navy);     color: var(--navy); }
+  .admin-source-manual  { border-color: var(--gold);     color: var(--gold); }
+
+  .admin-actions {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .admin-status-badge {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 2px;
+    border: 1px solid transparent;
+  }
+  .admin-status-loading  { border-color: var(--muted);    color: var(--muted); }
+  .admin-status-loaded   { border-color: var(--positive); color: var(--positive); }
+  .admin-status-failed   { border-color: var(--conflict); color: var(--conflict); }
+  .admin-status-ignored  { border-color: var(--border);   color: var(--muted); }
+  .admin-status-queued   { border-color: var(--navy);     color: var(--navy); }
+  .admin-status-manual   { border-color: var(--gold);     color: var(--gold); }
+
+  .admin-action-btn {
+    font-size: 12px;
+    padding: 5px 12px;
+    border: 1px solid var(--border);
+    background: var(--paper);
+    color: var(--ink);
+    cursor: pointer;
+    border-radius: 2px;
+    transition: background 120ms;
+  }
+  .admin-action-btn:hover    { background: var(--surface); }
+  .admin-action-btn:disabled { opacity: 0.4; cursor: default; }
+
+  .admin-action-primary {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+  .admin-action-primary:hover { opacity: 0.85; background: var(--ink); }
+
+  .admin-action-muted { color: var(--muted); }
+
+  .admin-feedback       { font-size: 12px; color: var(--positive); margin-top: 4px; }
+  .admin-feedback-error { font-size: 12px; color: var(--conflict); margin-top: 4px; }
 }
