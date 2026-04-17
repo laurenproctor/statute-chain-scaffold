@@ -1,7 +1,6 @@
 import type { DbClient } from '@statute-chain/legal-core'
 
 // Lazy singleton — only connects when first query is made.
-// Falls back gracefully if DATABASE_URL is unset (parse-only mode).
 let client: DbClient | null = null
 
 export function getDbClient(): DbClient {
@@ -9,8 +8,15 @@ export function getDbClient(): DbClient {
 
   const url = process.env['DATABASE_URL']
   if (!url) {
-    client = { query: async () => [] }
-    return client
+    const mockAllowed = process.env['NODE_ENV'] === 'test' || process.env['MOCK_DB'] === 'true'
+    if (mockAllowed) {
+      client = { query: async () => [] }
+      return client
+    }
+    throw new Error(
+      'DATABASE_URL is not set. Set it in your environment or .env file. ' +
+      'To run without a database, set MOCK_DB=true.',
+    )
   }
 
   // Dynamic import keeps `postgres` out of the client bundle.
@@ -29,4 +35,8 @@ export function getDbClient(): DbClient {
   }
 
   return client
+}
+
+export function resetDbClient(): void {
+  client = null
 }
