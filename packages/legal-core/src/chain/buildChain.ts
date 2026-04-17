@@ -2,7 +2,7 @@ import type { ChainGraph, ChainNode, ChainEdge, BuildChainOptions } from '@statu
 import { resolveCitation, type DbClient } from '../resolver/resolveCitation.js'
 
 const DEFAULTS = {
-  maxDepth: 10,
+  maxDepth: 20,  // default; hard cap is 100
   nodeCap: 75,
   timeoutMs: 1500,
 } as const
@@ -29,7 +29,7 @@ export async function buildChain(
   db: DbClient,
   options: BuildChainOptions = {},
 ): Promise<ChainGraph> {
-  const maxDepth = Math.min(Math.max(options.maxDepth ?? DEFAULTS.maxDepth, 1), 10)
+  const maxDepth = Math.min(Math.max(options.maxDepth ?? DEFAULTS.maxDepth, 1), 100)
   const nodeCap = options.nodeCap ?? DEFAULTS.nodeCap
   const timeoutMs = options.timeoutMs ?? DEFAULTS.timeoutMs
 
