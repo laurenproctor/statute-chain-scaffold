@@ -18,7 +18,7 @@ vi.mock('../../../lib/db', () => ({
 }))
 
 import { parseCitation } from '@statute-chain/parser'
-import { resolveCitation, buildChain } from '@statute-chain/legal-core'
+import { resolveCitation, buildChain, logMissingNodes } from '@statute-chain/legal-core'
 import type { ParsedCitation, ResolvedProvision, ChainGraph } from '@statute-chain/types'
 
 const mockParsed: ParsedCitation = {
@@ -107,6 +107,7 @@ describe('POST /api/query', () => {
     expect(body.parsed.canonical_id).toBe('federal/usc/26/501')
     expect(body.resolved.status).toBe('ingested')
     expect(body.chain.total_nodes).toBe(1)
+    expect(logMissingNodes).not.toHaveBeenCalled()
   })
 
   it('calls parseCitation with the trimmed query', async () => {
@@ -129,6 +130,22 @@ describe('POST /api/query', () => {
       expect.anything(),
       expect.any(Object),
     )
+  })
+
+  it('falls back to raw query string as startId when no canonical_id is available', async () => {
+    const rawQuery = 'some informal ref'
+    vi.mocked(parseCitation).mockReturnValueOnce({
+      ...mockParsed,
+      canonical_id: undefined,
+      raw: rawQuery,
+    })
+    vi.mocked(resolveCitation).mockResolvedValueOnce({
+      ...mockResolved,
+      canonical_id: rawQuery,
+    })
+    const { POST } = await import('./route')
+    await POST(makeRequest({ query: rawQuery }))
+    expect(buildChain).toHaveBeenCalledWith(rawQuery, expect.anything(), expect.any(Object))
   })
 
   it('returns 500 when buildChain throws', async () => {
