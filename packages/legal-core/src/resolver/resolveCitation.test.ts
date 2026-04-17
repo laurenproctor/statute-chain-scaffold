@@ -6,7 +6,7 @@ import type { ParsedCitation } from '@statute-chain/types'
 
 function makeDb(tables: {
   provisions?: Record<string, unknown>[]
-  citations?: Record<string, unknown>[]
+  legal_references?: Record<string, unknown>[]
   aliases?: Record<string, unknown>[]
   ambiguous_citations?: Record<string, unknown>[]
 }): DbClient {
@@ -27,8 +27,8 @@ function makeDb(tables: {
         )
         return rows as T[]
       }
-      if (sql.includes('FROM citations')) {
-        const rows = (tables.citations ?? []).filter(
+      if (sql.includes('FROM legal_references')) {
+        const rows = (tables.legal_references ?? []).filter(
           (r) => r['from_canonical_id'] === p,
         )
         return rows as T[]
@@ -72,7 +72,7 @@ const informalCitation: ParsedCitation = {
 // ── Direct lookup — found ─────────────────────────────────────────────────────
 
 describe('direct lookup — provision found', () => {
-  it('returns ingested status with text and outbound citations', async () => {
+  it('returns ingested status with text and legal relationships', async () => {
     const db = makeDb({
       provisions: [{
         canonical_id: 'federal/usc/26/501',
@@ -82,9 +82,9 @@ describe('direct lookup — provision found', () => {
         provenance_source: 'govinfo',
         ingested_at: '2026-01-01T00:00:00Z',
       }],
-      citations: [
-        { from_canonical_id: 'federal/usc/26/501', to_canonical_id: 'federal/usc/26/502' },
-        { from_canonical_id: 'federal/usc/26/501', to_canonical_id: 'federal/usc/26/170' },
+      legal_references: [
+        { from_canonical_id: 'federal/usc/26/501', to_canonical_id: 'federal/usc/26/502', relationship_type: 'references', source_method: 'parser', confidence: null, explanation: 'Referenced directly in text' },
+        { from_canonical_id: 'federal/usc/26/501', to_canonical_id: 'federal/usc/26/170', relationship_type: 'references', source_method: 'parser', confidence: null, explanation: 'Referenced directly in text' },
       ],
     })
 
@@ -93,7 +93,7 @@ describe('direct lookup — provision found', () => {
     expect(result.status).toBe('ingested')
     expect(result.canonical_id).toBe('federal/usc/26/501')
     expect(result.text).toBe('Exemption from tax...')
-    expect(result.outbound_citations).toEqual(['federal/usc/26/502', 'federal/usc/26/170'])
+    expect(result.legal_relationships.map(r => r.target_id)).toEqual(['federal/usc/26/502', 'federal/usc/26/170'])
     expect(result.provenance.source).toBe('govinfo')
     expect(result.provenance.ingested_at).toBe('2026-01-01T00:00:00Z')
   })
@@ -108,7 +108,7 @@ describe('direct lookup — provision found', () => {
         provenance_source: null,
         ingested_at: null,
       }],
-      citations: [],
+      legal_references: [],
     })
 
     const result = await resolveCitation(structuredCitation, db)
@@ -126,7 +126,7 @@ describe('direct lookup — provision found', () => {
         provenance_source: null,
         ingested_at: null,
       }],
-      citations: [],
+      legal_references: [],
     })
 
     const result = await resolveCitation(structuredCitation, db)
@@ -138,11 +138,11 @@ describe('direct lookup — provision found', () => {
 // ── Direct lookup — not ingested ──────────────────────────────────────────────
 
 describe('direct lookup — provision not in DB', () => {
-  it('returns not_ingested with outbound citations still populated', async () => {
+  it('returns not_ingested with legal_relationships populated', async () => {
     const db = makeDb({
       provisions: [],
-      citations: [
-        { from_canonical_id: 'federal/usc/26/501', to_canonical_id: 'federal/usc/26/502' },
+      legal_references: [
+        { from_canonical_id: 'federal/usc/26/501', to_canonical_id: 'federal/usc/26/502', relationship_type: 'references', source_method: 'parser', confidence: null, explanation: 'Referenced directly in text' },
       ],
     })
 
@@ -150,16 +150,16 @@ describe('direct lookup — provision not in DB', () => {
 
     expect(result.status).toBe('not_ingested')
     expect(result.text).toBeUndefined()
-    expect(result.outbound_citations).toEqual(['federal/usc/26/502'])
+    expect(result.legal_relationships.map(r => r.target_id)).toEqual(['federal/usc/26/502'])
     expect(result.provenance.source).toBe('unknown')
   })
 
-  it('returns empty outbound_citations when none recorded', async () => {
-    const db = makeDb({ provisions: [], citations: [] })
+  it('returns empty legal_relationships when none recorded', async () => {
+    const db = makeDb({ provisions: [], legal_references: [] })
 
     const result = await resolveCitation(structuredCitation, db)
 
-    expect(result.outbound_citations).toEqual([])
+    expect(result.legal_relationships).toEqual([])
   })
 })
 
@@ -181,7 +181,7 @@ describe('alias resolution', () => {
         provenance_source: 'govinfo',
         ingested_at: null,
       }],
-      citations: [],
+      legal_references: [],
     })
 
     const result = await resolveCitation(aliasedCitation, db)
@@ -208,7 +208,7 @@ describe('ambiguous citations', () => {
     expect(result.status).toBe('ambiguous')
     expect(result.candidates).toEqual(['federal/usc/42/1983', 'federal/usc/18/1983'])
     expect(result.confidence).toBeCloseTo(0.35 * 0.5)
-    expect(result.outbound_citations).toEqual([])
+    expect(result.legal_relationships).toEqual([])
   })
 })
 
@@ -231,7 +231,7 @@ describe('article-level lookup — no exact row but children exist', () => {
       { canonical_id: 'ny/penal/220.00', text_content: 'Definitions…', ingestion_status: 'ingested', confidence: '1.00', provenance_source: null, ingested_at: null },
       { canonical_id: 'ny/penal/220.16', text_content: 'Criminal possession…', ingestion_status: 'ingested', confidence: '1.00', provenance_source: null, ingested_at: null },
     ],
-    citations: [],
+    legal_references: [],
   })
 
   it('returns article_partial status', async () => {
@@ -250,7 +250,7 @@ describe('article-level lookup — no exact row but children exist', () => {
   })
 
   it('falls back to not_ingested when no children exist', async () => {
-    const emptyDb = makeDb({ provisions: [], citations: [] })
+    const emptyDb = makeDb({ provisions: [], legal_references: [] })
     const result = await resolveCitation(articleCitation, emptyDb)
     expect(result.status).toBe('not_ingested')
     expect(result.article_sections).toBeUndefined()
@@ -267,6 +267,6 @@ describe('fallback — no match anywhere', () => {
 
     expect(result.status).toBe('not_ingested')
     expect(result.confidence).toBe(0.35)
-    expect(result.outbound_citations).toEqual([])
+    expect(result.legal_relationships).toEqual([])
   })
 })

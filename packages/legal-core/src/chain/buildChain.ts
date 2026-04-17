@@ -78,7 +78,7 @@ export async function buildChain(
 
     if (resolved.status === 'not_ingested') {
       unresolved.push(nodeId)
-      // Don't follow outbound citations from unresolved nodes —
+      // Don't follow legal_relationships from unresolved nodes —
       // we have no text content so outbound edges are unreliable.
       continue
     }
@@ -88,15 +88,7 @@ export async function buildChain(
       continue
     }
 
-    // Prefer legal_relationships for traversal; fall back to outbound_citations for compat
-    const relationships = resolved.legal_relationships.length > 0
-      ? resolved.legal_relationships
-      : resolved.outbound_citations.map(id => ({
-          target_id: id,
-          relationship_type: 'references' as const,
-          source_method: 'parser' as const,
-          explanation: 'Referenced directly in text',
-        }))
+    const relationships = resolved.legal_relationships
 
     // Record outbound edges and enqueue unvisited children
     for (const rel of relationships) {
@@ -138,7 +130,7 @@ export async function buildChain(
     edges,
     unresolved,
     truncated,
-    truncation_reason: truncationReason,
+    ...(truncationReason !== undefined && { truncation_reason: truncationReason }),
     depth_reached: depthReached,
     total_nodes: Object.keys(nodes).length,
     query_ms: Date.now() - start,

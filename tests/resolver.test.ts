@@ -32,12 +32,12 @@ describe('resolveCitation — direct lookup', () => {
   it('returns ingested when provision found', async () => {
     const db = makeDb([
       [{ canonical_id: 'ny/penal/265.02', text_content: 'Criminal possession...', ingestion_status: 'ingested', confidence: '1.00', provenance_source: 'ny-open-legislation', ingested_at: '2026-01-01T00:00:00Z' }],
-      [{ to_canonical_id: 'ny/penal/265.00' }],
+      [{ to_canonical_id: 'ny/penal/265.00', relationship_type: 'references', source_method: 'parser', confidence: null, explanation: 'Referenced directly in text' }],
     ])
     const result = await resolveCitation(structured, db)
     expect(result.status).toBe('ingested')
     expect(result.text).toBe('Criminal possession...')
-    expect(result.outbound_citations).toEqual(['ny/penal/265.00'])
+    expect(result.legal_relationships.map(r => r.target_id)).toEqual(['ny/penal/265.00'])
     expect(result.confidence).toBe(1.0)
     expect(result.provenance.source).toBe('ny-open-legislation')
     expect(result.provenance.ingested_at).toBe('2026-01-01T00:00:00Z')
@@ -49,17 +49,17 @@ describe('resolveCitation — direct lookup', () => {
     const result = await resolveCitation(structured, db)
     expect(result.status).toBe('not_ingested')
     expect(result.text).toBeUndefined()
-    expect(result.outbound_citations).toEqual([])
+    expect(result.legal_relationships).toEqual([])
   })
 
-  it('includes outbound citations even when not_ingested', async () => {
+  it('includes legal_relationships even when not_ingested', async () => {
     const db = makeDb([
       [],
-      [{ to_canonical_id: 'ny/penal/265.00' }],
+      [{ to_canonical_id: 'ny/penal/265.00', relationship_type: 'references', source_method: 'parser', confidence: null, explanation: 'Referenced directly in text' }],
     ])
     const result = await resolveCitation(structured, db)
     expect(result.status).toBe('not_ingested')
-    expect(result.outbound_citations).toEqual(['ny/penal/265.00'])
+    expect(result.legal_relationships.map(r => r.target_id)).toEqual(['ny/penal/265.00'])
   })
 })
 
@@ -126,6 +126,6 @@ describe('resolveCitation — not_ingested fallback', () => {
     const db = makeDb([[], []])   // alias miss, ambiguous miss
     const result = await resolveCitation(informal, db)
     expect(result.status).toBe('not_ingested')
-    expect(result.outbound_citations).toEqual([])
+    expect(result.legal_relationships).toEqual([])
   })
 })

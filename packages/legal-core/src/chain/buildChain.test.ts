@@ -6,11 +6,9 @@ import type { ResolvedProvision } from '@statute-chain/types'
 // ── Test DB factory ───────────────────────────────────────────────────────────
 //
 // Simulates a provisions + citations + aliases + ambiguous_citations store.
-// Each node is keyed by canonical_id. outbound_citations drive BFS edges.
+// Each node is keyed by canonical_id. legal_relationships drive BFS edges.
 
-type FakeProvision = Omit<ResolvedProvision, 'outbound_citations'> & {
-  outbound_citations: string[]
-}
+type FakeProvision = ResolvedProvision
 
 function makeDb(
   provisions: FakeProvision[],
@@ -36,11 +34,15 @@ function makeDb(
         }] as T[]
       }
 
-      if (sql.includes('FROM citations')) {
+      if (sql.includes('FROM legal_references')) {
         const row = byId.get(p ?? '')
-        return (row?.outbound_citations ?? []).map((id) => ({
+        return (row?.legal_relationships ?? []).map((rel) => ({
           from_canonical_id: p,
-          to_canonical_id: id,
+          to_canonical_id: rel.target_id,
+          relationship_type: rel.relationship_type,
+          source_method: rel.source_method,
+          confidence: rel.confidence ?? null,
+          explanation: rel.explanation,
         })) as T[]
       }
 
@@ -71,7 +73,12 @@ function provision(
     status,
     confidence: 1.0,
     text: `Text of ${id}`,
-    outbound_citations: outbound,
+    legal_relationships: outbound.map((target_id) => ({
+      target_id,
+      relationship_type: 'references' as const,
+      source_method: 'parser' as const,
+      explanation: 'Referenced directly in text',
+    })),
     provenance: { source: 'test' },
   }
 }
@@ -165,9 +172,9 @@ describe('alias chains', () => {
   })
 })
 
-// ── 4. Missing nodes with outbound citations ──────────────────────────────────
+// ── 4. Missing nodes with unresolved references ──────────────────────────────
 
-describe('missing nodes with outbound citations', () => {
+describe('missing nodes with unresolved references', () => {
   it('marks missing nodes as not_ingested and records them in unresolved', async () => {
     // 501 references 502, but 502 is not in DB
     const db = makeDb([
@@ -182,7 +189,7 @@ describe('missing nodes with outbound citations', () => {
 
   it('does not enqueue children of not_ingested nodes (no outbound edges to follow)', async () => {
     // 501 → 502 (not ingested, but citations table has 502 → 503)
-    // Since 502 isn't ingested, its outbound citations should not be followed
+    // Since 502 isn't ingested, its legal_relationships should not be followed
     const db = makeDb([
       provision('federal/usc/26/501', ['federal/usc/26/502']),
       // 502 is absent from DB but citations table shows it references 503

@@ -13,7 +13,7 @@ type ProvisionRow = {
   ingested_at: string | null
 }
 
-type CitationRow = {
+type ReferenceRow = {
   to_canonical_id: string
   relationship_type: string | null
   source_method: string | null
@@ -55,12 +55,12 @@ function articleLabel(canonicalId: string): string {
   return canonicalId
 }
 
-function buildRelationship(row: CitationRow): LegalRelationship {
+function buildRelationship(row: ReferenceRow): LegalRelationship {
   return {
     target_id: row.to_canonical_id,
     relationship_type: (row.relationship_type ?? 'references') as LegalRelationshipType,
     source_method: (row.source_method ?? 'parser') as LegalRelationshipSourceMethod,
-    confidence: row.confidence != null ? parseFloat(row.confidence) : undefined,
+    ...(row.confidence != null && { confidence: parseFloat(row.confidence) }),
     explanation: row.explanation ?? 'Referenced directly in text',
   }
 }
@@ -75,15 +75,14 @@ async function lookupByCanonicalId(
     [canonicalId],
   )
 
-  // Query citations unconditionally — outbound edges are returned even when the provision
+  // Query references unconditionally — outbound edges are returned even when the provision
   // text has not been ingested yet, so callers can continue traversing the chain.
-  const citations = await db.query<CitationRow>(
-    'SELECT to_canonical_id, relationship_type, source_method, confidence, explanation FROM citations WHERE from_canonical_id = $1',
+  const references = await db.query<ReferenceRow>(
+    'SELECT to_canonical_id, relationship_type, source_method, confidence, explanation FROM legal_references WHERE from_canonical_id = $1',
     [canonicalId],
   )
 
-  const legal_relationships = citations.map(buildRelationship)
-  const outbound_citations = citations.map((c) => c.to_canonical_id)
+  const legal_relationships = references.map(buildRelationship)
 
   if (provisions.length === 0) {
     const children = await db.query<ChildRow>(
@@ -97,7 +96,6 @@ async function lookupByCanonicalId(
         label: articleLabel(canonicalId),
         confidence: parseConfidence,
         article_sections: children.map((c) => c.canonical_id),
-        outbound_citations,
         legal_relationships,
         provenance: { source: 'unknown' },
       }
@@ -106,7 +104,6 @@ async function lookupByCanonicalId(
       canonical_id: canonicalId,
       status: 'not_ingested',
       confidence: parseConfidence,
-      outbound_citations,
       legal_relationships,
       provenance: { source: 'unknown' },
     }
@@ -120,12 +117,11 @@ async function lookupByCanonicalId(
     canonical_id: row!.canonical_id,
     status: row!.ingestion_status === 'ingested' ? 'ingested' : 'not_ingested',
     confidence: parseConfidence * safeDbConfidence,
-    text: row!.text_content ?? undefined,
-    outbound_citations,
+    ...(row!.text_content != null && { text: row!.text_content }),
     legal_relationships,
     provenance: {
       source: row!.provenance_source ?? 'unknown',
-      ingested_at: row!.ingested_at ?? undefined,
+      ...(row!.ingested_at != null && { ingested_at: row!.ingested_at }),
     },
   }
 }
@@ -166,7 +162,6 @@ export async function resolveCitation(
       status: 'ambiguous',
       confidence: parsed.confidence * 0.5,
       candidates: ambiguous[0]!.candidate_ids,
-      outbound_citations: [],
       legal_relationships: [],
       provenance: { source: 'unknown' },
     }
@@ -177,7 +172,6 @@ export async function resolveCitation(
     canonical_id: parsed.raw,
     status: 'not_ingested',
     confidence: parsed.confidence,
-    outbound_citations: [],
     legal_relationships: [],
     provenance: { source: 'unknown' },
   }
