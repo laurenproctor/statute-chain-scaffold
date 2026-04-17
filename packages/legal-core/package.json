@@ -15,7 +15,8 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@statute-chain/types": "workspace:*"
+    "@statute-chain/types": "workspace:*",
+    "@statute-chain/parser": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.4.0",

@@ -60,23 +60,23 @@ function nyCanonicalId(code: string, section: string): string {
 // § is optional when title is present; without § and without title → not structured
 
 const FEDERAL_USC_RE =
-  /^(\d+)\s+U\.?S\.?C\.?\s*(?:§\s*)?(\d[\w.]*)(.*)$/i
+  /^(\d+)\s+U\.?S\.?C\.?\s*(?:§\s*)?(\d+(?:\.\d+)*)(.*)$/i
 
 // ── Pattern: structured NY ───────────────────────────────────────────────────
 // Matches: N.Y. Penal Law § 265.02 | Penal Law 220.16 | CPLR 3212 | PHL 3306
 // N.Y. prefix is optional; code name required; § optional
 
 const NY_LONG_RE =
-  /^(?:N\.Y\.\s+)?([\w.& ]+?(?:law))\s*(?:§\s*)?(\d[\w.]*)(.*)$/i
+  /^(?:N\.Y\.\s+)?([\w.& ]+?(?:law))\s*(?:§\s*)?(\d+(?:\.\d+)*)(.*)$/i
 
 const NY_ABBREV_RE =
-  /^(CPLR|PHL|VTL|PL|GBL|EL)\s+(\d[\w.]*)(.*)$/i
+  /^(CPLR|PHL|VTL|PL|GBL|EL)\s+(?:§\s*)?(\d+(?:\.\d+)*)(.*)$/i
 
 // ── Pattern: informal — bare § with number ───────────────────────────────────
-const BARE_SECTION_RE = /^§\s*(\d[\w.]*)(.*)$/i
+const BARE_SECTION_RE = /^§\s*(\d+(?:\.\d+)*)(.*)$/i
 
 // ── Pattern: informal — "Section NNNN" ───────────────────────────────────────
-const SECTION_WORD_RE = /^(?:section|sec\.?)\s+(\d[\w.]*)(.*)$/i
+const SECTION_WORD_RE = /^(?:section|sec\.?)\s+(\d+(?:\.\d+)*)(.*)$/i
 
 // ── Pattern: informal — "Penal § NNN" ────────────────────────────────────────
 const INFORMAL_NY_RE = /^(penal|cplr|phl|vtl)\s+§\s*(\d[\w.]*)(.*)$/i
@@ -223,3 +223,5 @@ export function parseCitation(input: string): ParsedCitation {
     subsection_path: [],
   }
 }
+
+export { extractCitationsFromText } from './extractCitations.js'
