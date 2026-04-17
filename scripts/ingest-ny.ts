@@ -6,35 +6,12 @@
  *   npx tsx scripts/ingest-ny.ts --fetch PEN/220.16 PBH/3306
  *
  * Requires DATABASE_URL env var (or .env file).
- * Docker: docker compose -f infra/docker-compose.yml up -d
  */
 
-import { createReadStream, readFileSync } from 'fs'
+import { readFileSync } from 'fs'
 import { resolve } from 'path'
 import { ingestNyProvisions, type NyFixtureRow } from '../packages/legal-core/src/ingest/ny.js'
-import type { DbClient } from '../packages/legal-core/src/resolver/resolveCitation.js'
-
-// ── Minimal Postgres client ───────────────────────────────────────────────────
-async function makeDbClient(): Promise<DbClient & { end?: () => Promise<void> }> {
-  const url = process.env['DATABASE_URL']
-  if (!url) {
-    console.warn('DATABASE_URL not set — running in dry-run mode (no DB writes)')
-    return { async query<T>(): Promise<T[]> { return [] } }
-  }
-  try {
-    const { getDb } = await import('../packages/database/src/index.js')
-    const sql = getDb() as { unsafe: (q: string, p?: unknown[]) => Promise<unknown[]>; end: () => Promise<void> }
-    return {
-      async query<T>(q: string, params?: unknown[]): Promise<T[]> {
-        return sql.unsafe(q, params) as Promise<T[]>
-      },
-      end: () => sql.end(),
-    }
-  } catch (err) {
-    console.warn('DB init failed — dry-run mode:', err)
-    return { async query<T>(): Promise<T[]> { return [] } }
-  }
-}
+import { getDbClient } from '../apps/web/lib/db.js'
 
 // ── NY Legislature API fetch ──────────────────────────────────────────────────
 
@@ -102,20 +79,16 @@ async function main() {
     process.exit(1)
   }
 
-  const db = await makeDbClient()
+  const db = getDbClient()
 
-  try {
-    console.log(`Ingesting ${rows.length} provision(s)…`)
-    const result = await ingestNyProvisions(rows, db)
-    console.log(`✓ provisions: ${result.provisions}`)
-    console.log(`✓ citations:  ${result.citations}`)
-    if (result.errors.length > 0) {
-      console.error('Errors:')
-      for (const e of result.errors) console.error(' ', e)
-      process.exit(1)
-    }
-  } finally {
-    await db.end?.()
+  console.log(`Ingesting ${rows.length} provision(s)…`)
+  const result = await ingestNyProvisions(rows, db)
+  console.log(`✓ provisions: ${result.provisions}`)
+  console.log(`✓ citations:  ${result.citations}`)
+  if (result.errors.length > 0) {
+    console.error('Errors:')
+    for (const e of result.errors) console.error(' ', e)
+    process.exit(1)
   }
 }
 
