@@ -3,11 +3,21 @@ import { resolveCitation } from '../packages/legal-core/src/resolver/resolveCita
 import type { ParsedCitation } from '../packages/types/src/index.js'
 import type { DbClient } from '../packages/legal-core/src/resolver/resolveCitation.js'
 
-function makeDb(rows: unknown[]): DbClient {
-  return { query: vi.fn().mockResolvedValue(rows) }
+type MockRow = Record<string, unknown>
+
+// Each call to db.query() returns the next response in the array
+function makeDb(responses: MockRow[][]): DbClient {
+  let call = 0
+  return {
+    query: vi.fn().mockImplementation(() => {
+      const rows = responses[call] ?? []
+      call++
+      return Promise.resolve(rows)
+    }),
+  }
 }
 
-const base: ParsedCitation = {
+const structured: ParsedCitation = {
   raw: 'N.Y. Penal Law § 265.02',
   format: 'structured',
   confidence: 1.0,
@@ -18,30 +28,103 @@ const base: ParsedCitation = {
   canonical_id: 'ny/penal/265.02',
 }
 
-describe('resolveCitation', () => {
-  it('TODO: returns ingested when provision found', async () => {
-    const db = makeDb([{ canonical_id: 'ny/penal/265.02', text_content: 'text', ingestion_status: 'ingested' }])
-    const result = await resolveCitation(base, db)
+describe('resolveCitation — direct lookup', () => {
+  it('returns ingested when provision found', async () => {
+    const db = makeDb([
+      [{ canonical_id: 'ny/penal/265.02', text_content: 'Criminal possession...', ingestion_status: 'ingested', confidence: '1.00', provenance_source: 'ny-open-legislation', ingested_at: '2026-01-01T00:00:00Z' }],
+      [{ to_canonical_id: 'ny/penal/265.00' }],
+    ])
+    const result = await resolveCitation(structured, db)
     expect(result.status).toBe('ingested')
+    expect(result.text).toBe('Criminal possession...')
+    expect(result.outbound_citations).toEqual(['ny/penal/265.00'])
+    expect(result.confidence).toBe(1.0)
+    expect(result.provenance.source).toBe('ny-open-legislation')
+    expect(result.provenance.ingested_at).toBe('2026-01-01T00:00:00Z')
   })
 
-  it('returns not_ingested when provision absent', async () => {
-    const db = makeDb([])
-    const result = await resolveCitation(base, db)
+  it('returns not_ingested when provision row missing', async () => {
+    const db = makeDb([[], []])
+    const result = await resolveCitation(structured, db)
     expect(result.status).toBe('not_ingested')
+    expect(result.text).toBeUndefined()
+    expect(result.outbound_citations).toEqual([])
   })
 
-  it('TODO: resolves via alias', async () => {
-    const informal: ParsedCitation = { ...base, format: 'informal', canonical_id: undefined }
-    const db = makeDb([])
+  it('includes outbound citations even when not_ingested', async () => {
+    const db = makeDb([
+      [],
+      [{ to_canonical_id: 'ny/penal/265.00' }],
+    ])
+    const result = await resolveCitation(structured, db)
+    expect(result.status).toBe('not_ingested')
+    expect(result.outbound_citations).toEqual(['ny/penal/265.00'])
+  })
+})
+
+describe('resolveCitation — alias resolution', () => {
+  it('resolves via alias and sets resolved_from', async () => {
+    const informal: ParsedCitation = {
+      raw: 'IRC 501(c)',
+      format: 'informal',
+      confidence: 0.6,
+      jurisdiction: 'federal',
+      code: 'usc/26',
+      section: '501',
+      subsection_path: ['c'],
+      canonical_id: undefined,
+    }
+    const db = makeDb([
+      [{ canonical_id: 'federal/usc/26/501' }],                         // alias lookup
+      [{ canonical_id: 'federal/usc/26/501', text_content: 'Exempt orgs...', ingestion_status: 'ingested', confidence: '1.00', provenance_source: 'usc-xml', ingested_at: '2026-01-01T00:00:00Z' }],  // provision
+      [],                                                                  // citations
+    ])
     const result = await resolveCitation(informal, db)
-    expect(['alias_resolved', 'not_ingested', 'not_found']).toContain(result.status)
+    expect(result.status).toBe('alias_resolved')
+    expect(result.resolved_from).toBe('IRC 501(c)')
+    expect(result.text).toBe('Exempt orgs...')
+    expect(result.canonical_id).toBe('federal/usc/26/501')
   })
+})
 
-  it('TODO: returns ambiguous with candidates list', async () => {
-    const ambig: ParsedCitation = { ...base, canonical_id: undefined }
-    const db = makeDb([])
+describe('resolveCitation — ambiguous', () => {
+  it('returns ambiguous with candidates when found in ambiguous_citations', async () => {
+    const ambig: ParsedCitation = {
+      raw: 'Section 265',
+      format: 'informal',
+      confidence: 0.6,
+      jurisdiction: 'unknown',
+      code: 'unknown',
+      section: '265',
+      subsection_path: [],
+      canonical_id: undefined,
+    }
+    const db = makeDb([
+      [],                                                                  // alias lookup — miss
+      [{ candidate_ids: ['ny/penal/265.00', 'ny/penal/265.02'] }],       // ambiguous hit
+    ])
     const result = await resolveCitation(ambig, db)
-    expect(['ambiguous', 'not_ingested', 'not_found']).toContain(result.status)
+    expect(result.status).toBe('ambiguous')
+    expect(result.candidates).toEqual(['ny/penal/265.00', 'ny/penal/265.02'])
+    expect(result.confidence).toBeLessThan(0.6)
+  })
+})
+
+describe('resolveCitation — not_ingested fallback', () => {
+  it('returns not_ingested when no alias, no ambiguous match', async () => {
+    const informal: ParsedCitation = {
+      raw: 'Penal § 999',
+      format: 'informal',
+      confidence: 0.6,
+      jurisdiction: 'unknown',
+      code: 'penal',
+      section: '999',
+      subsection_path: [],
+      canonical_id: undefined,
+    }
+    const db = makeDb([[], []])   // alias miss, ambiguous miss
+    const result = await resolveCitation(informal, db)
+    expect(result.status).toBe('not_ingested')
+    expect(result.outbound_citations).toEqual([])
   })
 })
