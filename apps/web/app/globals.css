@@ -149,3 +149,8 @@ body {
   font-family: var(--mono); font-size: 11px; line-height: 1.6;
   color: #aaa; white-space: pre; margin: 0;
 }
+
+/* Node label hierarchy */
+.node-label { font-size: 13px; }
+.node-canonical { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-top: 1px; }
+.node-subtitle { font-size: 11px; color: #888; font-style: italic; margin-top: 3px; padding-left: 20px; }

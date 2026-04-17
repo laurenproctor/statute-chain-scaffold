@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import type { ParsedCitation, ResolvedProvision, ChainGraph, ChainNode } from '@statute-chain/types'
+import { formatCanonicalId, extractSubtitle } from '../lib/formatCanonicalId'
 
 interface QueryResponse {
   parsed: ParsedCitation
@@ -92,8 +93,11 @@ function ResolveCard({ data }: { data: ResolvedProvision }) {
         <span>{statusBadge(data.status)}</span>
       </div>
       <div className="preview-row">
-        <span className="label">canonical id</span>
-        <span className="mono">{data.canonical_id}</span>
+        <span className="label">citation</span>
+        <span>
+          {formatCanonicalId(data.canonical_id)}
+          <span className="node-canonical" style={{ display: 'block' }}>{data.canonical_id}</span>
+        </span>
       </div>
       <div className="preview-row">
         <span className="label">confidence</span>
@@ -134,6 +138,7 @@ function ResolveCard({ data }: { data: ResolvedProvision }) {
 function NodeRow({ node, edges }: { node: ChainNode; edges: ChainGraph['edges'] }) {
   const [open, setOpen] = useState(node.depth === 0)
   const children = edges.filter((e) => e.from === node.canonical_id).map((e) => e.to)
+  const subtitle = extractSubtitle(node.text)
 
   return (
     <div className="node-row" style={{ paddingLeft: node.depth * 20 }}>
@@ -143,11 +148,13 @@ function NodeRow({ node, edges }: { node: ChainNode; edges: ChainGraph['edges'] 
         style={{ cursor: node.text ? 'pointer' : 'default' }}
       >
         <span className="node-connector">{node.depth === 0 ? '◉' : '└'}</span>
-        <span className="mono node-id">{node.canonical_id}</span>
+        <span className="node-label">{formatCanonicalId(node.canonical_id)}</span>
         {statusBadge(node.status)}
         <ConfidencePip value={node.confidence} />
         {node.text && <span className="toggle-hint">{open ? '▲' : '▼'}</span>}
       </div>
+      <div className="node-canonical">{node.canonical_id}</div>
+      {subtitle && !open && <div className="node-subtitle">{subtitle}</div>}
       {node.status === 'alias_resolved' && node.resolved_from && (
         <div className="node-meta">
           alias of <span className="mono">{node.resolved_from}</span>
