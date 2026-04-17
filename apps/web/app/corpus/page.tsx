@@ -67,8 +67,9 @@ export default async function CorpusPage() {
   return (
     <main className="page">
       <header className="site-header">
-        <h1>Corpus Status</h1>
-        <p className="tagline">Ingested provisions and reference graph.</p>
+        <p className="page-eyebrow">Corpus Status</p>
+        <h1>Ingested provisions and reference graph.</h1>
+        <p className="tagline">All statutes loaded in the system, with source and coverage metadata.</p>
       </header>
 
       {data.error ? (

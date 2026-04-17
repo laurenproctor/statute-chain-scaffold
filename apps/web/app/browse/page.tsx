@@ -4,8 +4,9 @@ export default function BrowsePage() {
   return (
     <main className="page">
       <header className="site-header">
-        <h1>Browse Codes</h1>
-        <p className="tagline">Browse statutes by jurisdiction and code.</p>
+        <p className="page-eyebrow">Browse Codes</p>
+        <h1>Browse statutes by jurisdiction.</h1>
+        <p className="tagline">Navigate loaded provisions by code, article, and section.</p>
       </header>
 
       <section className="section">

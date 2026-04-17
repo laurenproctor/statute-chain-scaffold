@@ -420,8 +420,9 @@ export function CompareClient() {
   return (
     <main className="page compare-page">
       <header className="site-header">
-        <h1>Compare Laws</h1>
-        <p className="tagline">Compare multiple laws side by side.</p>
+        <p className="page-eyebrow">Compare Laws</p>
+        <h1>Find where statutes align and diverge.</h1>
+        <p className="tagline">Enter two references to compare their scope, status, and linked authorities.</p>
       </header>
 
       <form className="compare-form" onSubmit={handleSubmit}>

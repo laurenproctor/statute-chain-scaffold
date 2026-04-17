@@ -42,8 +42,9 @@ export default async function RequestsPage() {
   return (
     <main className="page">
       <header className="site-header">
-        <h1>Ingest Console</h1>
-        <p className="tagline">{rows.length} load request{rows.length !== 1 ? 's' : ''} in queue.</p>
+        <p className="page-eyebrow">Ingest Console</p>
+        <h1>Load request queue.</h1>
+        <p className="tagline">{rows.length} pending request{rows.length !== 1 ? 's' : ''}. Ingest or ignore each below.</p>
       </header>
 
       {error && <div className="error-banner">{error}</div>}

@@ -567,8 +567,9 @@ export default function LawNavigatorPage() {
   return (
     <main className="page">
       <header className="site-header">
-        <h1>Law Navigator</h1>
-        <p className="tagline">Enter a statute section or legal reference to explore linked authorities.</p>
+        <p className="page-eyebrow">Law Navigator</p>
+        <h1>Resolve any statute or citation.</h1>
+        <p className="tagline">Enter a section reference to trace its full chain of linked authorities.</p>
       </header>
 
       <form className="search-form" onSubmit={handleSubmit}>
