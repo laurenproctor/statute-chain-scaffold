@@ -29,6 +29,14 @@ create table if not exists ambiguous_citations (
   created_at          timestamptz default now()
 );
 
+create table if not exists citation_requests (
+  canonical_id     text primary key,
+  latest_raw_input text not null,
+  requested_at     timestamptz not null default now(),
+  request_count    int not null default 1,
+  status           text not null default 'requested'
+);
+
 create table if not exists missing_nodes (
   canonical_id        text primary key,
   inbound_count       int not null default 1,

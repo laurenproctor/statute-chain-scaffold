@@ -48,6 +48,63 @@ export function knownDescription(canonicalId: string): string | undefined {
   return KNOWN_DESCRIPTIONS[canonicalId]
 }
 
+const OFFICIAL_DOMAINS = ['uscode.house.gov', 'legislation.nysenate.gov']
+
+const SOURCE_DISPLAY: Record<string, { name: string; baseUrl: string }> = {
+  'uscode.house.gov': {
+    name: 'U.S. House Office of the Law Revision Counsel',
+    baseUrl: 'https://uscode.house.gov',
+  },
+  'legislation.nysenate.gov': {
+    name: 'New York State Senate',
+    baseUrl: 'https://legislation.nysenate.gov',
+  },
+  govinfo: {
+    name: 'U.S. Government Publishing Office',
+    baseUrl: 'https://www.govinfo.gov',
+  },
+}
+
+export type SourceAttribution = {
+  name: string
+  url: string
+  official: boolean
+}
+
+export function sourceAttribution(provenance: string | null | undefined): SourceAttribution | null {
+  if (!provenance || provenance === 'unknown') return null
+
+  let domain: string | null = null
+  let url = provenance
+  try {
+    domain = new URL(provenance).hostname
+  } catch {
+    domain = provenance // short key like 'govinfo'
+  }
+
+  const official = OFFICIAL_DOMAINS.some((d) => domain === d || domain?.endsWith('.' + d))
+
+  // uscode.house.gov: stored URLs omit &edition=prelim which causes a redirect to /docnotfound
+  if (domain === 'uscode.house.gov' && url.includes('granuleid:') && !url.includes('edition=')) {
+    url = url + '&edition=prelim'
+  }
+
+  // legislation.nysenate.gov API URLs return 401 — rewrite to the public human-readable URL
+  if (domain === 'legislation.nysenate.gov' && url.includes('/api/3/laws/')) {
+    url = url.replace('https://legislation.nysenate.gov/api/3/laws/', 'https://www.nysenate.gov/legislation/laws/')
+  }
+
+  for (const [key, meta] of Object.entries(SOURCE_DISPLAY)) {
+    if (domain === key || domain?.includes(key)) {
+      return { name: meta.name, url, official }
+    }
+  }
+
+  // Unknown source — return as-is with non-official status
+  if (!url.startsWith('http')) return null
+  return { name: 'Source Available', url, official: false }
+}
+
 // Returns a subtitle derived from statute text, or undefined if nothing useful.
 // Preference order:
 //   1. Title-like first line (short, starts uppercase, no mid-sentence periods)

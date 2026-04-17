@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import type { ParsedCitation, ResolvedProvision, ChainGraph, ChainNode } from '@statute-chain/types'
-import { formatCanonicalId, extractSubtitle, knownDescription } from '../lib/formatCanonicalId'
+import { formatCanonicalId, extractSubtitle, knownDescription, sourceAttribution } from '../lib/formatCanonicalId'
 
 interface QueryResponse {
   parsed: ParsedCitation
@@ -43,6 +43,64 @@ function ConfidencePip({ value }: { value: number }) {
     <span style={{ color, fontVariantNumeric: 'tabular-nums', fontSize: 12 }}>
       {pct}%
     </span>
+  )
+}
+
+function ConfidenceLabel({ value }: { value: number }) {
+  if (value >= 0.90) return <span className="confidence-label confidence-high">High confidence match</span>
+  if (value >= 0.60) return <span className="confidence-label confidence-mid">Moderate confidence match</span>
+  return <span className="confidence-label confidence-low">Low confidence match</span>
+}
+
+function RequestLoadButton({ canonicalId, rawInput }: { canonicalId: string; rawInput: string }) {
+  const [state, setState] = useState<'idle' | 'loading' | 'done'>('idle')
+
+  async function request() {
+    setState('loading')
+    try {
+      await fetch('/api/request-load', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ canonical_id: canonicalId, raw_input: rawInput }),
+      })
+    } finally {
+      setState('done')
+    }
+  }
+
+  if (state === 'done') {
+    return <span className="request-thanks">Thanks. Requests help prioritize coverage.</span>
+  }
+
+  return (
+    <button
+      className="request-load-btn"
+      disabled={state === 'loading'}
+      onClick={request}
+    >
+      {state === 'loading' ? 'Requesting…' : 'Request This Law'}
+    </button>
+  )
+}
+
+function AttributionBlock({ provenance }: { provenance: ResolvedProvision['provenance'] }) {
+  const attr = sourceAttribution(provenance.source)
+  if (!attr) {
+    return <div className="attribution-block"><span className="attribution-unavailable">Source metadata unavailable</span></div>
+  }
+  const date = provenance.ingested_at
+    ? new Date(provenance.ingested_at).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' })
+    : null
+  return (
+    <div className="attribution-block">
+      {attr.official && <span className="badge badge-official">Official Source</span>}
+      {!attr.official && <span className="badge badge-source-available">Source Available</span>}
+      <span className="attribution-name">{attr.name}</span>
+      {date && <span className="attribution-date">Retrieved {date}</span>}
+      <a href={attr.url} target="_blank" rel="noopener noreferrer" className="attribution-link">
+        View official text →
+      </a>
+    </div>
   )
 }
 
@@ -138,7 +196,7 @@ function ParseCard({ data }: { data: ParsedCitation }) {
       </div>
       <div className="preview-row">
         <span className="label">confidence</span>
-        <ConfidencePip value={data.confidence} />
+        <ConfidenceLabel value={data.confidence} />
       </div>
     </div>
   )
@@ -160,7 +218,7 @@ function ResolveCard({ data, onSelectSection }: { data: ResolvedProvision; onSel
       </div>
       <div className="preview-row">
         <span className="label">confidence</span>
-        <ConfidencePip value={data.confidence} />
+        <ConfidenceLabel value={data.confidence} />
       </div>
       {data.resolved_from && (
         <div className="preview-row">
@@ -223,6 +281,7 @@ function NodeRow({ node, edges, onSelect }: { node: ChainNode; edges: ChainGraph
   const children = edges.filter((e) => e.from === node.canonical_id).map((e) => e.to)
   const subtitle = knownDescription(node.canonical_id) ?? extractSubtitle(node.text)
   const isMissing = node.status === 'not_ingested' || node.status === 'not_found'
+  const isLoaded = node.status === 'ingested' || node.status === 'alias_resolved'
 
   return (
     <div className={`node-row${isMissing ? ' node-row-missing' : ''}`} style={{ paddingLeft: node.depth * 20 }}>
@@ -234,12 +293,25 @@ function NodeRow({ node, edges, onSelect }: { node: ChainNode; edges: ChainGraph
         <span className="node-connector">{node.depth === 0 ? '◉' : '└'}</span>
         <span className="node-label">{formatCanonicalId(node.canonical_id)}</span>
         {statusBadge(node.status)}
-        {!isMissing && <ConfidencePip value={node.confidence} />}
         {node.text && <span className="toggle-hint">{open ? '▲' : '▼'}</span>}
         {!node.text && onSelect && !isMissing && <span className="toggle-hint">→</span>}
       </div>
-      <div className="node-canonical">{node.canonical_id}</div>
       {subtitle && !open && <div className="node-subtitle">{subtitle}</div>}
+      {isMissing && (
+        <div className="node-missing-note">
+          Recognized citation — full text not yet loaded in corpus.
+          {(() => {
+            const parts = node.canonical_id.split('/')
+            const parent = parts.length > 3 ? parts.slice(0, -1).join('/') : null
+            return parent && onSelect
+              ? <> <span className="node-missing-action" onClick={() => onSelect(parent)}>Browse parent article →</span></>
+              : null
+          })()}
+          <div className="node-missing-actions">
+            <RequestLoadButton canonicalId={node.canonical_id} rawInput={node.canonical_id} />
+          </div>
+        </div>
+      )}
       {node.status === 'alias_resolved' && node.resolved_from && (
         <div className="node-meta">alias of <span className="mono">{node.resolved_from}</span></div>
       )}
@@ -252,6 +324,16 @@ function NodeRow({ node, edges, onSelect }: { node: ChainNode; edges: ChainGraph
       {open && node.text && (
         <div className="node-text">
           {node.text.slice(0, 400)}{node.text.length > 400 ? '…' : ''}
+        </div>
+      )}
+      {isLoaded && open && (
+        <AttributionBlock provenance={node.provenance} />
+      )}
+      {isLoaded && !open && node.provenance.source !== 'unknown' && node.provenance.source && (
+        <div className="node-source-inline">
+          {sourceAttribution(node.provenance.source)?.official
+            ? <span className="badge badge-official" style={{ marginLeft: 0 }}>Official Source</span>
+            : <span className="badge badge-source-available" style={{ marginLeft: 0 }}>Source Available</span>}
         </div>
       )}
       {children.length > 0 && (
@@ -502,6 +584,9 @@ export default function Home() {
           <DebugPanel data={result} />
         </>
       )}
+      <footer className="site-footer">
+        Informational research tool. Verify conclusions against official sources and current law.
+      </footer>
     </main>
   )
 }

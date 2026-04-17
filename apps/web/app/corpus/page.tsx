@@ -9,6 +9,7 @@ interface CorpusData {
   citationsTotal: number
   canonicalIds: string[]
   lastIngestedAt: string | null
+  recentAdditions: { canonical_id: string; ingested_at: string }[]
   error?: string
 }
 
@@ -16,7 +17,7 @@ async function getCorpusData(): Promise<CorpusData> {
   try {
     const db = getDbClient()
 
-    const [provisionRows, citationRows, recentRows] = await Promise.all([
+    const [provisionRows, citationRows, allRows, recentAdditionRows] = await Promise.all([
       db.query<{ count: string; jurisdiction: string }>(
         `SELECT jurisdiction, COUNT(*)::text AS count FROM provisions GROUP BY jurisdiction ORDER BY jurisdiction`,
       ),
@@ -26,16 +27,20 @@ async function getCorpusData(): Promise<CorpusData> {
       db.query<{ canonical_id: string; ingested_at: string | null }>(
         `SELECT canonical_id, ingested_at FROM provisions ORDER BY ingested_at DESC NULLS LAST`,
       ),
+      db.query<{ canonical_id: string; ingested_at: string }>(
+        `SELECT canonical_id, ingested_at FROM provisions WHERE ingested_at IS NOT NULL ORDER BY ingested_at DESC LIMIT 10`,
+      ),
     ])
 
     return {
-      provisionsTotal: recentRows.length,
+      provisionsTotal: allRows.length,
       byJurisdiction: Object.fromEntries(
         provisionRows.map((r) => [r.jurisdiction, parseInt(r.count, 10)]),
       ),
       citationsTotal: parseInt(citationRows[0]?.count ?? '0', 10),
-      canonicalIds: recentRows.map((r) => r.canonical_id),
-      lastIngestedAt: recentRows[0]?.ingested_at ?? null,
+      canonicalIds: allRows.map((r) => r.canonical_id),
+      lastIngestedAt: allRows[0]?.ingested_at ?? null,
+      recentAdditions: recentAdditionRows.map((r) => ({ canonical_id: r.canonical_id, ingested_at: r.ingested_at })),
     }
   } catch (err) {
     return {
@@ -44,6 +49,7 @@ async function getCorpusData(): Promise<CorpusData> {
       citationsTotal: 0,
       canonicalIds: [],
       lastIngestedAt: null,
+      recentAdditions: [],
       error: err instanceof Error ? err.message : 'Unknown error',
     }
   }
@@ -52,7 +58,7 @@ async function getCorpusData(): Promise<CorpusData> {
 function formatTs(ts: string | null): string {
   if (!ts) return '—'
   const d = new Date(ts)
-  return d.toISOString().replace('T', ' ').slice(0, 19) + ' UTC'
+  return d.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' })
 }
 
 export default async function CorpusPage() {
@@ -61,7 +67,10 @@ export default async function CorpusPage() {
   return (
     <main className="page">
       <header className="site-header">
-        <h1>Corpus Status</h1>
+        <div className="site-header-row">
+          <h1>Corpus Status</h1>
+          <a href="/" className="corpus-link">← resolver</a>
+        </div>
         <p className="tagline">Ingested provisions and citation graph.</p>
       </header>
 
@@ -88,13 +97,34 @@ export default async function CorpusPage() {
               </div>
               <div className="preview-row">
                 <span className="label">last ingest</span>
-                <span className="mono" style={{ fontSize: 12 }}>{formatTs(data.lastIngestedAt)}</span>
+                <span className="muted" style={{ fontSize: 12 }}>{formatTs(data.lastIngestedAt)}</span>
               </div>
             </div>
           </section>
 
+          {data.recentAdditions.length > 0 && (
+            <section className="section">
+              <div className="section-title">Recently added</div>
+              <div className="chain-view">
+                <div className="nodes-list">
+                  {data.recentAdditions.map((r) => (
+                    <div key={r.canonical_id} className="node-row">
+                      <div className="node-header">
+                        <span className="node-label">{formatCanonicalId(r.canonical_id)}</span>
+                      </div>
+                      <div className="node-canonical">{r.canonical_id}</div>
+                      <div className="node-meta" style={{ paddingLeft: 0 }}>
+                        Added {formatTs(r.ingested_at)}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+          )}
+
           <section className="section">
-            <div className="section-title">Loaded provisions ({data.canonicalIds.length})</div>
+            <div className="section-title">All provisions ({data.canonicalIds.length})</div>
             <div className="chain-view">
               <div className="nodes-list">
                 {data.canonicalIds.map((id) => (
@@ -111,9 +141,9 @@ export default async function CorpusPage() {
         </>
       )}
 
-      <div style={{ marginTop: 32 }}>
-        <a href="/" style={{ color: 'var(--muted)', fontSize: 12 }}>← back to resolver</a>
-      </div>
+      <footer className="site-footer">
+        Informational research tool. Verify conclusions against official sources and current law.
+      </footer>
     </main>
   )
 }
