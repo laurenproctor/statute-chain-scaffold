@@ -16,6 +16,7 @@ type ProvisionRow = {
 type CitationRow = { to_canonical_id: string }
 type AliasRow = { canonical_id: string }
 type AmbiguousRow = { candidate_ids: string[] }
+type ChildRow = { canonical_id: string }
 
 async function lookupByCanonicalId(
   canonicalId: string,
@@ -37,10 +38,15 @@ async function lookupByCanonicalId(
   const outbound_citations = citations.map((c) => c.to_canonical_id)
 
   if (provisions.length === 0) {
+    const children = await db.query<ChildRow>(
+      `SELECT canonical_id FROM provisions WHERE canonical_id LIKE $1 ORDER BY canonical_id`,
+      [`${canonicalId}.%`],
+    )
     return {
       canonical_id: canonicalId,
       status: 'not_ingested',
       confidence: parseConfidence,
+      ...(children.length > 0 && { article_sections: children.map((c) => c.canonical_id) }),
       outbound_citations,
       provenance: { source: 'unknown' },
     }

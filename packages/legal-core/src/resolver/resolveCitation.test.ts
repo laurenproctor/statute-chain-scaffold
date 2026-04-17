@@ -14,6 +14,14 @@ function makeDb(tables: {
     async query<T>(sql: string, params?: unknown[]): Promise<T[]> {
       const p = params?.[0] as string | undefined
       if (sql.includes('FROM provisions')) {
+        // LIKE query for article children (e.g. "ny/penal/220.%")
+        if (sql.includes('LIKE')) {
+          const prefix = (p ?? '').replace(/%$/, '')
+          const rows = (tables.provisions ?? []).filter(
+            (r) => (r['canonical_id'] as string).startsWith(prefix),
+          )
+          return rows as T[]
+        }
         const rows = (tables.provisions ?? []).filter(
           (r) => r['canonical_id'] === p,
         )
@@ -201,6 +209,45 @@ describe('ambiguous citations', () => {
     expect(result.candidates).toEqual(['federal/usc/42/1983', 'federal/usc/18/1983'])
     expect(result.confidence).toBeCloseTo(0.35 * 0.5)
     expect(result.outbound_citations).toEqual([])
+  })
+})
+
+// ── Article-level lookup ──────────────────────────────────────────────────────
+
+const articleCitation: ParsedCitation = {
+  raw: 'NY Penal Law 220',
+  format: 'structured',
+  confidence: 0.85,
+  jurisdiction: 'ny',
+  code: 'penal',
+  section: '220',
+  subsection_path: [],
+  canonical_id: 'ny/penal/220',
+}
+
+describe('article-level lookup — no exact row but children exist', () => {
+  const db = makeDb({
+    provisions: [
+      { canonical_id: 'ny/penal/220.00', text_content: 'Definitions…', ingestion_status: 'ingested', confidence: '1.00', provenance_source: null, ingested_at: null },
+      { canonical_id: 'ny/penal/220.16', text_content: 'Criminal possession…', ingestion_status: 'ingested', confidence: '1.00', provenance_source: null, ingested_at: null },
+    ],
+    citations: [],
+  })
+
+  it('returns not_ingested status', async () => {
+    const result = await resolveCitation(articleCitation, db)
+    expect(result.status).toBe('not_ingested')
+  })
+
+  it('populates article_sections with child canonical_ids', async () => {
+    const result = await resolveCitation(articleCitation, db)
+    expect(result.article_sections).toEqual(['ny/penal/220.00', 'ny/penal/220.16'])
+  })
+
+  it('does not include article_sections when no children exist', async () => {
+    const emptyDb = makeDb({ provisions: [], citations: [] })
+    const result = await resolveCitation(articleCitation, emptyDb)
+    expect(result.article_sections).toBeUndefined()
   })
 })
 

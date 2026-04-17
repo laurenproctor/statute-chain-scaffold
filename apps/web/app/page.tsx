@@ -119,6 +119,18 @@ function ResolveCard({ data }: { data: ResolvedProvision }) {
           </span>
         </div>
       )}
+      {data.article_sections && data.article_sections.length > 0 && (
+        <div className="preview-row">
+          <span className="label">sections</span>
+          <span>
+            {data.article_sections.map((id) => (
+              <span key={id} className="article-section-item">
+                {formatCanonicalId(id)}
+              </span>
+            ))}
+          </span>
+        </div>
+      )}
       <div className="preview-row">
         <span className="label">source</span>
         <span className="muted">{data.provenance.source}</span>

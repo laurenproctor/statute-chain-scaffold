@@ -167,3 +167,4 @@ body {
 .node-label { font-size: 13px; }
 .node-canonical { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-top: 1px; }
 .node-subtitle { font-size: 11px; color: #888; font-style: italic; margin-top: 3px; padding-left: 20px; }
+.article-section-item { display: block; font-size: 12px; color: var(--text); padding: 1px 0; }

@@ -34,6 +34,7 @@ export type ResolvedProvision = {
   text?: string
   resolved_from?: string
   candidates?: string[]
+  article_sections?: string[]  // child canonical_ids when exact row missing but children exist
   outbound_citations: string[]
   provenance: {
     source: string
