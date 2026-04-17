@@ -108,7 +108,7 @@ describe('ingestNyProvisions', () => {
         if (sql.includes('INSERT INTO provisions')) {
           upserted.push(params?.[0] as string)
         }
-        if (sql.includes('INSERT INTO citations')) {
+        if (sql.includes('INSERT INTO legal_references')) {
           citationEdges.push([params?.[0] as string, params?.[1] as string])
         }
         return []
@@ -144,7 +144,7 @@ describe('220.16 chain expansion', () => {
         if (sql.includes('INSERT INTO provisions')) {
           if (p0) provisions.set(p0, { text: params?.[4] as string ?? '', outbound: [] })
         }
-        if (sql.includes('INSERT INTO citations')) {
+        if (sql.includes('INSERT INTO legal_references')) {
           if (p0 && p1) {
             const entry = provisions.get(p0)
             if (entry) entry.outbound.push(p1)
@@ -163,11 +163,14 @@ describe('220.16 chain expansion', () => {
             ingested_at: null,
           }] as T[]
         }
-        if (sql.includes('FROM citations')) {
+        if (sql.includes('FROM legal_references')) {
           const entry = provisions.get(p0 ?? '')
           return (entry?.outbound ?? []).map((id) => ({
-            from_canonical_id: p0,
             to_canonical_id: id,
+            relationship_type: 'references',
+            source_method: 'parser',
+            confidence: null,
+            explanation: 'Referenced directly in text',
           })) as T[]
         }
         if (sql.includes('FROM aliases')) return []
@@ -203,7 +206,7 @@ describe('220.16 chain expansion', () => {
         if (sql.includes('INSERT INTO provisions')) {
           if (p0) provisions.set(p0, { text: params?.[4] as string ?? '', outbound: [] })
         }
-        if (sql.includes('INSERT INTO citations')) {
+        if (sql.includes('INSERT INTO legal_references')) {
           if (p0 && p1) {
             const entry = provisions.get(p0)
             if (entry) entry.outbound.push(p1)
@@ -222,11 +225,14 @@ describe('220.16 chain expansion', () => {
             ingested_at: null,
           }] as T[]
         }
-        if (sql.includes('FROM citations')) {
+        if (sql.includes('FROM legal_references')) {
           const entry = provisions.get(p0 ?? '')
           return (entry?.outbound ?? []).map((id) => ({
-            from_canonical_id: p0,
             to_canonical_id: id,
+            relationship_type: 'references',
+            source_method: 'parser',
+            confidence: null,
+            explanation: 'Referenced directly in text',
           })) as T[]
         }
         if (sql.includes('FROM aliases')) return []
@@ -259,7 +265,7 @@ function makeCaptureDb(): { db: DbClient; captured: CapturedCitation[] } {
   const captured: CapturedCitation[] = []
   const db: DbClient = {
     async query<T>(sql: string, params?: unknown[]): Promise<T[]> {
-      if (sql.includes('INSERT INTO citations')) {
+      if (sql.includes('INSERT INTO legal_references')) {
         captured.push({
           from: params?.[0] as string,
           to: params?.[1] as string,
@@ -333,7 +339,7 @@ describe('ingestNyProvisions — legal_relationships emission for ny/penal/220.1
         if (sql.includes('INSERT INTO provisions')) {
           if (p0) store.set(p0, { text: params?.[4] as string ?? '', rels: [] })
         }
-        if (sql.includes('INSERT INTO citations')) {
+        if (sql.includes('INSERT INTO legal_references')) {
           if (p0 && p1) store.get(p0)?.rels.push({
             to: p1,
             rel_type: params?.[2] as string,
@@ -347,7 +353,7 @@ describe('ingestNyProvisions — legal_relationships emission for ny/penal/220.1
           if (!entry) return []
           return [{ canonical_id: p0, text_content: entry.text, ingestion_status: 'ingested', confidence: '1.00', provenance_source: 'test', ingested_at: null }] as T[]
         }
-        if (sql.includes('FROM citations WHERE from_canonical_id')) {
+        if (sql.includes('FROM legal_references WHERE from_canonical_id')) {
           return (store.get(p0 ?? '')?.rels ?? []).map(r => ({
             to_canonical_id: r.to, relationship_type: r.rel_type,
             source_method: r.method, confidence: r.conf, explanation: r.expl,

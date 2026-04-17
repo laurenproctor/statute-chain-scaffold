@@ -68,7 +68,7 @@ describe('ingestFederalProvisions upsert', () => {
           upserted.push(params?.[0] as string)
           versionHashes[params?.[0] as string] = params?.[6] as string
         }
-        if (sql.includes('INSERT INTO citations')) edges.push([params?.[0] as string, params?.[1] as string])
+        if (sql.includes('INSERT INTO legal_references')) edges.push([params?.[0] as string, params?.[1] as string])
         return []
       },
     }
@@ -90,7 +90,7 @@ describe('ingestFederalProvisions upsert', () => {
     const edges: Array<[string, string]> = []
     const db: DbClient = {
       async query<T>(sql: string, params?: unknown[]): Promise<T[]> {
-        if (sql.includes('INSERT INTO citations')) edges.push([params?.[0] as string, params?.[1] as string])
+        if (sql.includes('INSERT INTO legal_references')) edges.push([params?.[0] as string, params?.[1] as string])
         return []
       },
     }
@@ -103,7 +103,7 @@ describe('ingestFederalProvisions upsert', () => {
 
 describe('ingestFederalProvisions idempotency', () => {
   it('running ingest twice produces same final node/edge counts as once', async () => {
-    // Simulate ON CONFLICT DO UPDATE (provisions) and DO NOTHING (citations) semantics
+    // Simulate ON CONFLICT DO UPDATE semantics for both provisions and legal_references
     const provisions = new Map<string, unknown>()
     const edgeSet = new Set<string>()
 
@@ -112,7 +112,7 @@ describe('ingestFederalProvisions idempotency', () => {
         if (sql.includes('INSERT INTO provisions')) {
           provisions.set(params?.[0] as string, params)
         }
-        if (sql.includes('INSERT INTO citations')) {
+        if (sql.includes('INSERT INTO legal_references')) {
           edgeSet.add(`${params?.[0]}→${params?.[1]}`)
         }
         return []
@@ -143,7 +143,7 @@ function makeInMemoryDb() {
       if (sql.includes('INSERT INTO provisions')) {
         if (p0) provisions.set(p0, { text: params?.[4] as string ?? '', outbound: [] })
       }
-      if (sql.includes('INSERT INTO citations')) {
+      if (sql.includes('INSERT INTO legal_references')) {
         if (p0 && p1) {
           const entry = provisions.get(p0)
           if (entry) entry.outbound.push(p1)
@@ -161,11 +161,14 @@ function makeInMemoryDb() {
           ingested_at: null,
         }] as T[]
       }
-      if (sql.includes('FROM citations')) {
+      if (sql.includes('FROM legal_references')) {
         const entry = provisions.get(p0 ?? '')
         return (entry?.outbound ?? []).map((id) => ({
-          from_canonical_id: p0,
           to_canonical_id: id,
+          relationship_type: 'references',
+          source_method: 'parser',
+          confidence: null,
+          explanation: 'Referenced directly in text',
         })) as T[]
       }
       if (sql.includes('FROM aliases')) return []
@@ -289,11 +292,11 @@ describe('resolveCitation after ingest', () => {
     expect(resolved.text).toBeTruthy()
   })
 
-  it('outbound_citations for 802 includes federal/usc/21/812', async () => {
+  it('legal_relationships for 802 includes federal/usc/21/812', async () => {
     const db = makeInMemoryDb()
     await ingestFederalProvisions([fix802, fix812], db)
     const resolved = await resolveCitation(makeParsed('federal/usc/21/802'), db)
-    expect(resolved.outbound_citations).toContain('federal/usc/21/812')
+    expect(resolved.legal_relationships.map(r => r.target_id)).toContain('federal/usc/21/812')
   })
 
   it('returns status ingested for 812 after ingest', async () => {
@@ -303,11 +306,11 @@ describe('resolveCitation after ingest', () => {
     expect(resolved.status).toBe('ingested')
   })
 
-  it('outbound_citations for 812 includes federal/usc/21/802', async () => {
+  it('legal_relationships for 812 includes federal/usc/21/802', async () => {
     const db = makeInMemoryDb()
     await ingestFederalProvisions([fix802, fix812], db)
     const resolved = await resolveCitation(makeParsed('federal/usc/21/812'), db)
-    expect(resolved.outbound_citations).toContain('federal/usc/21/802')
+    expect(resolved.legal_relationships.map(r => r.target_id)).toContain('federal/usc/21/802')
   })
 
   it('returns status not_ingested for a provision never inserted', async () => {

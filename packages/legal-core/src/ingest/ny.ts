@@ -1,6 +1,7 @@
 import { extractCitationsFromText } from '@statute-chain/parser'
 import type { LegalRelationship } from '@statute-chain/types'
 import type { DbClient } from '../resolver/resolveCitation.js'
+import { upsertRelationship } from '../resolver/upsertRelationship.js'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -24,7 +25,7 @@ export interface ProvisionRow {
 
 export interface IngestResult {
   provisions: number
-  citations: number
+  references: number
   errors: string[]
 }
 
@@ -74,27 +75,13 @@ async function upsertProvision(p: ProvisionRow, db: DbClient): Promise<void> {
   )
 }
 
-async function upsertCitation(
-  fromId: string,
-  rel: LegalRelationship,
-  db: DbClient,
-): Promise<void> {
-  await db.query(
-    `INSERT INTO citations
-       (from_canonical_id, to_canonical_id, depth_found, relationship_type, source_method, confidence, explanation)
-     VALUES ($1, $2, 1, $3, $4, $5, $6)
-     ON CONFLICT (from_canonical_id, to_canonical_id) DO NOTHING`,
-    [fromId, rel.target_id, rel.relationship_type, rel.source_method, rel.confidence ?? null, rel.explanation],
-  )
-}
-
 // ── Pipeline ──────────────────────────────────────────────────────────────────
 
 export async function ingestNyProvisions(
   rows: NyFixtureRow[],
   db: DbClient,
 ): Promise<IngestResult> {
-  const result: IngestResult = { provisions: 0, citations: 0, errors: [] }
+  const result: IngestResult = { provisions: 0, references: 0, errors: [] }
 
   for (const row of rows) {
     try {
@@ -111,8 +98,8 @@ export async function ingestNyProvisions(
           confidence: 1.0,
           explanation: 'Referenced directly in text',
         }
-        await upsertCitation(provision.canonical_id, rel, db)
-        result.citations++
+        await upsertRelationship({ from_canonical_id: provision.canonical_id, ...rel }, db)
+        result.references++
       }
     } catch (err) {
       result.errors.push(
