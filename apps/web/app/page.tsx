@@ -184,6 +184,41 @@ function NodeRow({ node, edges }: { node: ChainNode; edges: ChainGraph['edges'] 
   )
 }
 
+function ResultSummary({ data }: { data: QueryResponse }) {
+  const { chain, resolved } = data
+  const nodes = Object.values(chain.nodes)
+  const foundCount = nodes.filter((n) => n.status === 'ingested' || n.status === 'alias_resolved').length
+  const missingCount = nodes.filter((n) => n.status === 'not_ingested' || n.status === 'not_found').length + chain.unresolved.length
+  const federalCount = nodes.filter((n) => n.canonical_id.startsWith('federal/')).length
+
+  return (
+    <div className="result-summary">
+      <div className="summary-label">{formatCanonicalId(resolved.canonical_id)}</div>
+      <div className="summary-stats">
+        <span className="summary-stat">
+          <span className="summary-stat-value">{chain.edges.length}</span>
+          <span className="summary-stat-key">linked</span>
+        </span>
+        <span className="summary-divider" />
+        <span className="summary-stat">
+          <span className="summary-stat-value text-green">{foundCount}</span>
+          <span className="summary-stat-key">found</span>
+        </span>
+        <span className="summary-divider" />
+        <span className="summary-stat">
+          <span className="summary-stat-value" style={{ color: missingCount > 0 ? 'var(--amber)' : 'var(--muted)' }}>{missingCount}</span>
+          <span className="summary-stat-key">missing</span>
+        </span>
+        <span className="summary-divider" />
+        <span className="summary-stat">
+          <span className="summary-stat-value" style={{ color: 'var(--blue)' }}>{federalCount}</span>
+          <span className="summary-stat-key">federal</span>
+        </span>
+      </div>
+    </div>
+  )
+}
+
 function ChainView({ data }: { data: QueryResponse }) {
   const { chain } = data
   const sorted = Object.values(chain.nodes).sort(
@@ -316,6 +351,8 @@ export default function Home() {
 
       {result && (
         <>
+          <ResultSummary data={result} />
+
           <section className="section">
             <div className="section-title">Parse</div>
             <ParseCard data={result.parsed} />

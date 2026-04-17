@@ -150,6 +150,19 @@ body {
   color: #aaa; white-space: pre; margin: 0;
 }
 
+/* Result summary header */
+.result-summary {
+  margin-top: 28px; padding: 14px 16px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 6px;
+}
+.summary-label { font-size: 15px; font-weight: 600; letter-spacing: -0.2px; margin-bottom: 10px; }
+.summary-stats { display: flex; align-items: center; flex-wrap: wrap; }
+.summary-stat { display: flex; flex-direction: column; align-items: center; min-width: 56px; padding: 0 14px; }
+.summary-stat:first-child { padding-left: 0; }
+.summary-stat-value { font-size: 20px; font-weight: 600; line-height: 1.2; font-variant-numeric: tabular-nums; }
+.summary-stat-key { font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-top: 2px; }
+.summary-divider { width: 1px; height: 28px; background: var(--border); margin: 0 2px; }
+
 /* Node label hierarchy */
 .node-label { font-size: 13px; }
 .node-canonical { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-top: 1px; }
