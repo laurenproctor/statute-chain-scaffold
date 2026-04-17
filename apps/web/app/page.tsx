@@ -46,6 +46,63 @@ function ConfidencePip({ value }: { value: number }) {
   )
 }
 
+function NavigationCard({
+  data,
+  articleSections,
+  onResolve,
+  onSelectSection,
+}: {
+  data: ParsedCitation
+  articleSections: string[] | null
+  onResolve: () => void
+  onSelectSection: (id: string) => void
+}) {
+  const [copied, setCopied] = useState(false)
+  const label = data.canonical_id
+    ? formatCanonicalId(data.canonical_id)
+    : data.raw
+
+  function copyId() {
+    if (!data.canonical_id) return
+    navigator.clipboard.writeText(data.canonical_id).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 1500)
+    })
+  }
+
+  return (
+    <div className="nav-card">
+      <div className="nav-card-label">{label}</div>
+      {data.canonical_id && (
+        <div className="node-canonical" style={{ marginBottom: 12 }}>{data.canonical_id}</div>
+      )}
+      <div className="nav-card-actions">
+        <button className="nav-action-btn nav-action-primary" onClick={onResolve}>
+          Resolve chain →
+        </button>
+        {data.canonical_id && (
+          <button className="nav-action-btn" onClick={copyId}>
+            {copied ? 'Copied!' : 'Copy ID'}
+          </button>
+        )}
+      </div>
+      {articleSections && articleSections.length > 0 && (
+        <div className="nav-sections">
+          <div className="nav-sections-label">Loaded sections</div>
+          {articleSections.map((id) => {
+            const sec = id.split('/').slice(2).join('/')
+            return (
+              <button key={id} className="nav-section-btn" onClick={() => onSelectSection(id)}>
+                §{sec}
+              </button>
+            )
+          })}
+        </div>
+      )}
+    </div>
+  )
+}
+
 function ParseCard({ data }: { data: ParsedCitation }) {
   return (
     <div className="parse-preview">
@@ -87,7 +144,7 @@ function ParseCard({ data }: { data: ParsedCitation }) {
   )
 }
 
-function ResolveCard({ data }: { data: ResolvedProvision }) {
+function ResolveCard({ data, onSelectSection }: { data: ResolvedProvision; onSelectSection?: (id: string) => void }) {
   return (
     <div className="resolve-card">
       <div className="preview-row">
@@ -134,7 +191,11 @@ function ResolveCard({ data }: { data: ResolvedProvision }) {
           <span className="label">sections</span>
           <span>
             {data.article_sections.map((id) => (
-              <span key={id} className="article-section-item">
+              <span
+                key={id}
+                className={`article-section-item${onSelectSection ? ' article-section-link' : ''}`}
+                onClick={() => onSelectSection?.(id)}
+              >
                 {formatCanonicalId(id)}
               </span>
             ))}
@@ -279,10 +340,15 @@ function DebugPanel({ data }: { data: QueryResponse }) {
   return (
     <div className="debug-wrapper">
       <button className="debug-toggle" onClick={() => setOpen((o) => !o)}>
-        {open ? '▲ hide JSON' : '▼ show JSON'}
+        {open ? '▲ hide debug' : '▼ show debug'}
       </button>
       {open && (
         <div className="debug-panel">
+          <div className="section-title" style={{ marginBottom: 8 }}>Parse</div>
+          <ParseCard data={data.parsed} />
+          <div className="section-title" style={{ margin: '12px 0 8px' }}>Resolve</div>
+          <ResolveCard data={data.resolved} />
+          <div className="section-title" style={{ margin: '12px 0 8px' }}>Raw JSON</div>
           <pre>{JSON.stringify(data, null, 2)}</pre>
         </div>
       )}
@@ -293,6 +359,7 @@ function DebugPanel({ data }: { data: QueryResponse }) {
 export default function Home() {
   const [input, setInput] = useState('')
   const [parsePreview, setParsePreview] = useState<ParsedCitation | null>(null)
+  const [articleSections, setArticleSections] = useState<string[] | null>(null)
   const [result, setResult] = useState<QueryResponse | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -301,17 +368,30 @@ export default function Home() {
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current)
     const trimmed = input.trim()
-    if (!trimmed) { setParsePreview(null); return }
+    if (!trimmed) { setParsePreview(null); setArticleSections(null); return }
     debounceRef.current = setTimeout(async () => {
       const res = await fetch(`/api/parse?q=${encodeURIComponent(trimmed)}`)
-      if (res.ok) setParsePreview(await res.json() as ParsedCitation)
-    }, 200)
+      if (!res.ok) return
+      const parsed = await res.json() as ParsedCitation
+      setParsePreview(parsed)
+      // For article-level canonical IDs (section has no dot), fetch children
+      if (parsed.canonical_id && !/\./.test(parsed.section)) {
+        const qres = await fetch('/api/query', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query: trimmed }),
+        })
+        if (qres.ok) {
+          const qdata = await qres.json() as QueryResponse
+          setArticleSections(qdata.resolved.article_sections ?? null)
+        }
+      } else {
+        setArticleSections(null)
+      }
+    }, 300)
   }, [input])
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    const trimmed = input.trim()
-    if (!trimmed) return
+  async function resolve(query: string) {
     setLoading(true)
     setError(null)
     setResult(null)
@@ -319,7 +399,7 @@ export default function Home() {
       const res = await fetch('/api/query', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: trimmed }),
+        body: JSON.stringify({ query }),
       })
       if (!res.ok) {
         const body = await res.json() as { error: string }
@@ -332,6 +412,18 @@ export default function Home() {
     } finally {
       setLoading(false)
     }
+  }
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    const trimmed = input.trim()
+    if (trimmed) resolve(trimmed)
+  }
+
+  function selectSection(canonicalId: string) {
+    const label = formatCanonicalId(canonicalId)
+    setInput(label)
+    resolve(label)
   }
 
   return (
@@ -364,8 +456,12 @@ export default function Home() {
 
       {parsePreview && !result && (
         <section className="section">
-          <div className="section-title">Parse preview</div>
-          <ParseCard data={parsePreview} />
+          <NavigationCard
+            data={parsePreview}
+            articleSections={articleSections}
+            onResolve={() => resolve(input.trim())}
+            onSelectSection={selectSection}
+          />
         </section>
       )}
 
@@ -376,19 +472,16 @@ export default function Home() {
           <ResultSummary data={result} />
 
           <section className="section">
-            <div className="section-title">Parse</div>
-            <ParseCard data={result.parsed} />
-          </section>
-
-          <section className="section">
-            <div className="section-title">Resolve</div>
-            <ResolveCard data={result.resolved} />
-          </section>
-
-          <section className="section">
             <div className="section-title">Chain</div>
             <ChainView data={result} />
           </section>
+
+          {result.resolved.article_sections && result.resolved.article_sections.length > 0 && (
+            <section className="section">
+              <div className="section-title">Available sections</div>
+              <ResolveCard data={result.resolved} onSelectSection={selectSection} />
+            </section>
+          )}
 
           <DebugPanel data={result} />
         </>

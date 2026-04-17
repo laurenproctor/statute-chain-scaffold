@@ -126,6 +126,36 @@ body {
 .text-green { color: var(--green); }
 .text-amber { color: var(--amber); }
 
+/* Navigation card */
+.nav-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 6px;
+  padding: 16px;
+}
+.nav-card-label { font-size: 16px; font-weight: 600; letter-spacing: -0.2px; margin-bottom: 4px; }
+.nav-card-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 0; }
+.nav-action-btn {
+  padding: 6px 14px; border-radius: 4px; font-size: 12px; font-weight: 500;
+  cursor: pointer; border: 1px solid var(--border); background: var(--bg);
+  color: var(--muted); transition: color 0.15s, border-color 0.15s;
+}
+.nav-action-btn:hover { color: var(--text); border-color: #444; }
+.nav-action-primary { background: var(--text); color: var(--bg); border-color: var(--text); }
+.nav-action-primary:hover { opacity: 0.85; color: var(--bg); }
+.nav-sections { margin-top: 14px; border-top: 1px solid var(--border); padding-top: 12px; }
+.nav-sections-label {
+  font-size: 10px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.08em; color: var(--muted); margin-bottom: 8px;
+}
+.nav-section-btn {
+  display: block; width: 100%; text-align: left; padding: 5px 0;
+  background: none; border: none; color: var(--text); font-size: 13px;
+  cursor: pointer; border-bottom: 1px solid #1f1f1f; transition: color 0.1s;
+}
+.nav-section-btn:last-child { border-bottom: none; }
+.nav-section-btn:hover { color: var(--blue); }
+.article-section-link { cursor: pointer; }
+.article-section-link:hover { color: var(--blue); text-decoration: underline; }
+
 /* Resolve card */
 .resolve-card {
   background: var(--surface); border: 1px solid var(--border); border-radius: 6px;
