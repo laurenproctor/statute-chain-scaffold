@@ -98,11 +98,59 @@ describe('parseCitation', () => {
     if (!isParsed(result)) return
     expect(result.format).toBe('informal')
     expect(result.confidence).toBe(0.6)
-    expect(result.jurisdiction).toBe('federal')
+    expect(result.jurisdiction).toBe('unknown')
     expect(result.code).toBe('unknown')
     expect(result.section).toBe('1983')
     expect(result.subsection_path).toEqual([])
     expect(result.canonical_id).toBeUndefined()
+  })
+
+  it('42 U.S.C. §1983 (no space after §) → same as with space', () => {
+    const result = parseCitation('42 U.S.C. §1983')
+    expect(isParsed(result)).toBe(true)
+    if (!isParsed(result)) return
+    expect(result.format).toBe('structured')
+    expect(result.jurisdiction).toBe('federal')
+    expect(result.section).toBe('1983')
+    expect(result.canonical_id).toBe('federal/usc/42/1983')
+  })
+
+  it('N.Y. General Business Law § 349 → structured ny, code general-business', () => {
+    const result = parseCitation('N.Y. General Business Law § 349')
+    expect(isParsed(result)).toBe(true)
+    if (!isParsed(result)) return
+    expect(result.format).toBe('structured')
+    expect(result.jurisdiction).toBe('ny')
+    expect(result.code).toBe('general-business')
+    expect(result.section).toBe('349')
+    expect(result.canonical_id).toBe('ny/general-business/349')
+  })
+
+  it('section 1983 (lowercase) → informal, section 1983, canonical_id undefined', () => {
+    const result = parseCitation('section 1983')
+    expect(isParsed(result)).toBe(true)
+    if (!isParsed(result)) return
+    expect(result.format).toBe('informal')
+    expect(result.section).toBe('1983')
+    expect(result.canonical_id).toBeUndefined()
+  })
+
+  it('Section 265 → informal, jurisdiction unknown', () => {
+    const result = parseCitation('Section 265')
+    expect(isParsed(result)).toBe(true)
+    if (!isParsed(result)) return
+    expect(result.format).toBe('informal')
+    expect(result.jurisdiction).toBe('unknown')
+    expect(result.section).toBe('265')
+  })
+
+  it('42 U.S.C. § 265.02 → structured, section 265.02, canonical_id federal/usc/42/265.02', () => {
+    const result = parseCitation('42 U.S.C. § 265.02')
+    expect(isParsed(result)).toBe(true)
+    if (!isParsed(result)) return
+    expect(result.format).toBe('structured')
+    expect(result.section).toBe('265.02')
+    expect(result.canonical_id).toBe('federal/usc/42/265.02')
   })
 
   it('not a citation at all → ParseError', () => {

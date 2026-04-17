@@ -16,7 +16,7 @@ export function parseCitation(input: string): ParseResult {
   const raw = input
 
   // Structured: Federal USC — "42 U.S.C. § 1983" or "26 U.S.C. § 501(c)(3)"
-  const uscMatch = raw.match(/^(\d+)\s+U\.S\.C\.\s+§\s+([\d.]+)((?:\([^)]+\))*)$/)
+  const uscMatch = raw.match(/^(\d+)\s+U\.S\.C\.\s+§\s*(\d+(?:\.\d+)*)((?:\([^)]+\))*)$/)
   if (uscMatch) {
     const title = uscMatch[1]
     const section = uscMatch[2]
@@ -34,7 +34,7 @@ export function parseCitation(input: string): ParseResult {
   }
 
   // Structured: NY statute — "N.Y. Penal Law § 265.02(b)"
-  const nyMatch = raw.match(/^N\.Y\.\s+(.+?)\s+Law\s+§\s+([\d.]+)((?:\([^)]+\))*)$/)
+  const nyMatch = raw.match(/^N\.Y\.\s+(.+?)\s+Law\s+§\s*(\d+(?:\.\d+)*)((?:\([^)]+\))*)$/)
   if (nyMatch) {
     const lawName = nyMatch[1].toLowerCase().replace(/\s+/g, '-')
     const section = nyMatch[2]
@@ -77,7 +77,7 @@ export function parseCitation(input: string): ParseResult {
       raw,
       format: 'informal',
       confidence: 0.6,
-      jurisdiction: 'federal',
+      jurisdiction: 'unknown',
       code: 'unknown',
       section,
       subsection_path,
@@ -86,7 +86,7 @@ export function parseCitation(input: string): ParseResult {
   }
 
   // Informal: "Penal § 265"
-  const codeSecMatch = raw.match(/^([A-Za-z][A-Za-z\s]*?)\s+§\s+([\d.]+)((?:\([^)]+\))*)$/)
+  const codeSecMatch = raw.match(/^([A-Za-z][A-Za-z ]*?)\s+§\s*(\d+(?:\.\d+)*)((?:\([^)]+\))*)$/)
   if (codeSecMatch) {
     const code = codeSecMatch[1].trim().toLowerCase().replace(/\s+/g, '-')
     const section = codeSecMatch[2]
