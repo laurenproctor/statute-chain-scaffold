@@ -364,6 +364,21 @@
   .nav-link:hover { color: var(--ink); opacity: 1; background: var(--surface); }
   .nav-link-active { color: var(--ink); background: var(--surface); }
 
+  /* ── Site Notice ─────────────────────────────────────────────── */
+  .site-notice {
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .site-notice p {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 7px 32px;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.01em;
+    text-align: center;
+  }
+
   /* ── Footer ──────────────────────────────────────────────────── */
   .site-footer {
     border-top: 1px solid var(--border);
@@ -413,6 +428,13 @@
     gap: 16px;
     align-items: center;
     flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  .footer-legal-links {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
   }
   .footer-copy a { color: var(--muted); }
   .footer-copy a:hover { color: var(--ink); }
