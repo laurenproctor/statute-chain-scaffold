@@ -1,12 +1,5 @@
 import Link from 'next/link'
 
-const LINKS = [
-  { href: '/law-navigator', label: 'Law Navigator' },
-  { href: '/compare',       label: 'Compare Laws'  },
-  { href: '/browse',        label: 'Browse Codes'  },
-  { href: '/corpus',        label: 'Corpus'        },
-]
-
 export function Footer() {
   return (
     <footer className="site-footer">
@@ -15,11 +8,6 @@ export function Footer() {
           <Link href="/" className="footer-wordmark">Greyledge</Link>
           <p className="footer-tagline">A clarity engine for law.</p>
         </div>
-        <nav className="footer-nav">
-          {LINKS.map(({ href, label }) => (
-            <Link key={href} href={href} className="footer-nav-link">{label}</Link>
-          ))}
-        </nav>
       </div>
       <div className="footer-copy">
         <span>&copy; {new Date().getFullYear()} Greyledge. All rights reserved.</span>
@@ -30,6 +18,9 @@ export function Footer() {
           <Link href="/disclaimer">Disclaimer</Link>
           <Link href="/acceptable-use">Acceptable Use</Link>
         </div>
+      </div>
+      <div className="site-notice">
+        <p>Informational research tool. Verify conclusions against official sources and current law.</p>
       </div>
     </footer>
   )

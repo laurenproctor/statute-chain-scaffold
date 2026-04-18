@@ -637,9 +637,6 @@ export default function LawNavigatorPage() {
           <DebugPanel data={result} />
         </>
       )}
-      <footer className="site-footer">
-        Informational research tool. Verify conclusions against official sources and current law.
-      </footer>
     </main>
   )
 }

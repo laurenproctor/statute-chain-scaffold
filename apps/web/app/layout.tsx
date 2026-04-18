@@ -25,9 +25,6 @@ export default function RootLayout({
         <Nav />
         {children}
         <Footer />
-        <div className="site-notice">
-          <p>Informational research tool. Verify conclusions against official sources and current law.</p>
-        </div>
       </body>
     </html>
   );

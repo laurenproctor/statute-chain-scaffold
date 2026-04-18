@@ -90,9 +90,6 @@ export default async function RequestsPage() {
         </section>
       )}
 
-      <footer className="site-footer">
-        Informational research tool. Verify conclusions against official sources and current law.
-      </footer>
     </main>
   )
 }

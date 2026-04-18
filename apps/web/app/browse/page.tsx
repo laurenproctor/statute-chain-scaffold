@@ -20,9 +20,6 @@ export default function BrowsePage() {
         </div>
       </section>
 
-      <footer className="site-footer">
-        Informational research tool. Verify conclusions against official sources and current law.
-      </footer>
     </main>
   )
 }
