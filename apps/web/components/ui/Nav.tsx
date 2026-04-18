@@ -30,6 +30,7 @@ export function Nav() {
             {label}
           </Link>
         ))}
+        <Link href="/digital-discovery" className="nav-cta">Digital Discovery</Link>
       </div>
     </nav>
   )
