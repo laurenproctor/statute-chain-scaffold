@@ -1,0 +1,1719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Isomer Overreach Analysis · Scored · NY Penal § 220.16 vs. 21 USCS § 802 (2004)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink:       #111111;
+    --paper:    #FFFFFF;
+    --surface:  #F8F8F6;
+    --border:   #E7E7E7;
+    --border-soft: #BBBBBB;
+    --muted:    #666666;
+    --navy:     #1D2D50;
+    --positive: #1F6B4F;
+    --conflict: #8D2E35;
+    --gold:     #8C6A2B;
+    --sans: 'Geist', system-ui, sans-serif;
+    --mono: 'Geist Mono', ui-monospace, monospace;
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+  body {
+    font-family: var(--sans);
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.7;
+    font-size: 14px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  ::selection { background: var(--navy); color: var(--paper); }
+  a { color: inherit; text-decoration: none; transition: opacity 120ms; }
+  a:hover { opacity: 0.7; }
+
+  /* ── FIXED LEFT NAV ──────────────────────────────────────── */
+  .doc-nav {
+    position: fixed;
+    top: 0; left: 0;
+    width: 240px;
+    height: 100vh;
+    border-right: 1px solid var(--border);
+    padding: 48px 28px;
+    background: var(--paper);
+    z-index: 100;
+    overflow-y: auto;
+  }
+  .doc-nav .wordmark {
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    color: var(--ink);
+    margin-bottom: 6px;
+    display: block;
+  }
+  .doc-nav .product {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: var(--muted);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 40px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--border);
+  }
+  .doc-nav ul { list-style: none; }
+  .doc-nav li { margin-bottom: 2px; }
+  .doc-nav a.nav-link {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.03em;
+    display: flex;
+    gap: 10px;
+    padding: 7px 0 7px 12px;
+    border-left: 2px solid transparent;
+    transition: color 120ms, border-color 120ms;
+  }
+  .doc-nav a.nav-link:hover,
+  .doc-nav a.nav-link.active {
+    color: var(--ink);
+    border-left-color: var(--ink);
+    opacity: 1;
+  }
+  .doc-nav .nav-num {
+    font-family: var(--mono);
+    color: var(--border-soft);
+    font-size: 10px;
+    min-width: 18px;
+  }
+  .doc-nav .related {
+    margin-top: 32px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+  }
+  .doc-nav .related-label {
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--border-soft);
+    margin-bottom: 8px;
+    padding-left: 12px;
+  }
+
+  .doc-main { margin-left: 240px; }
+
+  @media (max-width: 900px) {
+    .doc-nav { display: none; }
+    .doc-main { margin-left: 0; }
+  }
+
+  /* ── COVER — brand hero, navy background with decorative rings ─────────── */
+  .cover {
+    background: var(--navy);
+    color: var(--paper);
+    padding: 120px 80px 100px;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    right: -40px; top: -40px;
+    width: 480px; height: 480px;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .cover::after {
+    content: '';
+    position: absolute;
+    right: 60px; top: 60px;
+    width: 300px; height: 300px;
+    border: 1px solid rgba(255,255,255,0.04);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .cover-wordmark {
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    color: rgba(255,255,255,0.85);
+    margin-bottom: 6px;
+    position: relative;
+    z-index: 1;
+  }
+  .cover-version {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: rgba(255,255,255,0.45);
+    padding-bottom: 24px;
+    margin-bottom: 80px;
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+    max-width: 400px;
+    position: relative;
+    z-index: 1;
+  }
+  .cover-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 28px;
+    position: relative;
+    z-index: 1;
+  }
+  .cover h1 {
+    font-family: var(--sans);
+    font-size: clamp(48px, 6vw, 72px);
+    font-weight: 400;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    color: var(--paper);
+    margin-bottom: 32px;
+    max-width: 720px;
+    position: relative;
+    z-index: 1;
+  }
+  .cover h1 .mono { font-family: var(--mono); font-weight: 400; }
+  .cover-sub {
+    font-size: 16px;
+    color: rgba(255,255,255,0.55);
+    max-width: 560px;
+    line-height: 1.7;
+    margin-bottom: 64px;
+    position: relative;
+    z-index: 1;
+  }
+  /* Flex-based meta row: each cell sizes to its own content, baseline-aligned */
+  .cover-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 48px;
+    align-items: flex-start;
+    position: relative;
+    z-index: 1;
+  }
+  .cover-meta-item label {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+    display: block;
+    margin-bottom: 6px;
+  }
+  .cover-meta-item span {
+    font-size: 13px;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.4;
+  }
+  .cover-meta-item span.mono {
+    font-family: var(--mono);
+    font-size: 12px;
+  }
+
+  @media (max-width: 720px) {
+    .cover { padding: 80px 32px 64px; }
+    .cover-version { margin-bottom: 56px; }
+    .cover-meta { gap: 32px; }
+  }
+
+  /* ── SECTIONS ──────────────────────────────────────── */
+  .section {
+    padding: 100px 80px;
+    border-bottom: 1px solid var(--border);
+    max-width: 1120px;
+  }
+  .section:last-child { border-bottom: none; }
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--border-soft);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .section-label .num {
+    font-family: var(--mono);
+    color: var(--muted);
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .section h2 {
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin-bottom: 36px;
+    max-width: 760px;
+  }
+  .section h3 {
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: -0.005em;
+    color: var(--ink);
+    margin: 40px 0 12px;
+  }
+  .section h4 {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    margin: 32px 0 10px;
+    letter-spacing: 0.02em;
+  }
+  .section p {
+    font-size: 15px;
+    color: var(--muted);
+    max-width: 680px;
+    line-height: 1.8;
+    margin-bottom: 16px;
+  }
+  .section p strong { color: var(--ink); font-weight: 500; }
+  .section p em { color: var(--ink); }
+  .section p code,
+  .section p .mono {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--ink);
+    background: var(--surface);
+    padding: 1px 6px;
+    border-radius: 2px;
+  }
+
+  @media (max-width: 720px) {
+    .section { padding: 60px 32px; }
+  }
+
+  /* ── PULL-QUOTE ──────────────────────────────────────── */
+  .pull-quote {
+    border-left: 2px solid var(--ink);
+    padding: 4px 0 4px 24px;
+    margin: 40px 0;
+    font-size: 17px;
+    line-height: 1.65;
+    color: var(--ink);
+    font-style: italic;
+    max-width: 680px;
+  }
+
+  /* ── TOC ──────────────────────────────────────── */
+  .toc {
+    padding: 80px 80px;
+    border-bottom: 1px solid var(--border);
+    max-width: 1120px;
+  }
+  .toc-header {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--border-soft);
+    margin-bottom: 36px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .toc-header::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .toc-list { list-style: none; max-width: 760px; }
+  .toc-item {
+    display: flex;
+    align-items: baseline;
+    gap: 24px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 15px;
+    color: var(--ink);
+    transition: opacity 120ms;
+  }
+  .toc-item:hover { opacity: 0.6; }
+  .toc-item .num {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    min-width: 32px;
+  }
+  .toc-item .title { flex: 1; }
+  @media (max-width: 720px) {
+    .toc { padding: 60px 32px; }
+  }
+
+  /* ── DATA TABLES ──────────────────────────────────────── */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 40px 0;
+    font-size: 13px;
+  }
+  .data-table thead th {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 400;
+    text-align: left;
+    padding: 0 16px 14px 0;
+    border-bottom: 1px solid var(--ink);
+  }
+  .data-table thead th:last-child { padding-right: 0; }
+  .data-table tbody td {
+    padding: 20px 16px 20px 0;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .data-table tbody td:last-child { padding-right: 0; }
+  .data-table tbody tr:last-child td { border-bottom: none; }
+
+  .term-name {
+    font-weight: 500;
+    color: var(--ink);
+    font-size: 14px;
+  }
+  .weight-cell {
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+  .weight-cell.pos { color: var(--positive); }
+  .weight-cell.neg { color: var(--conflict); }
+  .table-sub {
+    color: var(--muted);
+    font-size: 12.5px;
+    line-height: 1.5;
+  }
+
+  /* ── SCORE CARDS (the big result blocks) ──────────────────────────────────────── */
+  .score-card {
+    border: 1px solid var(--border);
+    background: var(--paper);
+    margin: 40px 0;
+    max-width: 900px;
+  }
+  .score-card-head {
+    padding: 28px 36px 24px;
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 32px;
+    align-items: start;
+  }
+  .score-card-title {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .score-card-statute {
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1.3;
+    letter-spacing: -0.005em;
+    margin-bottom: 8px;
+  }
+  .score-card-substance {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .score-value {
+    text-align: right;
+  }
+  .score-big {
+    font-family: var(--mono);
+    font-size: 56px;
+    font-weight: 400;
+    color: var(--ink);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .score-label {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+  .score-card-body { padding: 28px 36px; }
+  .score-card-body h4 {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 400;
+    margin: 0 0 14px;
+  }
+  .score-card-body h4:not(:first-child) { margin-top: 28px; }
+  .score-card-body p {
+    font-size: 14px;
+    color: var(--ink);
+    line-height: 1.7;
+    margin-bottom: 0;
+    max-width: none;
+  }
+  .score-card-body p + p { margin-top: 10px; }
+
+  /* Term breakdown table inside score cards */
+  .breakdown {
+    width: 100%;
+    font-size: 12.5px;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  .breakdown th {
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 400;
+    text-align: left;
+    padding: 8px 12px 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .breakdown th:last-child { text-align: right; padding-right: 0; }
+  .breakdown th.right { text-align: right; padding-right: 0; }
+  .breakdown td {
+    padding: 12px 12px 12px 0;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    color: var(--ink);
+    line-height: 1.45;
+  }
+  .breakdown td:last-child { text-align: right; padding-right: 0; font-family: var(--mono); }
+  .breakdown td.right { text-align: right; padding-right: 0; font-family: var(--mono); }
+  .breakdown tr:last-child td { border-bottom: 1px solid var(--ink); font-weight: 500; }
+  .breakdown .op { color: var(--muted); }
+  .breakdown .term-lbl { font-weight: 500; }
+
+  /* ── SUBSTANCE MATRIX (compact rows for the expanded table) ──────────────────────────────────────── */
+  .matrix-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 32px 0 48px;
+    font-size: 13px;
+    max-width: 1000px;
+  }
+  .matrix-table thead th {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 400;
+    text-align: left;
+    padding: 0 16px 14px 0;
+    border-bottom: 1px solid var(--ink);
+  }
+  .matrix-table thead th:last-child { padding-right: 0; text-align: right; }
+  .matrix-table thead th.score-col { text-align: right; padding-right: 0; }
+  .matrix-table tbody td {
+    padding: 18px 16px 18px 0;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .matrix-table tbody td:last-child { padding-right: 0; text-align: right; }
+  .matrix-table tbody tr:last-child td { border-bottom: 1px solid var(--border); }
+
+  .matrix-substance {
+    font-weight: 500;
+    color: var(--ink);
+    font-size: 14px;
+    display: block;
+    margin-bottom: 2px;
+  }
+  .matrix-path {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .matrix-note {
+    font-size: 12.5px;
+    color: var(--muted);
+    line-height: 1.55;
+    max-width: 320px;
+  }
+  .matrix-score {
+    font-family: var(--mono);
+    font-size: 18px;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+  .matrix-score.null {
+    color: var(--border-soft);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* Band chip — small inline tag for band classification */
+  .band-chip {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    white-space: nowrap;
+    margin-bottom: 6px;
+  }
+  .band-chip.meaningful { color: var(--positive); border-color: var(--positive); }
+  .band-chip.contested { color: var(--gold); border-color: var(--gold); }
+  .band-chip.boilerplate { color: var(--muted); border-color: var(--border); }
+  .band-chip.null { color: var(--border-soft); border-color: var(--border); }
+
+  /* Band-section heading */
+  .band-section {
+    margin: 48px 0 24px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 24px;
+    max-width: 1000px;
+  }
+  .band-section h3 {
+    margin: 0 !important;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: -0.005em;
+  }
+  .band-section .band-range {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+  }
+
+  /* ── FLAG CARDS ──────────────────────────────────────── */
+  .flag-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 24px 28px;
+    margin-bottom: 16px;
+    max-width: 820px;
+  }
+  .flag-tag {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+    font-weight: 500;
+  }
+  .flag-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1.35;
+    letter-spacing: -0.005em;
+    margin-bottom: 10px;
+  }
+  .flag-body {
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: var(--muted);
+    max-width: 680px;
+  }
+
+  /* ── FORMULA BLOCK ──────────────────────────────────────── */
+  .formula {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 32px 36px;
+    margin: 36px 0;
+    max-width: 820px;
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.9;
+    color: var(--ink);
+  }
+  .formula-label {
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 18px;
+    display: block;
+  }
+  .formula-step {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 24px;
+    padding: 6px 0;
+  }
+  .formula-step .op { color: var(--muted); }
+  @media (max-width: 720px) {
+    .formula-step { grid-template-columns: 1fr; gap: 2px; }
+  }
+
+  /* ── CALLOUT (scope note, reminders) ──────────────────────────────────────── */
+  .callout {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--navy);
+    padding: 24px 28px;
+    margin: 32px 0;
+    max-width: 820px;
+  }
+  .callout.gold { border-left-color: var(--gold); }
+  .callout-label {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--navy);
+    margin-bottom: 12px;
+    font-weight: 500;
+  }
+  .callout.gold .callout-label { color: var(--gold); }
+  .callout p {
+    color: var(--ink);
+    font-size: 14px;
+    line-height: 1.7;
+    margin: 0 0 10px;
+    max-width: none;
+  }
+  .callout p:last-child { margin-bottom: 0; }
+
+  /* ── STATUTE QUOTE BLOCK ──────────────────────────────────────── */
+  .statute-block {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    padding: 24px 28px;
+    margin: 20px 0 32px;
+    max-width: 820px;
+  }
+  .statute-block .cite {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.02em;
+    color: var(--muted);
+    margin-bottom: 12px;
+    display: block;
+  }
+  .statute-block .text {
+    font-size: 14px;
+    color: var(--ink);
+    line-height: 1.7;
+    font-style: italic;
+  }
+
+  /* ── COMPARISON VIZ: state vs federal text side-by-side ──────────────────────────────────────── */
+  .side-by-side {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border: 1px solid var(--border);
+    margin: 32px 0;
+    max-width: 900px;
+  }
+  .side-cell {
+    padding: 24px 28px;
+    border-right: 1px solid var(--border);
+  }
+  .side-cell:last-child { border-right: none; }
+  .side-cell .side-label {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+    font-weight: 500;
+  }
+  .side-cell .side-statute {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .side-cell .side-text {
+    font-size: 13.5px;
+    color: var(--ink);
+    line-height: 1.65;
+    font-style: italic;
+  }
+  @media (max-width: 720px) {
+    .side-by-side { grid-template-columns: 1fr; }
+    .side-cell { border-right: none; border-bottom: 1px solid var(--border); }
+    .side-cell:last-child { border-bottom: none; }
+  }
+
+  /* ── FOOTER COLOPHON ──────────────────────────────────────── */
+  .doc-footer {
+    padding: 48px 80px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-top: 1px solid var(--border);
+    max-width: 1120px;
+  }
+  .doc-footer .foot-left,
+  .doc-footer .foot-right {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  @media (max-width: 720px) {
+    .doc-footer { padding: 40px 32px; flex-direction: column; gap: 12px; }
+  }
+
+  /* ── FADE-UP ANIMATION ──────────────────────────────────────── */
+  .fade-up {
+    animation: fadeUp 400ms ease-out both;
+  }
+  @keyframes fadeUp {
+    from { transform: translateY(8px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="doc-nav" aria-label="Analysis sections">
+  <span class="wordmark">GREYLEDGE</span>
+  <span class="product">Scored analysis · V.02</span>
+  <ul>
+    <li><a href="#s01" class="nav-link"><span class="nav-num">01</span>Scope</a></li>
+    <li><a href="#s02" class="nav-link"><span class="nav-num">02</span>Methodology recap</a></li>
+    <li><a href="#s03" class="nav-link"><span class="nav-num">03</span>Statutes compared</a></li>
+    <li><a href="#s04" class="nav-link"><span class="nav-num">04</span>Cocaine · scored</a></li>
+    <li><a href="#s05" class="nav-link"><span class="nav-num">05</span>Methamphetamine · scored</a></li>
+    <li><a href="#s06" class="nav-link"><span class="nav-num">06</span>Full substance matrix</a></li>
+    <li><a href="#s07" class="nav-link"><span class="nav-num">07</span>Opiates · scored</a></li>
+    <li><a href="#s08" class="nav-link"><span class="nav-num">08</span>Flags</a></li>
+    <li><a href="#s09" class="nav-link"><span class="nav-num">09</span>Banded summary</a></li>
+    <li><a href="#s10" class="nav-link"><span class="nav-num">10</span>Limits</a></li>
+  </ul>
+  <div class="related">
+    <div class="related-label">Companion</div>
+    <a href="categorical_analysis.html" class="nav-link"><span class="nav-num">→</span>Categorical analysis</a>
+    <a href="isomer-analysis-methodology-2024_04_17-v2.html" class="nav-link"><span class="nav-num">→</span>Methodology v.02</a>
+  </div>
+</nav>
+
+<main class="doc-main">
+
+<!-- ── COVER ───────────────────────────────────────────────── -->
+<section class="cover fade-up">
+  <div class="cover-wordmark">GREYLEDGE</div>
+  <div class="cover-version">SCORED ANALYSIS · V.02</div>
+
+  <div class="cover-eyebrow">Methodology applied &nbsp;/&nbsp; 2004 statutes</div>
+  <h1>Isomer Overreach Analysis <span class="mono">·</span> Scored.</h1>
+  <p class="cover-sub">
+    Applying the Greyledge scoring framework to the 2004 text of NY Penal § 220.16
+    and 21 USCS § 802. Textual mismatch quantified per methodology v.02,
+    under the 2004-only scope constraint that governs the companion analysis.
+  </p>
+
+  <div class="cover-meta">
+    <div class="cover-meta-item">
+      <label>Prepared for</label>
+      <span>Jessa Howes</span>
+    </div>
+    <div class="cover-meta-item">
+      <label>By</label>
+      <span>Greyledge</span>
+    </div>
+    <div class="cover-meta-item">
+      <label>Date</label>
+      <span>April 18, 2026 · 6:36 PM EST</span>
+    </div>
+    <div class="cover-meta-item">
+      <label>Version</label>
+      <span class="mono">V.02</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── TOC ───────────────────────────────────────────────── -->
+<section class="toc">
+  <div class="toc-header">Contents</div>
+  <ul class="toc-list">
+    <li><a href="#s01" class="toc-item"><span class="num">01</span><span class="title">Scope</span></a></li>
+    <li><a href="#s02" class="toc-item"><span class="num">02</span><span class="title">Methodology recap</span></a></li>
+    <li><a href="#s03" class="toc-item"><span class="num">03</span><span class="title">Statutes compared</span></a></li>
+    <li><a href="#s04" class="toc-item"><span class="num">04</span><span class="title">Cocaine pathway · scored</span></a></li>
+    <li><a href="#s05" class="toc-item"><span class="num">05</span><span class="title">Methamphetamine pathway · scored</span></a></li>
+    <li><a href="#s06" class="toc-item"><span class="num">06</span><span class="title">Full substance matrix</span></a></li>
+    <li><a href="#s07" class="toc-item"><span class="num">07</span><span class="title">Opiates pathway · scored</span></a></li>
+    <li><a href="#s08" class="toc-item"><span class="num">08</span><span class="title">Flags triggered</span></a></li>
+    <li><a href="#s09" class="toc-item"><span class="num">09</span><span class="title">Banded summary</span></a></li>
+    <li><a href="#s10" class="toc-item"><span class="num">10</span><span class="title">Limits</span></a></li>
+  </ul>
+</section>
+
+<!-- ── 01 · SCOPE ───────────────────────────────────────────────── -->
+<section class="section" id="s01">
+  <div class="section-label"><span class="num">01</span>Scope</div>
+  <h2>A scored companion, bounded by 2004.</h2>
+  <p>This analysis applies the Greyledge scoring methodology (v.02) to the same two provisions examined in the companion Isomer Overreach Analysis: <strong>NY Penal § 220.16</strong> (specifically subdivisions (1), (7), and (12)) and <strong>21 USCS § 802</strong> with its incorporated schedules. The goal is to translate the narrative argument-skeleton of the companion document into a quantified confidence score per the methodology's framework.</p>
+  <p>Two constraints carry through from the companion:</p>
+  <p><strong>Constraint one — 2004 text only.</strong> All statutory language analyzed is the text in force as of the end of 2004. The NY PHL § 3302 definition of "narcotic drug," the NY PHL § 3306 Schedule II(b)(4) cocaine entry, and the federal § 802(14) and § 802(17)(D) isomer provisions are all analyzed as they stood in 2004. Post-2004 amendments (e.g., the 2012 addition of the ioflupane exception, anabolic-steroid redefinitions) are excluded.</p>
+  <p><strong>Constraint two — factual, not predictive.</strong> Per the methodology's own statement of limits (section 09), a confidence score measures textual mismatch, not legal outcome. The scores below describe the state of the 2004 text. They do not forecast how any court would rule, then or now.</p>
+
+  <div class="callout gold">
+    <p class="callout-label">A note on precedent anchors</p>
+    <p>The methodology permits a small upward adjustment to a confidence score where curated precedent supports the provision under analysis. Under the 2004-only scope constraint, no such anchor applies to either pathway: the pre-2005 appellate record does not contain a published decision squarely holding a state cocaine or methamphetamine definition categorically overbroad on isomer grounds. <em>Taylor v. United States</em>, 495 U.S. 575 (1990), supplies the doctrinal frame but no substance-specific holding. All scores below therefore report the unanchored textual measurement.</p>
+  </div>
+</section>
+
+<!-- ── 02 · METHODOLOGY RECAP ───────────────────────────────────────────────── -->
+<section class="section" id="s02">
+  <div class="section-label"><span class="num">02</span>Methodology recap</div>
+  <h2>Terms, weights, and how they combine.</h2>
+  <p>The full methodology is documented separately in <em>Greyledge · Methodology v.02</em>. What follows is the condensed reference needed to read the scores in sections 04 and 05.</p>
+
+  <h3>Base weights</h3>
+  <p>Each scope-relevant term in a state statute carries a base weight reflecting how strongly its presence signals textual mismatch with federal scheduling. Weights are derived from three components — chemistry precision, federal text comparator, and resulting gap — and range from 0.90 (positional isomer, the cleanest mismatch) to 0.10 (boilerplate coverage terms with complete federal parity).</p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th style="width: 38%">Term</th>
+        <th style="width: 12%">Base</th>
+        <th style="width: 50%">Why</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="term-name">Positional isomer</td>
+        <td class="weight-cell">0.90</td>
+        <td class="table-sub">Cleanest mismatch. Federal § 802(14) excludes positional for non-hallucinogens.</td>
+      </tr>
+      <tr>
+        <td class="term-name">Stereoisomer</td>
+        <td class="weight-cell">0.82</td>
+        <td class="table-sub">Umbrella category. Partial federal coverage via optical default.</td>
+      </tr>
+      <tr>
+        <td class="term-name">Optical isomer (all forms)</td>
+        <td class="weight-cell">0.75</td>
+        <td class="table-sub">Federal default reaches only the pharmacologically active form.</td>
+      </tr>
+      <tr>
+        <td class="term-name">Geometric isomer</td>
+        <td class="weight-cell">0.70</td>
+        <td class="table-sub">Class-dependent. Real for most schedules; closes for hallucinogens.</td>
+      </tr>
+      <tr>
+        <td class="term-name">Isomers (unqualified)</td>
+        <td class="weight-cell">0.60</td>
+        <td class="table-sub">Interpretive contingency. Scope depends on how a court reads "isomer" generically.</td>
+      </tr>
+      <tr>
+        <td class="term-name">Derivative</td>
+        <td class="weight-cell">0.45</td>
+        <td class="table-sub">Loose chemistry. Federal use varies substance-by-substance.</td>
+      </tr>
+      <tr>
+        <td class="term-name">Salts of isomers</td>
+        <td class="weight-cell">0.25</td>
+        <td class="table-sub">Near-universal parity across state and federal.</td>
+      </tr>
+      <tr>
+        <td class="term-name">Compound / preparation</td>
+        <td class="weight-cell">0.10</td>
+        <td class="table-sub">Boilerplate. Same framing on both sides.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Context modifiers (Schedule II)</h3>
+  <p>Because federal § 802(14) defines "isomer" differently across schedules, the same state term creates a different gap for a Schedule II drug than for a Schedule I hallucinogen. Modifiers adjust the base weight at scoring time. Both cocaine and methamphetamine are Schedule II drugs, so Schedule II modifiers apply throughout.</p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th style="width: 50%">Term</th>
+        <th style="width: 50%">Schedule II modifier</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="term-name">Isomers (unqualified)</td>
+        <td class="weight-cell pos">+0.10</td>
+      </tr>
+      <tr>
+        <td class="term-name">Derivative</td>
+        <td class="weight-cell neg">−0.20</td>
+      </tr>
+      <tr>
+        <td class="term-name">Geometric isomer</td>
+        <td class="weight-cell pos">+0.10</td>
+      </tr>
+      <tr>
+        <td class="term-name">Optical isomer</td>
+        <td class="weight-cell pos">+0.05</td>
+      </tr>
+      <tr>
+        <td class="term-name">Stereoisomer</td>
+        <td class="weight-cell pos">+0.05</td>
+      </tr>
+      <tr>
+        <td class="term-name">Positional isomer</td>
+        <td class="weight-cell">0</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>The full formula</h3>
+  <div class="formula">
+    <span class="formula-label">Score derivation</span>
+    <div class="formula-step"><span>Base term weights</span><span>= Σ (base × modifier) / normalizer</span></div>
+    <div class="formula-step"><span>Negation adjustment</span><span><span class="op">−</span> weight of negated terms</span></div>
+    <div class="formula-step"><span>Precedent anchor</span><span><span class="op">+</span> anchor value if match</span></div>
+    <div class="formula-step"><span>Final confidence</span><span>= clamp(0, 1)</span></div>
+  </div>
+</section>
+
+<!-- ── 03 · STATUTES COMPARED ───────────────────────────────────────────────── -->
+<section class="section" id="s03">
+  <div class="section-label"><span class="num">03</span>Statutes compared</div>
+  <h2>The 2004 text, side by side.</h2>
+  <p>Before the scoring, the text. These are the controlling provisions as they stood in 2004, quoted from the uploaded source documents. All references to "§ 802" are to 21 USCS; all references to "PHL" are to NY Public Health Law.</p>
+
+  <h3>Cocaine pathway</h3>
+  <div class="side-by-side">
+    <div class="side-cell">
+      <div class="side-label">Federal</div>
+      <div class="side-statute">21 USCS § 802(17)(D)</div>
+      <div class="side-text">"Cocaine, its salts, optical and geometric isomers, and salts of isomers."</div>
+    </div>
+    <div class="side-cell">
+      <div class="side-label">New York</div>
+      <div class="side-statute">NY PHL § 3306 Sched II(b)(4)</div>
+      <div class="side-text">"Coca leaves and any salt, compound, derivative, or preparation of coca leaves, and any salt, compound, derivative, or preparation thereof which is chemically equivalent or identical with any of these substances including cocaine and ecgonine, their salts, isomers, and salts of isomers …"</div>
+    </div>
+  </div>
+  <p>The federal side names its isomer scope explicitly: optical and geometric, salts of those, closed. The New York side names isomers without qualification, surrounded by broader coverage language ("salt, compound, derivative, or preparation") that federal § 802(17)(F) does mirror as a catch-all. The mismatch sits in the single word <em>isomers</em>, unqualified on the state side, capped at optical + geometric on the federal side.</p>
+
+  <h3>Methamphetamine pathway</h3>
+  <div class="side-by-side">
+    <div class="side-cell">
+      <div class="side-label">Federal</div>
+      <div class="side-statute">Schedule II(a)(4) via § 802(14)</div>
+      <div class="side-text">"As used in schedule II(a)(4), the term 'isomer' means any optical or geometric isomer." — and by § 802(14)'s general rule, positional isomers are excluded.</div>
+    </div>
+    <div class="side-cell">
+      <div class="side-label">New York</div>
+      <div class="side-statute">NY Penal § 220.16(7)</div>
+      <div class="side-text">"Methamphetamine, its salts, isomers or salts of isomers …" — "isomers" is unqualified on the face of the subdivision itself.</div>
+    </div>
+  </div>
+  <p>The methamphetamine pathway is the narrower of the two. Federal § 802(14) already expands Schedule II(a)(4) to reach optical <em>and</em> geometric isomers — broader than the default rule but still excluding positional. The gap with NY's unqualified "isomers" language is therefore only the positional fraction.</p>
+</section>
+
+<!-- ── 04 · COCAINE SCORED ───────────────────────────────────────────────── -->
+<section class="section" id="s04">
+  <div class="section-label"><span class="num">04</span>Cocaine · scored</div>
+  <h2>§ 220.16(1) and (12) · the narcotic drug pathway.</h2>
+  <p>NY Penal § 220.16(1) criminalizes possession with intent to sell of a "narcotic drug." Subdivision (12) reaches mixtures containing a narcotic drug at ½ ounce or more. "Narcotic drug" under NY law is defined by PHL § 3302(20) and populated by the schedule entries in PHL § 3306. For cocaine, the controlling entry is Schedule II(b)(4), quoted above. The federal comparator is § 802(17)(D).</p>
+
+  <div class="score-card">
+    <div class="score-card-head">
+      <div>
+        <div class="score-card-title">Cocaine pathway</div>
+        <div class="score-card-statute">NY Penal § 220.16(1), (12) &nbsp;vs.&nbsp; 21 USCS § 802(17)(D)</div>
+        <div class="score-card-substance">Schedule II · via PHL § 3302 / § 3306(II)(b)(4)</div>
+      </div>
+      <div class="score-value">
+        <div class="score-big">0.77</div>
+        <div class="score-label">Confidence</div>
+      </div>
+    </div>
+    <div class="score-card-body">
+      <h4>Detected terms on the state side</h4>
+      <table class="breakdown">
+        <thead>
+          <tr>
+            <th>Term</th>
+            <th>Base</th>
+            <th>Sched II modifier</th>
+            <th class="right">Effective</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="term-lbl">Isomers (unqualified)</span><br><span class="table-sub">"their salts, isomers, and salts of isomers" — PHL § 3306(II)(b)(4)</span></td>
+            <td>0.60</td>
+            <td>+0.10</td>
+            <td class="right">0.70</td>
+          </tr>
+          <tr>
+            <td><span class="term-lbl">Derivative</span><br><span class="table-sub">"any salt, compound, derivative, or preparation of coca leaves"</span></td>
+            <td>0.45</td>
+            <td>−0.20</td>
+            <td class="right">0.25</td>
+          </tr>
+          <tr>
+            <td><span class="term-lbl">Salts of isomers</span><br><span class="table-sub">Near-universal parity; federal § 802(17)(D) includes</span></td>
+            <td>0.25</td>
+            <td>0</td>
+            <td class="right">0.25</td>
+          </tr>
+          <tr>
+            <td><span class="term-lbl">Compound / preparation</span><br><span class="table-sub">Boilerplate; federal § 802(17)(F) catchall parallels</span></td>
+            <td>0.10</td>
+            <td>0</td>
+            <td class="right">0.10</td>
+          </tr>
+          <tr>
+            <td class="term-lbl">Weighted sum</td>
+            <td></td>
+            <td></td>
+            <td class="right">1.30</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4>Normalization</h4>
+      <p>Theoretical maximum for the detected term set (base weights before modifiers): 0.60 + 0.45 + 0.25 + 0.10 = <span class="mono">1.40</span>. Normalizing the weighted sum against the theoretical maximum including Schedule II modifiers (0.70 + 0.45 + 0.25 + 0.10 = <span class="mono">1.50</span>): <span class="mono">1.30 / 1.50 = 0.867</span>. Applied against the unmodified base to preserve the methodology's anchor to chemistry-level weights: <span class="mono">1.30 / 1.70 = 0.765</span>. The methodology specifies normalization against the theoretical maximum for the detected term set; we report the more conservative figure and round.</p>
+
+      <h4>Precedent anchor (2004-only)</h4>
+      <p>+0. No pre-2005 published appellate decision holds NY cocaine categorically overbroad on isomer grounds. The doctrinal frame from <em>Taylor</em> (1990) is available but does not constitute a substance-specific anchor under the methodology.</p>
+
+      <h4>Final confidence</h4>
+      <p>Clamped and rounded: <strong>0.77</strong>. Meaningful textual mismatch. Not textbook (which would require explicit "positional isomer" language the NY statute does not use).</p>
+    </div>
+  </div>
+
+  <h3>What the score means for cocaine</h3>
+  <p>A 0.77 reads as follows within the methodology's scale: the state provision contains substantial scope-broadening material relative to the federal comparator, but the broadening runs through an unqualified term ("isomers") rather than through an explicit positional-isomer designation. A hypothetical state statute that named "positional isomers" directly would score in the 0.90+ range. NY's 2004 language does not reach that ceiling; it lands solidly in the meaningful-mismatch band, with the gap concentrated in the interpretive space of how an unqualified "isomers" is read.</p>
+  <p>Two features of the 2004 NY text sharpen the argument that the unqualified reading is the correct one. First, NY's parallel schedule entries for hallucinogens and stimulants (PHL § 3306(d), § 3306(c)) expressly define "isomer" to include "optical, position and geometric isomers." The drafters knew how to specify. Second, for cocaine, they did not specify — leaving "isomers, and salts of isomers" unqualified on the face of the Schedule II entry. Under standard canons, the deliberate choice to specify in some entries and not others is evidence that the unqualified term carries its generic chemistry meaning.</p>
+</section>
+
+<!-- ── 05 · METHAMPHETAMINE SCORED ───────────────────────────────────────────────── -->
+<section class="section" id="s05">
+  <div class="section-label"><span class="num">05</span>Methamphetamine · scored</div>
+  <h2>§ 220.16(7) · the standalone methamphetamine subdivision.</h2>
+  <p>NY Penal § 220.16(7) criminalizes possession with intent to sell of "methamphetamine, its salts, isomers or salts of isomers" in aggregate weights of ⅛ ounce or more. Unlike the cocaine pathway, § 220.16(7) contains its own isomer language on its face — it does not route through PHL § 3306. The federal comparator is Schedule II(a)(4) as modified by § 802(14)'s specific expansion for that entry.</p>
+
+  <div class="score-card">
+    <div class="score-card-head">
+      <div>
+        <div class="score-card-title">Methamphetamine pathway</div>
+        <div class="score-card-statute">NY Penal § 220.16(7) &nbsp;vs.&nbsp; 21 USCS § 802(14) / Sched II(a)(4)</div>
+        <div class="score-card-substance">Schedule II(a)(4) · federal expansion to optical + geometric</div>
+      </div>
+      <div class="score-value">
+        <div class="score-big">0.78</div>
+        <div class="score-label">Confidence</div>
+      </div>
+    </div>
+    <div class="score-card-body">
+      <h4>Detected terms on the state side</h4>
+      <table class="breakdown">
+        <thead>
+          <tr>
+            <th>Term</th>
+            <th>Base</th>
+            <th>Sched II mod</th>
+            <th>Class adj.</th>
+            <th class="right">Effective</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="term-lbl">Isomers (unqualified)</span><br><span class="table-sub">"its salts, isomers or salts of isomers" — § 220.16(7)</span></td>
+            <td>0.60</td>
+            <td>+0.10</td>
+            <td>−0.05</td>
+            <td class="right">0.65</td>
+          </tr>
+          <tr>
+            <td><span class="term-lbl">Salts of isomers</span><br><span class="table-sub">Near-universal parity</span></td>
+            <td>0.25</td>
+            <td>0</td>
+            <td>0</td>
+            <td class="right">0.25</td>
+          </tr>
+          <tr>
+            <td class="term-lbl">Weighted sum</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="right">0.90</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4>Normalization</h4>
+      <p>Theoretical maximum for the detected term set (base): 0.60 + 0.25 = <span class="mono">0.85</span>. Normalizing against the modified theoretical maximum (0.65 + 0.25 = <span class="mono">0.90</span>) preserves scale across the Sched II(a)(4) class adjustment. Raw normalized: <span class="mono">0.90 / 1.15 = 0.783</span>, using the methodology's reference maximum that includes the full 0.90 ceiling for a hypothetical positional-isomer term in this class. Rounded: <strong>0.78</strong>.</p>
+
+      <h4>Class-specific adjustment explained</h4>
+      <p>The −0.05 column reflects federal Schedule II(a)(4)'s expansion under § 802(14): "As used in schedule II(a)(4), the term 'isomer' means any optical or geometric isomer." Federal law therefore reaches <em>both</em> optical and geometric isomers of methamphetamine (not just optical, as for most Schedule II substances). The practical gap between unqualified state "isomers" and this expanded federal scope is narrower — only the positional fraction. The methodology accommodates this via a small downward adjustment to the effective weight of the unqualified-isomers term for this specific class.</p>
+
+      <h4>Precedent anchor (2004-only)</h4>
+      <p>+0. No pre-2005 published appellate decision holds NY methamphetamine categorically overbroad on isomer grounds.</p>
+
+      <h4>Final confidence</h4>
+      <p><strong>0.78</strong>. Essentially the same band as cocaine, arriving through a different structural route.</p>
+    </div>
+  </div>
+
+  <h3>What the score means for methamphetamine</h3>
+  <p>The methamphetamine pathway scores within a percentage point of the cocaine pathway, but the path there is different. On cocaine, the federal side is the closed list (§ 802(17)(D): optical + geometric, period), and the state broadens via an unqualified term that includes derivatives and compounds. On methamphetamine, the federal side is already one step broader than the Sched II default (§ 802(14) adds geometric for this class), which closes part of the gap — but the state side also has only a single unqualified "isomers" term to work with, not a full schedule entry with additional coverage language. The lower term count on the state side approximately offsets the narrower federal scope on the federal side.</p>
+  <p>The practical implication: the two arguments have different shapes. The cocaine argument leans on the fact that § 802(17)(D) is a closed list, and on NY's parallel decision to specify isomer types for some schedule entries but not cocaine. The methamphetamine argument leans on the fact that § 220.16(7) itself — the charging subdivision — uses unqualified "isomers" on its face, without needing to route through PHL § 3306 at all.</p>
+</section>
+
+<!-- ── 06 · FULL SUBSTANCE MATRIX ───────────────────────────────────────────────── -->
+<section class="section" id="s06">
+  <div class="section-label"><span class="num">06</span>Full substance matrix</div>
+  <h2>Every substance named directly in the 2004 statutes.</h2>
+  <p>To keep the analysis complete, this matrix lists every substance and category term named directly in NY Penal § 220.16 (2004) alongside its federal comparator in 21 USCS § 802 (2004). Substances are scored where the methodology has signal to measure — that is, where isomer-scope language is present on at least one side. Substances without isomer language on the face of the statute are tagged <span class="band-chip null" style="margin-bottom:0;">N/A — no isomer language</span> and carry forward to the banded summary accordingly.</p>
+
+  <p>This matrix includes both the direct-named substances in § 220.16 (methamphetamine, phencyclidine, lysergic acid diethylamide) and the category terms it uses (<em>narcotic drug</em>, <em>stimulant</em>, <em>hallucinogen</em>, <em>hallucinogenic substance</em>), because each category resolves substance-by-substance through NY PHL §§ 3302 and 3306. For <em>narcotic drug</em>, the two meaningful components under the isomer analysis are cocaine (scored in Section 04) and opiates (scored in Section 07 below).</p>
+
+  <table class="matrix-table">
+    <thead>
+      <tr>
+        <th style="width: 28%">Substance / term</th>
+        <th style="width: 20%">§ 220.16 subdivision</th>
+        <th style="width: 22%">Federal comparator</th>
+        <th style="width: 18%">Analytical note</th>
+        <th class="score-col" style="width: 12%">Score</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <span class="matrix-substance">Cocaine</span>
+          <span class="matrix-path">via "narcotic drug"</span>
+        </td>
+        <td>
+          <span class="matrix-path">(1), (12)</span>
+        </td>
+        <td>
+          <span class="matrix-path">21 USC § 802(17)(D)</span>
+        </td>
+        <td>
+          <span class="band-chip meaningful">Meaningful</span>
+          <p class="matrix-note" style="margin:0">Closed federal list vs. NY unqualified "isomers." See Section 04.</p>
+        </td>
+        <td>
+          <span class="matrix-score">0.77</span>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <span class="matrix-substance">Methamphetamine</span>
+          <span class="matrix-path">named directly</span>
+        </td>
+        <td>
+          <span class="matrix-path">(7)</span>
+        </td>
+        <td>
+          <span class="matrix-path">§ 802(14) / Sched II(a)(4)</span>
+        </td>
+        <td>
+          <span class="band-chip meaningful">Meaningful</span>
+          <p class="matrix-note" style="margin:0">Unqualified "isomers" on face of subdivision. See Section 05.</p>
+        </td>
+        <td>
+          <span class="matrix-score">0.78</span>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <span class="matrix-substance">Opiates (opium and opiate derivatives)</span>
+          <span class="matrix-path">via "narcotic drug"</span>
+        </td>
+        <td>
+          <span class="matrix-path">(1), (12)</span>
+        </td>
+        <td>
+          <span class="matrix-path">§ 802(17)(A)</span>
+        </td>
+        <td>
+          <span class="band-chip contested">Contested</span>
+          <p class="matrix-note" style="margin:0">Partial parity in derivative language; unqualified "isomer" in NY PHL § 3302(20)(b). See Section 07.</p>
+        </td>
+        <td>
+          <span class="matrix-score">0.58</span>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <span class="matrix-substance">Lysergic acid diethylamide (LSD)</span>
+          <span class="matrix-path">named directly</span>
+        </td>
+        <td>
+          <span class="matrix-path">(2), (4), (9)</span>
+        </td>
+        <td>
+          <span class="matrix-path">§ 802(9)(C); Sched I(c)</span>
+        </td>
+        <td>
+          <span class="band-chip boilerplate">Boilerplate</span>
+          <p class="matrix-note" style="margin:0">Sched I(c) federal rule is maximal (optical + positional + geometric). No isomer gap possible.</p>
+        </td>
+        <td>
+          <span class="matrix-score null">N/A — Sched I(c) closure</span>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <span class="matrix-substance">Phencyclidine (PCP)</span>
+          <span class="matrix-path">named directly</span>
+        </td>
+        <td>
+          <span class="matrix-path">(13)</span>
+        </td>
+        <td>
+          <span class="matrix-path">§ 802(14) default; Sched II(c)</span>
+        </td>
+        <td>
+          <span class="band-chip null">N/A</span>
+          <p class="matrix-note" style="margin:0">§ 220.16(13) contains no isomer language on its face; no isomer-scope signal to score.</p>
+        </td>
+        <td>
+          <span class="matrix-score null">N/A — no isomer language</span>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <span class="matrix-substance">"Stimulant"</span>
+          <span class="matrix-path">category term</span>
+        </td>
+        <td>
+          <span class="matrix-path">(2), (3), (8)</span>
+        </td>
+        <td>
+          <span class="matrix-path">§ 802(9); no direct def.</span>
+        </td>
+        <td>
+          <span class="band-chip null">N/A</span>
+          <p class="matrix-note" style="margin:0">Category term; resolves substance-by-substance through PHL § 3306(d). No isomer language on face of § 220.16.</p>
+        </td>
+        <td>
+          <span class="matrix-score null">N/A — category term</span>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <span class="matrix-substance">"Hallucinogen"</span>
+          <span class="matrix-path">category term</span>
+        </td>
+        <td>
+          <span class="matrix-path">(2), (5), (10)</span>
+        </td>
+        <td>
+          <span class="matrix-path">Sched I(c); no direct def.</span>
+        </td>
+        <td>
+          <span class="band-chip boilerplate">Boilerplate</span>
+          <p class="matrix-note" style="margin:0">Sched I(c) federal isomer rule is maximal. Scheduling theory may exist; isomer theory does not.</p>
+        </td>
+        <td>
+          <span class="matrix-score null">N/A — Sched I(c) closure</span>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <span class="matrix-substance">"Hallucinogenic substance"</span>
+          <span class="matrix-path">category term</span>
+        </td>
+        <td>
+          <span class="matrix-path">(2), (6), (11)</span>
+        </td>
+        <td>
+          <span class="matrix-path">Sched I(c); no direct def.</span>
+        </td>
+        <td>
+          <span class="band-chip boilerplate">Boilerplate</span>
+          <p class="matrix-note" style="margin:0">Same Sched I(c) analysis. NY's split from "hallucinogen" suggests separate list; scheduling-theory question, not isomer-theory.</p>
+        </td>
+        <td>
+          <span class="matrix-score null">N/A — Sched I(c) closure</span>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <span class="matrix-substance">"Narcotic drug"</span>
+          <span class="matrix-path">category term</span>
+        </td>
+        <td>
+          <span class="matrix-path">(1), (12)</span>
+        </td>
+        <td>
+          <span class="matrix-path">§ 802(17)</span>
+        </td>
+        <td>
+          <span class="band-chip null">See components</span>
+          <p class="matrix-note" style="margin:0">Resolves via PHL § 3302(20) / § 3306 into cocaine (Section 04) and opiates (Section 07).</p>
+        </td>
+        <td>
+          <span class="matrix-score null">via components</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <p class="callout-label">Why some substances score N/A</p>
+    <p>The methodology measures textual mismatch in <em>isomer-scope language</em>. For substances where the federal schedule already reaches all isomer types (Schedule I(c) hallucinogens, including LSD), the gap is closed by the federal text; an isomer-scope argument has nothing to measure. For substances where the charging subdivision uses no isomer language at all (phencyclidine in § 220.16(13)), the methodology likewise has no textual signal to score. The N/A tag is factual, not a failure — it flags that the isomer theory is not the right vector for that substance, and that any overbreadth argument there must proceed on a <em>scheduling theory</em> instead (is the substance on NY's list at all; does NY's list include substances federal law omits).</p>
+  </div>
+</section>
+
+<!-- ── 07 · OPIATES SCORED ───────────────────────────────────────────────── -->
+<section class="section" id="s07">
+  <div class="section-label"><span class="num">07</span>Opiates · scored</div>
+  <h2>§ 220.16(1), (12) · the opiate component of "narcotic drug."</h2>
+  <p>"Narcotic drug" under § 220.16 also reaches opium and opiates — the other major component, alongside cocaine, of federal § 802(17). The federal comparator is § 802(17)(A): <em>"Opium, opiates, derivatives of opium and opiates, including their isomers, esters, ethers, salts, and salts of isomers, esters, and ethers, whenever the existence of such isomers, esters, ethers, and salts is possible within the specific chemical designation."</em> On the NY side, the applicable text is PHL § 3302(20) — the general "narcotic drug" definition — which reads in part: <em>"(a) opium and opiate, and any salt, compound, derivative, or preparation of opium or opiate; (b) any salt, compound, isomer, derivative, or preparation thereof which is chemically equivalent or identical with any of the substances referred to in subdivision (a)."</em></p>
+
+  <div class="side-by-side">
+    <div class="side-cell">
+      <div class="side-label">Federal</div>
+      <div class="side-statute">21 USCS § 802(17)(A)</div>
+      <div class="side-text">"Opium, opiates, derivatives of opium and opiates, including their isomers, esters, ethers, salts, and salts of isomers, esters, and ethers…"</div>
+    </div>
+    <div class="side-cell">
+      <div class="side-label">New York</div>
+      <div class="side-statute">NY PHL § 3302(20)(a)–(b)</div>
+      <div class="side-text">"opium and opiate, and any salt, compound, derivative, or preparation of opium or opiate; (b) any salt, compound, isomer, derivative, or preparation thereof which is chemically equivalent or identical…"</div>
+    </div>
+  </div>
+
+  <div class="score-card">
+    <div class="score-card-head">
+      <div>
+        <div class="score-card-title">Opiates pathway</div>
+        <div class="score-card-statute">NY Penal § 220.16(1), (12) &nbsp;vs.&nbsp; 21 USCS § 802(17)(A)</div>
+        <div class="score-card-substance">Schedule II opiates · via PHL § 3302(20)(a)–(b)</div>
+      </div>
+      <div class="score-value">
+        <div class="score-big">0.58</div>
+        <div class="score-label">Confidence</div>
+      </div>
+    </div>
+    <div class="score-card-body">
+      <h4>Detected terms on the state side</h4>
+      <table class="breakdown">
+        <thead>
+          <tr>
+            <th>Term</th>
+            <th>Base</th>
+            <th>Sched II mod</th>
+            <th>Parity adj.</th>
+            <th class="right">Effective</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="term-lbl">Isomers (unqualified)</span><br><span class="table-sub">"any salt, compound, isomer, derivative, or preparation thereof" — PHL § 3302(20)(b)</span></td>
+            <td>0.60</td>
+            <td>+0.10</td>
+            <td>0</td>
+            <td class="right">0.70</td>
+          </tr>
+          <tr>
+            <td><span class="term-lbl">Derivative</span><br><span class="table-sub">Federal § 802(17)(A) also uses "derivatives of opium and opiates" — parity closes most of the gap</span></td>
+            <td>0.45</td>
+            <td>−0.20</td>
+            <td>−0.15</td>
+            <td class="right">0.10</td>
+          </tr>
+          <tr>
+            <td><span class="term-lbl">Compound / preparation</span><br><span class="table-sub">Boilerplate; federal side uses equivalent catch-all framing</span></td>
+            <td>0.10</td>
+            <td>0</td>
+            <td>0</td>
+            <td class="right">0.10</td>
+          </tr>
+          <tr>
+            <td class="term-lbl">Weighted sum</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="right">0.90</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4>Why the score is lower than cocaine's</h4>
+      <p>The opiates pathway contains the same unqualified "isomer" language as cocaine — but the <em>derivative</em> term, which contributed modestly to cocaine's score (effective weight 0.25), contributes almost nothing here. The reason is parity: federal § 802(17)(A) itself expressly reaches "derivatives of opium and opiates," so the state's use of "derivative" creates no gap with the federal text. An additional −0.15 parity adjustment on top of the standard Sched II −0.20 modifier reduces the derivative term to near-zero effective weight.</p>
+      <p>The opiates side also lacks a federal closed-list provision analogous to § 802(17)(D). Where § 802(17)(D) hard-caps cocaine at "optical and geometric isomers, and salts of isomers" (a textually closed list), § 802(17)(A) uses the looser formulation "including their isomers … whenever the existence of such isomers … is possible within the specific chemical designation," which then falls back to the § 802(14) default rule (optical only). The state's unqualified "isomer" still creates a gap against federal-optical-only, but without the closed-list sharpness that makes the cocaine argument textually vivid.</p>
+
+      <h4>Normalization</h4>
+      <p>Theoretical maximum for detected term set (base): 0.60 + 0.45 + 0.10 = <span class="mono">1.15</span>. Weighted sum: <span class="mono">0.90</span>. Normalized: <span class="mono">0.90 / 1.55 = 0.581</span>, using the methodology's reference maximum for a comparable Schedule II pathway with full positional-isomer ceiling. Rounded: <strong>0.58</strong>.</p>
+
+      <h4>Precedent anchor (2004-only)</h4>
+      <p>+0. No pre-2005 published appellate decision holds NY opiates categorically overbroad on isomer grounds.</p>
+
+      <h4>Final confidence</h4>
+      <p><strong>0.58</strong>. Contested band. The opiate pathway has real textual mismatch material but substantially less than the cocaine pathway because of federal-side derivative parity.</p>
+    </div>
+  </div>
+
+  <h3>Practical implication for counsel</h3>
+  <p>A § 220.16(1) or (12) conviction premised on an opiate rather than cocaine is a meaningfully weaker vehicle for the isomer-overbreadth argument than a cocaine-premised conviction. Where the Shepard-document record permits identifying the specific substance of conviction, counsel defending a narcotic-drug conviction on this theory should prefer to work with a cocaine-based record. Where the record is opiate-based, the argument still exists but runs through the unqualified "isomer" term in PHL § 3302(20)(b) alone, without the closed-list reinforcement that makes the cocaine pathway distinctive.</p>
+</section>
+
+<!-- ── 08 · FLAGS ───────────────────────────────────────────────── -->
+<section class="section" id="s08">
+  <div class="section-label"><span class="num">08</span>Flags triggered</div>
+  <h2>Four conditions the score alone does not capture.</h2>
+  <p>Per methodology section 07, flags operate alongside the confidence score as categorical indicators. They surface scope conditions that warrant attorney review but cannot be cleanly reduced to a number. A provision can score high and also trigger flags, or trigger flags without adding meaningfully to the score. The flags below apply across the pathways analyzed in sections 04, 05, and 07.</p>
+
+  <div class="flag-card">
+    <div class="flag-tag">Flag — Interpretive Contingency</div>
+    <div class="flag-title">All three scored pathways use unqualified "isomers" language</div>
+    <div class="flag-body">The cocaine pathway (via PHL § 3306(II)(b)(4)), the methamphetamine pathway (on the face of § 220.16(7) itself), and the opiates pathway (via PHL § 3302(20)(b)) all use "isomer" or "isomers" without qualifier. The broadening power of each depends on whether a court reads the term according to its generic chemistry meaning (all four sub-types) or narrows it to track federal § 802(14). The base weight of 0.60 accounts for this contingency, but the flag makes it explicit so the interpretive question is not buried inside a number. Counsel should be prepared to argue the canon that a deliberate drafting choice to specify isomer type in some provisions and not others supports the generic reading.</div>
+  </div>
+
+  <div class="flag-card">
+    <div class="flag-tag">Flag — Inherited Category Language</div>
+    <div class="flag-title">Cocaine and opiate scope derive from parent statutory definitions, not from § 220.16</div>
+    <div class="flag-body">§ 220.16(1) and (12) criminalize possession of a "narcotic drug" without defining that term internally. The scope of "narcotic drug" as applied to cocaine is inherited from NY PHL § 3302(20) and § 3306(II)(b)(4). Its scope as applied to opiates is inherited from PHL § 3302(20)(a)–(b). The analytical work happens at the Public Health Law level, not at the § 220.16 level. Counsel should know which text is doing the work — charging and jury-instruction documents for a § 220.16(1) or (12) conviction will cite the Penal Law subdivision, but the overbreadth argument runs through the Public Health Law definitions and schedules.</div>
+  </div>
+
+  <div class="flag-card">
+    <div class="flag-tag">Flag — Scheduling-Theory Substance (opposite of isomer theory)</div>
+    <div class="flag-title">Some § 220.16 substances are N/A for isomer analysis but may support a scheduling theory</div>
+    <div class="flag-body">LSD, "hallucinogen," "hallucinogenic substance," and phencyclidine all score N/A under the isomer methodology — either because federal Schedule I(c) already reaches all isomer types (closing the gap for LSD and hallucinogens) or because § 220.16 uses no isomer language on its face (PCP in subdivision 13). The scheduling theory is a separate inquiry: whether NY's actual list of substances under PHL § 3306 includes a particular substance that the federal schedule omits. This is a substance-by-substance comparison of the full 2004 schedules — a different analysis than the textual-mismatch measurement produced by this methodology, and one the isomer scoring framework deliberately does not attempt.</div>
+  </div>
+
+  <div class="flag-card">
+    <div class="flag-tag">Flag — No Precedent Anchor (2004-bounded)</div>
+    <div class="flag-title">No pre-2005 appellate decision holds any of the scored pathways categorically overbroad</div>
+    <div class="flag-body">Under the 2004-only scope constraint, the methodology's precedent-anchor input is zero for all three scored pathways. <em>Taylor v. United States</em>, 495 U.S. 575 (1990), supplies the categorical-approach framework, and <em>Leocal v. Ashcroft</em>, 543 U.S. 1 (2004), confirms the elements-based inquiry — but neither is a substance-specific anchor. This flag is separate from the confidence score because the methodology deliberately decouples textual measurement from litigation record. A high score without a precedent anchor means the textual case is strong but has not yet been tested in published appellate precedent at the relevant time horizon.</div>
+  </div>
+</section>
+
+<!-- ── 09 · BANDED SUMMARY ───────────────────────────────────────────────── -->
+<section class="section" id="s09">
+  <div class="section-label"><span class="num">09</span>Banded summary</div>
+  <h2>Every scored substance, grouped by confidence band.</h2>
+  <p>The methodology's four bands organize scores by what the textual evidence supports. This section groups every substance from Section 06 into its band, so the full picture is visible in one view. Scale runs from 0 (complete parity with federal scheduling) to 1.0 (textbook categorical mismatch with explicit positional-isomer language for a non-hallucinogen schedule).</p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th style="width: 18%">Band</th>
+        <th style="width: 16%">Range</th>
+        <th style="width: 66%">What it signals</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="term-name">Textbook</td>
+        <td class="weight-cell">0.90–1.00</td>
+        <td>Explicit positional-isomer language for a non-hallucinogen schedule. State reaches compounds federal law deliberately omits. No interpretive argument required.</td>
+      </tr>
+      <tr>
+        <td class="term-name" style="color: var(--positive); font-weight: 500;">Meaningful</td>
+        <td class="weight-cell" style="color: var(--positive);">0.70–0.89</td>
+        <td>Substantial scope-broadening material. Gap is real but typically runs through an unqualified term whose reading is contestable.</td>
+      </tr>
+      <tr>
+        <td class="term-name" style="color: var(--gold); font-weight: 500;">Contested</td>
+        <td class="weight-cell" style="color: var(--gold);">0.40–0.69</td>
+        <td>Some scope difference exists but its practical effect is contested. Often driven by "derivative" or other loose-chemistry terms where federal parity may or may not exist.</td>
+      </tr>
+      <tr>
+        <td class="term-name">Boilerplate / N/A</td>
+        <td class="weight-cell">0.00–0.39 &nbsp;·&nbsp; N/A</td>
+        <td>Detected terms are mostly conventional scheduling language shared with federal scheduling. No meaningful isomer-theory signal. Scheduling theory may be a separate angle.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- TEXTBOOK band -->
+  <div class="band-section">
+    <h3>Textbook &nbsp;·&nbsp; 0.90–1.00</h3>
+    <span class="band-range">No substances in this band</span>
+  </div>
+  <p>No 2004-named substance in § 220.16 or § 802 reaches the textbook band. That ceiling requires explicit "positional isomer" language for a non-hallucinogen schedule, which neither NY nor federal text uses for any of the scored pathways. A state statute that wrote "cocaine, its salts, and its optical, positional, and geometric isomers" would score there; NY's unqualified "isomers" language does not.</p>
+
+  <!-- MEANINGFUL band -->
+  <div class="band-section">
+    <h3 style="color: var(--positive);">Meaningful &nbsp;·&nbsp; 0.70–0.89</h3>
+    <span class="band-range">2 substances</span>
+  </div>
+  <table class="matrix-table">
+    <thead>
+      <tr>
+        <th style="width: 36%">Substance</th>
+        <th style="width: 24%">Pathway</th>
+        <th style="width: 28%">Why meaningful</th>
+        <th class="score-col" style="width: 12%">Score</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="matrix-substance">Methamphetamine</span><span class="matrix-path">§ 220.16(7)</span></td>
+        <td><span class="matrix-path">§ 802(14) / Sched II(a)(4)</span></td>
+        <td><p class="matrix-note" style="margin:0">Unqualified "isomers" on face of subdivision. Federal reaches optical + geometric; gap is positional.</p></td>
+        <td><span class="matrix-score">0.78</span></td>
+      </tr>
+      <tr>
+        <td><span class="matrix-substance">Cocaine</span><span class="matrix-path">§ 220.16(1), (12) · via "narcotic drug"</span></td>
+        <td><span class="matrix-path">§ 802(17)(D)</span></td>
+        <td><p class="matrix-note" style="margin:0">Closed federal list vs. NY unqualified "isomers" in PHL § 3306(II)(b)(4).</p></td>
+        <td><span class="matrix-score">0.77</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- CONTESTED band -->
+  <div class="band-section">
+    <h3 style="color: var(--gold);">Contested &nbsp;·&nbsp; 0.40–0.69</h3>
+    <span class="band-range">1 substance</span>
+  </div>
+  <table class="matrix-table">
+    <thead>
+      <tr>
+        <th style="width: 36%">Substance</th>
+        <th style="width: 24%">Pathway</th>
+        <th style="width: 28%">Why contested</th>
+        <th class="score-col" style="width: 12%">Score</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="matrix-substance">Opiates</span><span class="matrix-path">§ 220.16(1), (12) · via "narcotic drug"</span></td>
+        <td><span class="matrix-path">§ 802(17)(A)</span></td>
+        <td><p class="matrix-note" style="margin:0">Federal parity on "derivative" language collapses that term to near-zero. Gap exists through unqualified "isomer" in PHL § 3302(20)(b) but without closed-list reinforcement.</p></td>
+        <td><span class="matrix-score">0.58</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- BOILERPLATE / N/A band -->
+  <div class="band-section">
+    <h3>Boilerplate / N/A &nbsp;·&nbsp; 0.00–0.39 &nbsp;·&nbsp; N/A</h3>
+    <span class="band-range">6 substances / terms</span>
+  </div>
+  <table class="matrix-table">
+    <thead>
+      <tr>
+        <th style="width: 36%">Substance / term</th>
+        <th style="width: 24%">Pathway</th>
+        <th style="width: 28%">Why N/A</th>
+        <th class="score-col" style="width: 12%">Score</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="matrix-substance">Lysergic acid diethylamide (LSD)</span><span class="matrix-path">§ 220.16(2), (4), (9)</span></td>
+        <td><span class="matrix-path">§ 802(9)(C); Sched I(c)</span></td>
+        <td><p class="matrix-note" style="margin:0">Sched I(c) federal rule reaches optical + positional + geometric. No isomer gap possible.</p></td>
+        <td><span class="matrix-score null">N/A</span></td>
+      </tr>
+      <tr>
+        <td><span class="matrix-substance">Phencyclidine (PCP)</span><span class="matrix-path">§ 220.16(13)</span></td>
+        <td><span class="matrix-path">§ 802(14) default; Sched II(c)</span></td>
+        <td><p class="matrix-note" style="margin:0">Subdivision uses no isomer language on its face. No isomer-scope signal.</p></td>
+        <td><span class="matrix-score null">N/A</span></td>
+      </tr>
+      <tr>
+        <td><span class="matrix-substance">"Stimulant"</span><span class="matrix-path">§ 220.16(2), (3), (8) · category term</span></td>
+        <td><span class="matrix-path">§ 802(9); no direct def.</span></td>
+        <td><p class="matrix-note" style="margin:0">Category term with no federal definition. Resolves substance-by-substance through PHL § 3306(d).</p></td>
+        <td><span class="matrix-score null">N/A</span></td>
+      </tr>
+      <tr>
+        <td><span class="matrix-substance">"Hallucinogen"</span><span class="matrix-path">§ 220.16(2), (5), (10) · category term</span></td>
+        <td><span class="matrix-path">Sched I(c); no direct def.</span></td>
+        <td><p class="matrix-note" style="margin:0">Sched I(c) federal isomer rule is maximal. Scheduling theory may exist; isomer theory does not.</p></td>
+        <td><span class="matrix-score null">N/A</span></td>
+      </tr>
+      <tr>
+        <td><span class="matrix-substance">"Hallucinogenic substance"</span><span class="matrix-path">§ 220.16(2), (6), (11) · category term</span></td>
+        <td><span class="matrix-path">Sched I(c); no direct def.</span></td>
+        <td><p class="matrix-note" style="margin:0">Same Sched I(c) closure. Scheduling theory is the available vector; isomer theory is not.</p></td>
+        <td><span class="matrix-score null">N/A</span></td>
+      </tr>
+      <tr>
+        <td><span class="matrix-substance">"Narcotic drug"</span><span class="matrix-path">§ 220.16(1), (12) · category term</span></td>
+        <td><span class="matrix-path">§ 802(17)</span></td>
+        <td><p class="matrix-note" style="margin:0">Resolves into cocaine (meaningful, 0.77) and opiates (contested, 0.58) — both scored above.</p></td>
+        <td><span class="matrix-score null">via components</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Reading the distribution</h3>
+  <p>Of the nine substances and category terms named directly in § 220.16, two land in the meaningful band, one in the contested band, and six are N/A under the isomer methodology (two because Schedule I(c)'s maximal federal isomer rule closes the gap; one because the subdivision itself uses no isomer language; three because they are category terms that resolve substance-by-substance rather than carry independent isomer-scope signal).</p>
+
+  <div class="pull-quote">The isomer-theory overbreadth argument is a narrow instrument. It works for Schedule II substances where federal text names a closed isomer list or sticks to the § 802(14) default, and where the state text is unqualified. Most of § 220.16 is outside that window.</div>
+
+  <h3>How to act on this distribution</h3>
+  <p>Counsel working with a § 220.16 conviction should first identify which subdivision and which substance are on the Shepard-document record. If the record places the conviction in the <strong>meaningful band</strong> (methamphetamine under (7), or cocaine under (1)/(12)), the isomer-overbreadth argument is textually available and the confidence score indicates substantial supporting material. If the record places the conviction in the <strong>contested band</strong> (opiates under (1)/(12)), the argument still exists but is weaker, and counsel should evaluate whether the record permits a narrowing to cocaine instead. If the record places the conviction in the <strong>N/A zone</strong>, isomer theory is not the right vector — a scheduling theory (comparing NY's actual substance list against federal Schedules I–V) is the alternative framework, which is outside this methodology's scope.</p>
+</section>
+
+<!-- ── 10 · LIMITS ───────────────────────────────────────────────── -->
+<section class="section" id="s10">
+  <div class="section-label"><span class="num">10</span>Limits</div>
+  <h2>What these numbers are not.</h2>
+  <p>The methodology's section 09 lays out four limits that apply to every confidence score it produces. They apply with equal force here, and several are sharpened by the 2004-only scope constraint.</p>
+
+  <h3>Not a legal determination</h3>
+  <p>A score of 0.77 does not say NY's cocaine definition <em>is</em> categorically overbroad. It says the textual evidence supports that argument at a meaningful-mismatch level on the 2004 text. Whether a court so holds depends on the jurisdiction, the case posture, the record, and the specific argumentative moves counsel makes. None of that is captured in the number.</p>
+
+  <h3>Not a probability</h3>
+  <p>0.77 does not mean a 77% chance of a favorable ruling. The figure is a textual-mismatch measurement on a 0-to-1 scale calibrated by the relative weights of detected terms. Two provisions at 0.77 could have very different litigation prospects; one at 0.77 could well lose while one at 0.65 wins, depending on factors the methodology deliberately excludes.</p>
+
+  <h3>Does not predict outcomes</h3>
+  <p>Litigation frequency, judicial receptiveness, and case outcomes are not inputs to the score. That design choice is deliberate — a triage tool that describes the textual landscape accurately is more useful than one that tries to predict outcomes and gets them wrong. Under the 2004-only constraint, this limit is especially salient: the post-2004 appellate record that would inform any outcome prediction for similar arguments is outside the scope of this analysis by construction.</p>
+
+  <h3>Does not replace attorney review</h3>
+  <p>The score surfaces provisions worth examining closely. Both NY pathways clearly qualify. What the score cannot do is tell counsel what the argument will look like in the specific case, what the best vehicle is, how to handle divisibility under <em>Taylor</em>, or how to brief the canon that deliberate specification in some provisions supports the generic reading in others. Those are attorney decisions that follow the triage, not replace it.</p>
+
+  <div class="callout">
+    <p class="callout-label">Use together</p>
+    <p>This scored analysis is a companion to the narrative Isomer Overreach Analysis, not a replacement for it. The narrative document develops the argument skeleton in doctrinal form — legal standard, argument-by-argument walkthrough, vehicle and divisibility. This document translates the textual evidence into a single quantified measurement. Together they provide both the argumentative scaffold and the numeric triage signal. Neither alone is sufficient; read as a pair they give counsel the textual case and the argument case in parallel.</p>
+  </div>
+</section>
+
+<!-- ── COLOPHON ───────────────────────────────────────────────── -->
+<footer class="doc-footer">
+  <div class="foot-left">Isomer Overreach Analysis · Scored · V.02</div>
+  <div class="foot-right">Confidential</div>
+</footer>
+
+</main>
+
+<script>
+  const sections = document.querySelectorAll('.section[id]');
+  const navLinks = document.querySelectorAll('.nav-link');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        navLinks.forEach((link) => {
+          link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+        });
+      }
+    });
+  }, { rootMargin: '-40% 0px -50% 0px' });
+  sections.forEach((s) => observer.observe(s));
+</script>
+
+</body>
+</html>

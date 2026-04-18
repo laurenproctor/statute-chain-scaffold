@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Greyledge · Isomer Analysis Methodology</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink:      #111111;
+    --paper:    #FFFFFF;
+    --surface:  #F8F8F6;
+    --border:   #E7E7E7;
+    --muted:    #666666;
+    --navy:     #1D2D50;
+    --positive: #1F6B4F;
+    --conflict: #8D2E35;
+    --gold:     #8C6A2B;
+    --sans:     'Geist', system-ui, sans-serif;
+    --mono:     'Geist Mono', ui-monospace, monospace;
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+  body {
+    font-family: var(--sans);
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.7;
+    font-size: 14px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  a { color: inherit; text-decoration: none; transition: opacity 120ms; }
+  a:hover { opacity: 0.7; }
+
+  .doc-nav {
+    position: fixed;
+    top: 0; left: 0;
+    width: 240px;
+    height: 100vh;
+    border-right: 1px solid var(--border);
+    padding: 48px 28px;
+    background: var(--paper);
+    z-index: 100;
+    overflow-y: auto;
+  }
+  .doc-nav .wordmark {
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    color: var(--ink);
+    margin-bottom: 6px;
+    display: block;
+  }
+  .doc-nav .product {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: var(--muted);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 40px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--border);
+  }
+  .doc-nav ul { list-style: none; }
+  .doc-nav li { margin-bottom: 2px; }
+  .doc-nav a.nav-link {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.03em;
+    display: flex;
+    gap: 10px;
+    padding: 7px 0 7px 12px;
+    border-left: 2px solid transparent;
+    transition: color 120ms, border-color 120ms;
+  }
+  .doc-nav a.nav-link:hover,
+  .doc-nav a.nav-link.active {
+    color: var(--ink);
+    border-left-color: var(--ink);
+    opacity: 1;
+  }
+  .doc-nav .nav-num {
+    font-family: var(--mono);
+    color: #BBBBBB;
+    font-size: 10px;
+    min-width: 18px;
+  }
+
+  .doc-main { margin-left: 240px; }
+
+  @media (max-width: 900px) {
+    .doc-nav { display: none; }
+    .doc-main { margin-left: 0; }
+  }
+
+  .cover {
+    padding: 140px 80px 100px;
+    border-bottom: 1px solid var(--border);
+  }
+  .cover-wordmark {
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .cover-version {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    padding-bottom: 24px;
+    margin-bottom: 140px;
+    border-bottom: 1px solid var(--border);
+    max-width: 400px;
+  }
+  .cover-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 28px;
+  }
+  .cover h1 {
+    font-size: clamp(56px, 8vw, 96px);
+    font-weight: 400;
+    line-height: 1.0;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 40px;
+    max-width: 820px;
+  }
+  .cover-sub {
+    font-size: 17px;
+    color: var(--muted);
+    max-width: 580px;
+    line-height: 1.7;
+    margin-bottom: 100px;
+  }
+  .cover-meta {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    max-width: 820px;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .cover-meta-cell {
+    padding: 24px 24px 24px 0;
+    border-right: 1px solid var(--border);
+  }
+  .cover-meta-cell:last-child { border-right: none; padding-right: 0; }
+  .cover-meta-cell:nth-child(n+2) { padding-left: 24px; }
+  .cover-meta-cell .lbl {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: block;
+    margin-bottom: 8px;
+  }
+  .cover-meta-cell .val {
+    font-size: 13px;
+    color: var(--ink);
+    line-height: 1.4;
+  }
+  .cover-meta-cell .val.mono {
+    font-family: var(--mono);
+    font-size: 12px;
+  }
+
+  @media (max-width: 720px) {
+    .cover { padding: 80px 32px 60px; }
+    .cover-version { margin-bottom: 80px; }
+    .cover-meta { grid-template-columns: 1fr 1fr; }
+    .cover-meta-cell { border-right: none; }
+    .cover-meta-cell:nth-child(odd) { border-right: 1px solid var(--border); }
+  }
+
+  .section {
+    padding: 100px 80px;
+    border-bottom: 1px solid var(--border);
+    max-width: 1120px;
+  }
+  .section:last-child { border-bottom: none; }
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #BBBBBB;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .section-label .num {
+    font-family: var(--mono);
+    color: var(--muted);
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .section h2 {
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin-bottom: 36px;
+    max-width: 760px;
+  }
+  .section h3 {
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: -0.005em;
+    color: var(--ink);
+    margin: 40px 0 12px;
+  }
+  .section p {
+    font-size: 15px;
+    color: var(--muted);
+    max-width: 680px;
+    line-height: 1.8;
+    margin-bottom: 16px;
+  }
+  .section p strong { color: var(--ink); font-weight: 500; }
+  .section p em { color: var(--ink); }
+  .section p code,
+  .section p .mono {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--ink);
+    background: var(--surface);
+    padding: 1px 6px;
+    border-radius: 2px;
+  }
+
+  @media (max-width: 720px) {
+    .section { padding: 60px 32px; }
+  }
+
+  .pull-quote {
+    border-left: 2px solid var(--ink);
+    padding: 4px 0 4px 24px;
+    margin: 40px 0;
+    font-size: 17px;
+    line-height: 1.65;
+    color: var(--ink);
+    font-style: italic;
+    max-width: 680px;
+  }
+
+  .gloss {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 8px 40px;
+    max-width: 820px;
+    margin: 32px 0;
+  }
+  .gloss dt {
+    font-weight: 500;
+    color: var(--ink);
+    font-size: 14px;
+    padding: 16px 0;
+    border-top: 1px solid var(--border);
+  }
+  .gloss dd {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.65;
+    padding: 16px 0;
+    border-top: 1px solid var(--border);
+  }
+  .gloss dt:first-child,
+  .gloss dd:nth-child(2) { border-top: 1px solid var(--ink); }
+
+  @media (max-width: 720px) {
+    .gloss { grid-template-columns: 1fr; gap: 0; }
+    .gloss dd { border-top: none; padding-top: 0; }
+  }
+
+  .toc {
+    padding: 80px 80px;
+    border-bottom: 1px solid var(--border);
+    max-width: 1120px;
+  }
+  .toc-header {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #BBBBBB;
+    margin-bottom: 36px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .toc-header::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .toc-list { list-style: none; max-width: 760px; }
+  .toc-item {
+    display: flex;
+    align-items: baseline;
+    gap: 24px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 15px;
+    color: var(--ink);
+    transition: opacity 120ms;
+  }
+  .toc-item:hover { opacity: 0.6; }
+  .toc-item .num {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    min-width: 32px;
+  }
+  .toc-item .title { flex: 1; }
+
+  @media (max-width: 720px) {
+    .toc { padding: 60px 32px; }
+  }
+
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 40px 0;
+    font-size: 13px;
+  }
+  .data-table thead th {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 400;
+    text-align: left;
+    padding: 0 16px 14px 0;
+    border-bottom: 1px solid var(--ink);
+  }
+  .data-table thead th:last-child { padding-right: 0; }
+  .data-table tbody td {
+    padding: 20px 16px 20px 0;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .data-table tbody td:last-child { padding-right: 0; }
+  .data-table tbody tr:last-child td { border-bottom: none; }
+
+  .term-name {
+    font-weight: 500;
+    color: var(--ink);
+    font-size: 14px;
+  }
+  .weight-cell {
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+  .table-sub {
+    color: var(--muted);
+    font-size: 12.5px;
+    line-height: 1.5;
+  }
+  .table-body {
+    color: var(--ink);
+    font-size: 13px;
+    line-height: 1.55;
+  }
+
+  .term-entry {
+    padding: 32px 0;
+    border-top: 1px solid var(--border);
+    max-width: 820px;
+  }
+  .term-entry:first-of-type { border-top: 1px solid var(--ink); }
+  .term-entry-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+  .term-entry-title {
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: -0.005em;
+  }
+  .term-entry-weight {
+    font-family: var(--mono);
+    font-size: 20px;
+    color: var(--ink);
+  }
+  .term-entry p {
+    max-width: 680px;
+  }
+  .term-entry-components {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 12px 32px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+  .term-entry-components dt {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding-top: 4px;
+  }
+  .term-entry-components dd {
+    color: var(--ink);
+    font-size: 14px;
+    line-height: 1.65;
+  }
+
+  @media (max-width: 720px) {
+    .term-entry-components { grid-template-columns: 1fr; }
+  }
+
+  .flag-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 32px 36px;
+    margin-bottom: 20px;
+    max-width: 820px;
+  }
+  .flag-tag {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+  .flag-title {
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1.35;
+    letter-spacing: -0.005em;
+    margin-bottom: 14px;
+  }
+  .flag-body {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--muted);
+    max-width: 680px;
+  }
+
+  .formula {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 32px 36px;
+    margin: 36px 0;
+    max-width: 820px;
+    font-family: var(--mono);
+    font-size: 14px;
+    line-height: 2.0;
+    color: var(--ink);
+  }
+  .formula-label {
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 18px;
+    display: block;
+  }
+  .formula-step {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 24px;
+    padding: 8px 0;
+  }
+  .formula-step .op { color: var(--muted); }
+
+  .doc-footer {
+    padding: 48px 80px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-top: 1px solid var(--border);
+    max-width: 1120px;
+  }
+  .doc-footer .foot-left,
+  .doc-footer .foot-right {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  @media (max-width: 720px) {
+    .doc-footer { padding: 40px 32px; flex-direction: column; gap: 12px; }
+  }
+
+  .fade-up {
+    animation: fadeUp 400ms ease-out both;
+  }
+  @keyframes fadeUp {
+    from { transform: translateY(8px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
+
+  @media print {
+    .doc-nav { display: none; }
+    .doc-main { margin-left: 0; }
+    .section, .toc, .cover { padding: 40px; page-break-inside: avoid; }
+    .section { break-after: page; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="doc-nav" aria-label="Methodology sections">
+  <span class="wordmark">GREYLEDGE</span>
+  <span class="product">Methodology · v.02</span>
+  <ul>
+    <li><a href="#s01" class="nav-link"><span class="nav-num">01</span>The question</a></li>
+    <li><a href="#s02" class="nav-link"><span class="nav-num">02</span>Why a score</a></li>
+    <li><a href="#s03" class="nav-link"><span class="nav-num">03</span>How it is built</a></li>
+    <li><a href="#s04" class="nav-link"><span class="nav-num">04</span>Term walkthrough</a></li>
+    <li><a href="#s05" class="nav-link"><span class="nav-num">05</span>Weight table</a></li>
+    <li><a href="#s06" class="nav-link"><span class="nav-num">06</span>Context modifiers</a></li>
+    <li><a href="#s07" class="nav-link"><span class="nav-num">07</span>Scope flags</a></li>
+    <li><a href="#s08" class="nav-link"><span class="nav-num">08</span>The full formula</a></li>
+    <li><a href="#s09" class="nav-link"><span class="nav-num">09</span>What this is not</a></li>
+    <li><a href="#s10" class="nav-link"><span class="nav-num">10</span>Glossary</a></li>
+  </ul>
+  <a href="greyledge-methodology-changelog.html" class="nav-link" style="margin-top: 32px; padding-top: 18px; border-top: 1px solid var(--border); border-left: 2px solid transparent;"><span class="nav-num">→</span>Changelog</a>
+</nav>
+
+<main class="doc-main">
+
+  <section class="cover fade-up">
+    <div class="cover-wordmark">GREYLEDGE</div>
+    <div class="cover-version">METHODOLOGY · v.02</div>
+
+    <div class="cover-eyebrow">Greyledge Scoring Framework</div>
+    <h1>Isomer Analysis Methodology</h1>
+    <p class="cover-sub">
+      Why we score isomer language in state controlled-substance statutes,
+      how the score is constructed from chemistry and federal text, and what
+      each term in the system is weighted to measure.
+    </p>
+
+    <div class="cover-meta">
+      <div class="cover-meta-cell">
+        <span class="lbl">Scope</span>
+        <span class="val">State versus federal scheduling</span>
+      </div>
+      <div class="cover-meta-cell">
+        <span class="lbl">Version</span>
+        <span class="val mono">2.0 · April 18, 2026 · 5:55 PM EST</span>
+      </div>
+      <div class="cover-meta-cell">
+        <span class="lbl">Status</span>
+        <span class="val">Triage tool</span>
+      </div>
+      <div class="cover-meta-cell">
+        <span class="lbl">Audience</span>
+        <span class="val">Attorneys and researchers</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="toc">
+    <div class="toc-header">Contents</div>
+    <ul class="toc-list">
+      <li><a href="#s01" class="toc-item"><span class="num">01</span><span class="title">The question this system answers</span></a></li>
+      <li><a href="#s02" class="toc-item"><span class="num">02</span><span class="title">Why a confidence score</span></a></li>
+      <li><a href="#s03" class="toc-item"><span class="num">03</span><span class="title">How the score is built</span></a></li>
+      <li><a href="#s04" class="toc-item"><span class="num">04</span><span class="title">Term-by-term walkthrough</span></a></li>
+      <li><a href="#s05" class="toc-item"><span class="num">05</span><span class="title">Weight table</span></a></li>
+      <li><a href="#s06" class="toc-item"><span class="num">06</span><span class="title">Context modifiers</span></a></li>
+      <li><a href="#s07" class="toc-item"><span class="num">07</span><span class="title">Scope flags</span></a></li>
+      <li><a href="#s08" class="toc-item"><span class="num">08</span><span class="title">The full formula</span></a></li>
+      <li><a href="#s09" class="toc-item"><span class="num">09</span><span class="title">What this is not</span></a></li>
+      <li><a href="#s10" class="toc-item"><span class="num">10</span><span class="title">Glossary of chemical terms</span></a></li>
+    </ul>
+  </section>
+
+  <section class="section" id="s01">
+    <div class="section-label"><span class="num">01</span></div>
+    <h2>The question this system answers</h2>
+
+    <p>
+      Controlled-substance statutes in state and federal law both list drugs on schedules, but they do not always list them the same way. A single substance can be described using different language — naming isomers, salts, derivatives, or analogs — and those differences in language have real legal consequences. When a state reaches compounds the federal schedule does not, a conviction under the state statute may not match the federal generic offense for purposes that depend on categorical comparison, such as immigration consequences or federal sentencing enhancements.
+    </p>
+
+    <p>
+      The specific mechanism that creates this divergence is isomer language. A statute that names "stereoisomers" reaches more compounds than one that names "optical isomers." A statute that uses "isomers" without qualification may or may not reach as much, depending on how a court reads the unqualified term. Small textual choices in scheduling language produce materially different scopes of criminalization.
+    </p>
+
+    <p>
+      Greyledge exists to make these differences visible. The system reads state controlled-substance provisions, identifies the chemical scope language they contain, and flags provisions whose scope may exceed comparable federal scheduling. The goal is not to predict outcomes in litigation — it is to surface the textual evidence an attorney would need to evaluate a scope question efficiently.
+    </p>
+
+    <blockquote class="pull-quote">
+      A scope mismatch is a property of the statute itself. Before anyone argues about what it means, someone has to notice it exists.
+    </blockquote>
+
+    <p>
+      Without automated analysis, scope review requires reading every state statute alongside its federal counterpart, identifying every isomer term, cross-referencing the federal definition for each schedule class, and evaluating whether the state term reaches further. For an attorney reviewing a single case this is tractable. For anyone trying to understand which provisions across a jurisdiction warrant closer review, it is not.
+    </p>
+  </section>
+
+  <section class="section" id="s02">
+    <div class="section-label"><span class="num">02</span></div>
+    <h2>Why a confidence score</h2>
+
+    <p>
+      A binary output — broader or not — would be easier to produce but wrong in two directions at once. Some scope mismatches are clean and textually obvious; others depend on interpretation. Calling both "broader" treats them as equivalent when they are not. Calling ambiguous cases "not broader" hides them when they may deserve attention.
+    </p>
+
+    <p>
+      The confidence score is a compromise designed to communicate <em>how strongly</em> the textual evidence supports a broadening conclusion. A score of 0.90 signals that the state term creates a textbook mismatch with federal scheduling language. A score of 0.45 signals that some scope difference exists but its practical effect is contested. A score below 0.30 signals that the detected terms are mostly boilerplate shared with federal language.
+    </p>
+
+    <p>
+      The number is not a probability. It is not a prediction of how a court will rule. It is a measurement of textual mismatch strength, expressed on a 0-to-1 scale so attorneys can sort, filter, and compare provisions without reading each one in full. A high score means "this provision is worth examining closely." A low score means "this provision's language mostly tracks federal scheduling."
+    </p>
+
+    <blockquote class="pull-quote">
+      A score cannot answer whether a court will agree. It can only answer how much the text gives a court to work with.
+    </blockquote>
+
+    <p>
+      The alternative to a score would be narrative flags — "isomer language detected," "scope difference possible" — which sound safer but are less useful at scale. Narrative flags do not sort. A confidence score does. Given that attorneys using this tool are almost always trying to triage a large corpus of provisions to find the ones worth deeper analysis, sorting matters more than the apparent precision of a number.
+    </p>
+  </section>
+
+  <section class="section" id="s03">
+    <div class="section-label"><span class="num">03</span></div>
+    <h2>How the score is built</h2>
+
+    <p>
+      Every weight in the system is justified along three dimensions. This section explains each one and the framework that combines them.
+    </p>
+
+    <h3>Chemistry</h3>
+    <p>
+      What does the term actually refer to in scientific usage? Some terms describe sharply defined categories of compounds. <em>Positional isomer</em>, for instance, has a specific meaning in organic chemistry: molecules that share a molecular formula but differ in where a functional group attaches to the skeleton. Other terms are looser. <em>Derivative</em> can mean anything from a minor structural modification to a substantially different compound that happens to share a core scaffold. Chemists and courts disagree on what counts as a derivative. The chemistry score measures how precisely the term identifies a class of compounds.
+    </p>
+
+    <h3>Federal text</h3>
+    <p>
+      What does federal scheduling language actually say about this term? The Controlled Substances Act defines "isomer" in <code>21 U.S.C. § 802(14)</code>, but the definition varies by schedule class. For most schedules, "isomer" means "the optical isomer" — a narrow reading. For Schedule I hallucinogens, the definition expands to include optical, positional, and geometric isomers. For other terms like "derivative" or "analog," federal language is variable across substances. The federal text score measures whether the term appears in federal scheduling, is explicitly excluded, or is simply unaddressed — because each of those produces a different gap with state language that uses the term.
+    </p>
+
+    <h3>Gap</h3>
+    <p>
+      Given what the term covers chemically and what federal law actually reaches, how much does the state term extend beyond federal scope? This is the synthesis of the first two components. A term with clean chemistry and a clear federal exclusion produces a large gap — the state statute reaches compounds federal law deliberately omits. A term whose federal comparator is unstable or interpretively contested produces a small or uncertain gap. The gap measurement drives the weight.
+    </p>
+
+    <p>
+      One important nuance: the gap is not always a single value per term. Federal scheduling treats some terms differently for different drug classes, which means the same state term can create a large gap for one substance and no gap at all for another. This variation is handled by context modifiers — covered in detail later — but it is worth naming here because it shapes what a base weight means. A base weight represents the typical case; the actual scoring contribution is always adjusted for the substance under analysis.
+    </p>
+
+    <blockquote class="pull-quote">
+      Litigation frequency is not an input. Weights measure textual mismatch as a property of the statute itself, not how often courts have been asked about it.
+    </blockquote>
+
+    <p>
+      This exclusion matters. Earlier iterations of the framework considered how often each term appears in successful categorical approach arguments. That criterion was removed because it conflated how often an argument has been made with how strong the argument actually is. A rarely litigated term can still be textually strong; a frequently litigated term can still be textually weak. The weights measure the text, not the record of litigation around it.
+    </p>
+  </section>
+
+  <section class="section" id="s04">
+    <div class="section-label"><span class="num">04</span></div>
+    <h2>Term-by-term walkthrough</h2>
+
+    <p>
+      Each term in the detection system has a base weight derived from the three-component framework above. This section walks through every weighted term, explaining the chemistry, the federal text comparator, and the reasoning behind each weight.
+    </p>
+
+    <article class="term-entry">
+      <div class="term-entry-head">
+        <div class="term-entry-title">Positional isomer</div>
+        <div class="term-entry-weight">0.90</div>
+      </div>
+      <p>
+        Positional isomers differ in where a functional group attaches on the molecular skeleton. A compound with a chlorine at position 2 and a compound with a chlorine at position 4 on the same ring are positional isomers. They share a molecular formula but are structurally distinct.
+      </p>
+      <p>
+        This is the term with the cleanest textual mismatch. The federal definition of "isomer" in <code>§ 802(14)</code> explicitly excludes positional isomers for most schedules, limiting the term to optical isomers. The narrow carve-out for Schedule I hallucinogens is the exception that proves the rule: Congress knew how to include positional isomers and chose not to, except in that one class. When a state statute reaches positional isomers outside that class, it is covering compounds federal law deliberately omits. There is no interpretive argument required.
+      </p>
+      <dl class="term-entry-components">
+        <dt>Chemistry</dt>
+        <dd>Clean, well-defined. Scientific community agrees on what the term means.</dd>
+        <dt>Federal text</dt>
+        <dd>Excluded by § 802(14) for most schedules; included only for Schedule I hallucinogens.</dd>
+        <dt>Gap</dt>
+        <dd>Large and categorical. State use reaches compounds federal law deliberately omits.</dd>
+      </dl>
+    </article>
+
+    <article class="term-entry">
+      <div class="term-entry-head">
+        <div class="term-entry-title">Stereoisomer</div>
+        <div class="term-entry-weight">0.82</div>
+      </div>
+      <p>
+        Stereoisomer is an umbrella term covering any two molecules that share the same bond connectivity but differ in spatial arrangement. It includes both optical isomers (mirror images) and geometric isomers (cis/trans variants around rigid bonds). Any stereoisomer is either an optical isomer or a geometric isomer; the term groups both together.
+      </p>
+      <p>
+        The mismatch with federal scheduling is real but narrower than positional isomer's. Federal law already covers optical isomers for most scheduled substances, so the "optical" half of the stereoisomer category overlaps with federal scope. The additional coverage state stereoisomer language provides is mostly the geometric half, plus any non-federally-named optical variants for substances where federal scheduling targets a specific form (levorotatory cocaine, for instance). The gap is substance-dependent and partially pre-captured by federal text, which is why this term scores below positional isomer despite being scientifically well-defined.
+      </p>
+      <dl class="term-entry-components">
+        <dt>Chemistry</dt>
+        <dd>Umbrella category. Well-defined scientifically but covers two distinct sub-types.</dd>
+        <dt>Federal text</dt>
+        <dd>Partial coverage. Optical isomers captured by federal default; geometric isomers not.</dd>
+        <dt>Gap</dt>
+        <dd>Substance-specific. Exists for most schedules but closes for Schedule I hallucinogens.</dd>
+      </dl>
+    </article>
+
+    <article class="term-entry">
+      <div class="term-entry-head">
+        <div class="term-entry-title">Optical isomer (all forms)</div>
+        <div class="term-entry-weight">0.75</div>
+      </div>
+      <p>
+        Optical isomers are non-superimposable mirror images of each other — like left and right hands. For many drugs, only one optical isomer is pharmacologically active; the other is inert. Federal scheduling typically targets the active form only: for cocaine, this is the levorotatory isomer. A compound that rotates plane-polarized light in the opposite direction — the dextrorotatory form — is chemically the same family but pharmacologically different.
+      </p>
+      <p>
+        State statutes that say "optical isomers" without qualifying the rotation reach both forms, including the dextrorotatory variants federal law excludes. The broadening is narrower in scope than positional isomer's because the pharmacologically inert forms are rarely seized in practice. But the textual mismatch is clean: the state covers what federal does not. The weight is lower than positional or stereoisomer because the practical class of broader-than-federal compounds is narrower, and because some state statutes use "optical isomer" in ways that may be read as tracking the federal narrow definition.
+      </p>
+      <dl class="term-entry-components">
+        <dt>Chemistry</dt>
+        <dd>Clean, well-defined. Mirror-image relationship with well-understood pharmacological implications.</dd>
+        <dt>Federal text</dt>
+        <dd>Federal default reaches only the active (typically levorotatory) form.</dd>
+        <dt>Gap</dt>
+        <dd>Present but limited in practical scope. Only applies when state language is unqualified.</dd>
+      </dl>
+    </article>
+
+    <article class="term-entry">
+      <div class="term-entry-head">
+        <div class="term-entry-title">Geometric isomer</div>
+        <div class="term-entry-weight">0.70</div>
+      </div>
+      <p>
+        Geometric isomers differ in how groups are arranged around a rigid part of a molecule — typically a double bond or a ring. Groups on the same side of the rigid bond are called <em>cis</em>; on opposite sides, <em>trans</em>. For most controlled substances this distinction covers a small number of real-world compounds, but for certain classes it matters more.
+      </p>
+      <p>
+        This term is the first one where the federal gap varies substantially by drug class. For Schedule II substances and most other schedules, federal scheduling does not explicitly include geometric isomers, so a state statute that names them creates a textual gap. For Schedule I hallucinogens, federal <code>§ 802(14)(C)</code> explicitly includes geometric isomers, closing the gap entirely. The base weight reflects the general case; the context modifier system (next section) adjusts for the class-specific variation.
+      </p>
+      <dl class="term-entry-components">
+        <dt>Chemistry</dt>
+        <dd>Well-defined. Cis/trans configurations around rigid bonds.</dd>
+        <dt>Federal text</dt>
+        <dd>Not named by default; included explicitly only for Schedule I hallucinogens.</dd>
+        <dt>Gap</dt>
+        <dd>Class-dependent. Real for most schedules, closes for hallucinogens.</dd>
+      </dl>
+    </article>
+
+    <article class="term-entry">
+      <div class="term-entry-head">
+        <div class="term-entry-title">Isomers (unqualified)</div>
+        <div class="term-entry-weight">0.60</div>
+      </div>
+      <p>
+        When a statute uses "isomers" without qualifier, the term's scope depends on interpretation. In generic chemistry usage, "isomer" covers positional, optical, and geometric variants — all four sub-types. But federal law narrows the term via <code>§ 802(14)</code>, and some courts have read unqualified state "isomer" language to track the narrow federal definition rather than the generic chemistry one.
+      </p>
+      <p>
+        The weight reflects this interpretive contingency. If courts adopt the broad reading, unqualified "isomers" creates one of the most significant scope expansions available — it potentially captures all four sub-types at once. If courts adopt the narrow reading, the gap collapses to whatever optical-isomer mismatch exists. The weight sits below the specifically-named isomer terms because its broadening power depends on which reading a court applies, and the system cannot predict that. The presence of this term in a provision also triggers an <em>interpretive contingency flag</em> in the evidence output, alerting the attorney that the confidence score alone does not capture the full question.
+      </p>
+      <dl class="term-entry-components">
+        <dt>Chemistry</dt>
+        <dd>Generic term with four possible readings. Scientifically unambiguous but statutorily contested.</dd>
+        <dt>Federal text</dt>
+        <dd>Federal narrows to optical via § 802(14); state unqualified language is ambiguous.</dd>
+        <dt>Gap</dt>
+        <dd>Contingent on interpretation. Real but not textually resolved.</dd>
+      </dl>
+    </article>
+
+    <article class="term-entry">
+      <div class="term-entry-head">
+        <div class="term-entry-title">Derivative</div>
+        <div class="term-entry-weight">0.45</div>
+      </div>
+      <p>
+        A derivative is a compound formed from a parent compound through chemical modification. The term has no sharp scientific definition — chemists disagree on how much modification is required before something stops being a derivative. Courts disagree too: some require structural similarity plus pharmacological similarity, others accept structural similarity alone, and others read "derivative" expansively to cover any compound that could be synthesized from the parent.
+      </p>
+      <p>
+        The weight is lower than the specific isomer terms because the chemistry anchor is weak. Federal use of "derivative" also varies substantially by substance — the term is present in federal scheduling for coca leaf products but absent for many other drugs. When federal language already uses "derivative," the state's use of the same term creates no gap. When federal language omits it, state derivative language fills the omission. Context modifiers do substantial work for this term, producing effective weights that range from near-zero (for substances where federal parity exists) to above the base weight (for substances where federal is silent).
+      </p>
+      <dl class="term-entry-components">
+        <dt>Chemistry</dt>
+        <dd>Interpretively loose. No sharp scientific definition; courts disagree on scope.</dd>
+        <dt>Federal text</dt>
+        <dd>Variable by substance. Present for some drugs (coca leaves) and absent for others.</dd>
+        <dt>Gap</dt>
+        <dd>Substance-dependent. Closes entirely where federal also uses the term.</dd>
+      </dl>
+    </article>
+
+    <article class="term-entry">
+      <div class="term-entry-head">
+        <div class="term-entry-title">Salts of isomers</div>
+        <div class="term-entry-weight">0.25</div>
+      </div>
+      <p>
+        A salt is an ionic compound formed when a drug molecule bonds to a counter-ion — cocaine hydrochloride is a salt of cocaine with hydrochloric acid. Salts are the same drug molecule in a different chemical state, typically more stable, soluble, or storable than the freebase form.
+      </p>
+      <p>
+        "Salts of isomers" is standard scheduling language that appears on both state and federal sides across essentially all classes. It ensures that when a substance is sold in salt form, the statute still reaches it. The term does essentially no work in the state-federal comparison because parity is near-universal. The weight is kept non-zero mostly for completeness: the term is detected, displayed for attorney visibility, and grouped with other boilerplate in the evidence card output.
+      </p>
+      <dl class="term-entry-components">
+        <dt>Chemistry</dt>
+        <dd>Ionic forms of isomeric variants. High specificity, low broadening potential.</dd>
+        <dt>Federal text</dt>
+        <dd>Standard federal scheduling language across all classes.</dd>
+        <dt>Gap</dt>
+        <dd>Near-zero. Parity with federal is essentially universal.</dd>
+      </dl>
+    </article>
+
+    <article class="term-entry">
+      <div class="term-entry-head">
+        <div class="term-entry-title">Compound / preparation</div>
+        <div class="term-entry-weight">0.10</div>
+      </div>
+      <p>
+        "Compound" and "preparation" are the broadest possible coverage terms, ensuring a statute reaches the substance regardless of how it is formulated or mixed. Cocaine in pure form is a compound; cocaine in a solution is a preparation; cocaine cut with another substance for sale is a preparation. These terms make the schedule apply across real-world formulations.
+      </p>
+      <p>
+        They appear in essentially every modern controlled-substance statute, state and federal, as standard boilerplate. They contain no broadening signal — their presence tells us that the statute follows conventional scheduling structure, not that it reaches beyond federal scope. The weight is kept above zero only to preserve detection for statutes where these terms are unusually absent, which can itself be diagnostic.
+      </p>
+      <dl class="term-entry-components">
+        <dt>Chemistry</dt>
+        <dd>Coverage-inclusive rather than scope-defining. No distinct chemical meaning.</dd>
+        <dt>Federal text</dt>
+        <dd>Complete parity. Federal and state use identical framing.</dd>
+        <dt>Gap</dt>
+        <dd>None. Pure boilerplate.</dd>
+      </dl>
+    </article>
+
+  </section>
+
+  <section class="section" id="s05">
+    <div class="section-label"><span class="num">05</span></div>
+    <h2>Weight table</h2>
+
+    <p>
+      A single-page reference summarizing the walkthrough above. Base weights before context modifiers.
+    </p>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th style="width: 22%">Term</th>
+          <th style="width: 10%">Weight</th>
+          <th style="width: 22%">Chemistry</th>
+          <th style="width: 22%">Federal text</th>
+          <th style="width: 24%">Gap</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="term-name">Positional isomer</td>
+          <td class="weight-cell">0.90</td>
+          <td class="table-sub">Clean, well-defined</td>
+          <td class="table-sub">Excluded by § 802(14)</td>
+          <td class="table-body">Large, categorical</td>
+        </tr>
+        <tr>
+          <td class="term-name">Stereoisomer</td>
+          <td class="weight-cell">0.82</td>
+          <td class="table-sub">Umbrella category</td>
+          <td class="table-sub">Partial federal coverage</td>
+          <td class="table-body">Substance-specific</td>
+        </tr>
+        <tr>
+          <td class="term-name">Optical isomer (all forms)</td>
+          <td class="weight-cell">0.75</td>
+          <td class="table-sub">Mirror images</td>
+          <td class="table-sub">Levorotatory only</td>
+          <td class="table-body">Present but narrow</td>
+        </tr>
+        <tr>
+          <td class="term-name">Geometric isomer</td>
+          <td class="weight-cell">0.70</td>
+          <td class="table-sub">Cis/trans variants</td>
+          <td class="table-sub">Hallucinogens only</td>
+          <td class="table-body">Class-dependent</td>
+        </tr>
+        <tr>
+          <td class="term-name">Isomers (unqualified)</td>
+          <td class="weight-cell">0.60</td>
+          <td class="table-sub">Generic term</td>
+          <td class="table-sub">Ambiguous</td>
+          <td class="table-body">Interpretively contingent</td>
+        </tr>
+        <tr>
+          <td class="term-name">Derivative</td>
+          <td class="weight-cell">0.45</td>
+          <td class="table-sub">Interpretively loose</td>
+          <td class="table-sub">Variable by substance</td>
+          <td class="table-body">Substance-dependent</td>
+        </tr>
+        <tr>
+          <td class="term-name">Salts of isomers</td>
+          <td class="weight-cell">0.25</td>
+          <td class="table-sub">Ionic forms</td>
+          <td class="table-sub">Standard language</td>
+          <td class="table-body">Near-zero</td>
+        </tr>
+        <tr>
+          <td class="term-name">Compound / preparation</td>
+          <td class="weight-cell">0.10</td>
+          <td class="table-sub">Coverage terms</td>
+          <td class="table-sub">Complete parity</td>
+          <td class="table-body">None</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="section" id="s06">
+    <div class="section-label"><span class="num">06</span></div>
+    <h2>Context modifiers</h2>
+
+    <p>
+      A single base weight per term is not quite accurate. Federal scope varies by substance class, and the same state term can create a large gap for one drug and no gap at all for another. Context modifiers adjust the base weight at scoring time based on the substance under analysis.
+    </p>
+
+    <p>
+      The core reason these modifiers exist: federal <code>§ 802(14)</code> defines "isomer" narrowly for most schedules ("the optical isomer") but broadly for Schedule I hallucinogens (adding positional and geometric). When a state statute uses "positional isomer" language for a Schedule II drug, there is a substantial gap with federal scope. When the same state statute uses the same language for a Schedule I hallucinogen, the gap closes entirely because federal law already covers it. A single weight would hide this variation inside an averaged number that overstates the gap for hallucinogens and understates it for other schedules.
+    </p>
+
+    <p>
+      Positive modifiers indicate the gap widens for that drug class. Negative modifiers indicate federal parity closes the gap. The effective weight contributed to the score is the base weight plus the modifier.
+    </p>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th style="width: 34%">Term</th>
+          <th style="width: 33%">Schedule II</th>
+          <th style="width: 33%">Schedule I hallucinogens</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="term-name">Positional isomer</td>
+          <td class="weight-cell">0</td>
+          <td class="weight-cell">−0.45</td>
+        </tr>
+        <tr>
+          <td class="term-name">Stereoisomer</td>
+          <td class="weight-cell">+0.05</td>
+          <td class="weight-cell">−0.40</td>
+        </tr>
+        <tr>
+          <td class="term-name">Optical isomer</td>
+          <td class="weight-cell">+0.05</td>
+          <td class="weight-cell">−0.30</td>
+        </tr>
+        <tr>
+          <td class="term-name">Geometric isomer</td>
+          <td class="weight-cell">+0.10</td>
+          <td class="weight-cell">−0.65</td>
+        </tr>
+        <tr>
+          <td class="term-name">Isomers (unqualified)</td>
+          <td class="weight-cell">+0.10</td>
+          <td class="weight-cell">−0.40</td>
+        </tr>
+        <tr>
+          <td class="term-name">Derivative</td>
+          <td class="weight-cell">−0.20</td>
+          <td class="weight-cell">+0.15</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>
+      Modifiers are rounded to 0.05 increments and surfaced in the evidence card alongside the base weight, so attorneys can see exactly how the effective weight was derived for the substance under review.
+    </p>
+  </section>
+
+  <section class="section" id="s07">
+    <div class="section-label"><span class="num">07</span></div>
+    <h2>Scope flags</h2>
+
+    <p>
+      Some scope questions cannot be honestly reduced to a textual mismatch score. When a term's federal comparator is a mechanism rather than a text, or when the state term's broadening depends on an interpretive choice the system cannot predict, forcing those conditions into a number misrepresents what the number means.
+    </p>
+
+    <p>
+      Flags are the alternative. They operate alongside the confidence score as categorical indicators, surfacing scope conditions that warrant attorney review but cannot be quantified cleanly. A provision can have a high confidence score and also trigger a flag, or trigger a flag without a score-contributing signal present. The two measurements are independent.
+    </p>
+
+    <div class="flag-card">
+      <div class="flag-tag">Flag — Analog Language</div>
+      <div class="flag-title">Federal comparator is a mechanism, not a text</div>
+      <div class="flag-body">
+        Triggered when a provision uses "analog" or equivalent terms. Federal analog coverage is determined case-by-case under the Federal Analogue Act rather than fixed by scheduling text, and circuits have interpreted the "substantially similar" standard inconsistently. Because there is no stable federal text to compare against, this term is incompatible with the textual-mismatch methodology that drives the confidence score.
+      </div>
+    </div>
+
+    <div class="flag-card">
+      <div class="flag-tag">Flag — Interpretive Contingency</div>
+      <div class="flag-title">Unqualified isomer language admits a split reading</div>
+      <div class="flag-body">
+        Triggered when a provision uses "isomers" without qualifier. The broadening depends on whether a court reads the term as the generic chemistry definition (reaching all four isomer types) or the narrower federal definition. The base weight accounts for this contingency, but the flag makes it explicit so the interpretive question is not hidden inside a number.
+      </div>
+    </div>
+
+    <div class="flag-card">
+      <div class="flag-tag">Flag — Inherited Category Language</div>
+      <div class="flag-title">Analysis derives from parent provision rather than individual entry</div>
+      <div class="flag-body">
+        Triggered when a substance's scope analysis draws primarily from its parent schedule category provision rather than its own scheduling entry. Attorneys should know which text is doing the analytical work, particularly when preparing scope arguments that rely on category-level language inherited by multiple individual substances.
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="s08">
+    <div class="section-label"><span class="num">08</span></div>
+    <h2>The full formula</h2>
+
+    <p>
+      Every component of the scoring system described above combines into a single transparent calculation. This section shows the full formula and explains the adjustments applied after the base weighted sum.
+    </p>
+
+    <div class="formula">
+      <span class="formula-label">Score derivation</span>
+      <div class="formula-step"><span>Base term weights</span><span>= Σ (base × modifier) / normalizer</span></div>
+      <div class="formula-step"><span>Context modifiers</span><span><span class="op">+</span> class-specific adjustments</span></div>
+      <div class="formula-step"><span>Negation adjustment</span><span><span class="op">−</span> weight of negated terms</span></div>
+      <div class="formula-step"><span>Precedent anchor</span><span><span class="op">+</span> anchor value if case law matched</span></div>
+      <div class="formula-step"><span>Final confidence</span><span>= clamp(0, 1)</span></div>
+    </div>
+
+    <h3>Negation adjustment</h3>
+    <p>
+      A term present in statutory text may not actually contribute to broadening if it appears in a negated context. "Except stereoisomers" should not count as a stereoisomer broadening signal. The parser scans a window preceding each detected term for negation markers — <em>except, excluding, other than, does not include, shall not include</em> — and terms found within a negation window are excluded from the weighted sum. They still appear in the evidence card, greyed and struck through, so attorneys can see that detection happened and understand why the term did not contribute to the score.
+    </p>
+
+    <h3>Precedent anchors</h3>
+    <p>
+      Where curated precedent exists for a provision, the system applies a small upward adjustment reflecting that courts have previously ruled on similar language. The anchor is deliberately modest — the score remains driven by textual mismatch, not by case outcomes. Anchors sharpen confidence where judicial interpretation has already crystallized the analysis, but they cannot override the underlying textual signal. A statute with weak textual mismatch does not become strong just because a similar statute was successfully challenged elsewhere.
+    </p>
+
+    <h3>Normalization</h3>
+    <p>
+      The raw weighted sum is normalized against the theoretical maximum for the detected term set to produce a score on the 0-to-1 scale. This prevents provisions that happen to contain many low-weight boilerplate terms from producing artificially high scores. Normalization also makes scores comparable across provisions with different term compositions.
+    </p>
+  </section>
+
+  <section class="section" id="s09">
+    <div class="section-label"><span class="num">09</span></div>
+    <h2>What this is not</h2>
+
+    <p>
+      The system measures textual mismatch. Textual mismatch is not the same as legal conclusion, and being clear about this is essential to using the tool well.
+    </p>
+
+    <p>
+      Every limit in this section follows from that distinction. A confidence score describes the state of the text — how much scope-broadening material a provision contains relative to federal scheduling. It does not describe the state of the law, the state of judicial interpretation in any particular jurisdiction, or the likelihood of any particular outcome. The four limits below are different facets of the same underlying principle: a textual measurement is useful for triage and argument-building, but it is not a substitute for legal judgment.
+    </p>
+
+    <h3>It is not a legal determination</h3>
+    <p>
+      A confidence score does not say whether a state statute is categorically broader than federal law for any particular legal purpose. It says how strongly the textual evidence supports a broadening argument. The argument itself still has to be built, tested against relevant precedent in the relevant jurisdiction, and evaluated by counsel.
+    </p>
+
+    <h3>It is not a probability</h3>
+    <p>
+      A score of 0.82 does not mean an 82% chance a court will agree. The number is a measurement of how much textual material supports the scope argument, on a scale calibrated by the relative weights of the detected terms. Two provisions with 0.82 scores may have very different litigation prospects depending on their jurisdiction, precedent, and surrounding context.
+    </p>
+
+    <h3>It does not predict outcomes</h3>
+    <p>
+      The framework deliberately excludes litigation frequency and judicial receptiveness from its inputs. The score reflects what the text says, not how courts have tended to rule on similar text. This is a design choice: a triage tool that accurately describes the textual landscape is more useful than one that attempts to predict outcomes and gets them wrong.
+    </p>
+
+    <h3>It does not replace attorney review</h3>
+    <p>
+      The system is designed to surface provisions worth examining closely, not to substitute for that examination. A high score signals "this is worth looking at." A low score signals "this probably tracks federal scheduling." Either way, the next step is an attorney reading the provision, the relevant federal comparator, and the applicable case law in the jurisdiction where the question matters.
+    </p>
+  </section>
+
+  <section class="section" id="s10">
+    <div class="section-label"><span class="num">10</span></div>
+    <h2>Glossary of chemical terms</h2>
+
+    <p>
+      Reference definitions for the chemistry vocabulary used throughout the methodology. Terms are ordered by their appearance in the weight table.
+    </p>
+
+    <dl class="gloss">
+      <dt>Isomer</dt>
+      <dd>Any two molecules that share the same molecular formula but differ in structure or spatial arrangement. A generic term covering positional, optical, and geometric variants.</dd>
+
+      <dt>Positional isomer</dt>
+      <dd>Molecules that differ in where a functional group attaches on the molecular skeleton. Same atoms, same connectivity in most places, but a substituent sits at a different position.</dd>
+
+      <dt>Stereoisomer</dt>
+      <dd>Molecules with the same atoms and bond connectivity but different spatial arrangements. Umbrella category including optical and geometric isomers.</dd>
+
+      <dt>Optical isomer</dt>
+      <dd>Non-superimposable mirror images of each other, also called enantiomers. Distinguished by whether they rotate plane-polarized light left (levorotatory) or right (dextrorotatory). Typically only one form is pharmacologically active.</dd>
+
+      <dt>Geometric isomer</dt>
+      <dd>Also called cis/trans or E/Z isomers. Differ in how groups are arranged around a rigid bond or ring, with groups either on the same side (cis) or opposite sides (trans).</dd>
+
+      <dt>Derivative</dt>
+      <dd>A compound formed from a parent compound through chemical modification. Scientifically and legally contested — the degree of modification required before something stops being a derivative is not sharply defined.</dd>
+
+      <dt>Analog</dt>
+      <dd>A compound structurally similar to another but not chemically identical, often designed to produce similar biological effects. Federal analog coverage operates through a separate statutory mechanism rather than through scheduling text.</dd>
+
+      <dt>Salt</dt>
+      <dd>An ionic compound formed when a drug molecule bonds to a counter-ion. Salts are the same active compound in a different chemical state — typically more stable, soluble, or storable than the freebase form.</dd>
+
+      <dt>Levorotatory</dt>
+      <dd>Rotating plane-polarized light to the left. For many controlled substances, the levorotatory optical isomer is the pharmacologically active form and the one federal scheduling targets.</dd>
+
+      <dt>Dextrorotatory</dt>
+      <dd>Rotating plane-polarized light to the right. For many controlled substances, the dextrorotatory optical isomer is pharmacologically inactive but still chemically the same drug family.</dd>
+    </dl>
+  </section>
+
+  <footer class="doc-footer">
+    <div class="foot-left">Greyledge · Methodology v.02</div>
+    <div class="foot-right">2026-04-18T17:55:00-05:00</div>
+  </footer>
+
+</main>
+
+<script>
+  const sections = document.querySelectorAll('.section[id]');
+  const navLinks = document.querySelectorAll('.nav-link');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        navLinks.forEach((link) => {
+          link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+        });
+      }
+    });
+  }, { rootMargin: '-40% 0px -50% 0px' });
+  sections.forEach((s) => observer.observe(s));
+</script>
+
+</body>
+</html>
