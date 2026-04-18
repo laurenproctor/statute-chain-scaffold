@@ -387,7 +387,7 @@ function LandingFooter() {
           <p className="dd-footer-col-text" style={{ marginBottom: 16 }}>
             Available for urgent and time-sensitive matters.
           </p>
-          <Link href="#contact" className="dd-btn-primary" style={{ fontSize: 12, padding: '10px 20px' }}>
+          <Link href="#contact" className="dd-btn-primary" style={{ fontSize: 12, padding: '10px 20px', background: '#fff', color: 'var(--navy)', borderColor: '#fff' }}>
             Request Consultation
           </Link>
         </div>
@@ -397,14 +397,11 @@ function LandingFooter() {
           &copy; {new Date().getFullYear()} Greyledge LLC. All rights reserved.
         </span>
         <div className="dd-footer-notices">
-          <span className="dd-footer-notice">Confidential inquiries welcome</span>
-          <span className="dd-footer-notice">Urgent matter support available</span>
-          <span className="dd-footer-notice">
-            <Link href="/privacy" style={{ color: 'inherit' }}>Privacy Policy</Link>
-          </span>
-          <span className="dd-footer-notice">
-            <Link href="/terms" style={{ color: 'inherit' }}>Terms of Service</Link>
-          </span>
+          <span className="dd-footer-notice"><Link href="/privacy" style={{ color: 'inherit' }}>Privacy Policy</Link></span>
+          <span className="dd-footer-notice"><Link href="/terms" style={{ color: 'inherit' }}>Terms of Service</Link></span>
+          <span className="dd-footer-notice"><Link href="/cookies" style={{ color: 'inherit' }}>Cookie Policy</Link></span>
+          <span className="dd-footer-notice"><Link href="/disclaimer" style={{ color: 'inherit' }}>Disclaimer</Link></span>
+          <span className="dd-footer-notice"><Link href="/acceptable-use" style={{ color: 'inherit' }}>Acceptable Use</Link></span>
         </div>
       </div>
     </footer>

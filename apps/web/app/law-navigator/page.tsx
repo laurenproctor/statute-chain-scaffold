@@ -573,15 +573,24 @@ export default function LawNavigatorPage() {
       </header>
 
       <form className="search-form" onSubmit={handleSubmit}>
-        <input
-          className="citation-input"
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="e.g. 21 U.S.C. § 802 or NY Penal Law 220.16"
-          autoFocus
-          spellCheck={false}
-        />
+        <div className="search-row">
+          <input
+            className="citation-input"
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="e.g. 21 U.S.C. § 802 or NY Penal Law 220.16"
+            autoFocus
+            spellCheck={false}
+          />
+          <button
+            className="submit-btn"
+            type="submit"
+            disabled={loading || !input.trim()}
+          >
+            {loading ? 'resolving…' : 'Resolve →'}
+          </button>
+        </div>
         <div className="example-pills">
           {['21 U.S.C. § 802', 'NY Penal Law 220.16', '21 U.S.C. § 812'].map((ex) => (
             <button
@@ -593,15 +602,6 @@ export default function LawNavigatorPage() {
               {ex}
             </button>
           ))}
-        </div>
-        <div className="form-controls">
-          <button
-            className="submit-btn"
-            type="submit"
-            disabled={loading || !input.trim()}
-          >
-            {loading ? 'resolving…' : 'Resolve →'}
-          </button>
         </div>
       </form>
 

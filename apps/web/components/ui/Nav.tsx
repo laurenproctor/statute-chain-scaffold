@@ -19,18 +19,20 @@ export function Nav() {
 
   return (
     <nav className="site-nav">
-      <Link href="/" className="nav-brand">Greyledge</Link>
-      <div className="nav-links">
-        {LINKS.map(({ href, label }) => (
-          <Link
-            key={href}
-            href={href}
-            className={`nav-link${isActive(href) ? ' nav-link-active' : ''}`}
-          >
-            {label}
-          </Link>
-        ))}
-        <Link href="/digital-discovery" className="nav-cta">Digital Discovery</Link>
+      <div className="nav-inner">
+        <Link href="/" className="nav-brand">Greyledge</Link>
+        <div className="nav-links">
+          {LINKS.map(({ href, label }) => (
+            <Link
+              key={href}
+              href={href}
+              className={`nav-link${isActive(href) ? ' nav-link-active' : ''}`}
+            >
+              {label}
+            </Link>
+          ))}
+          <Link href="/digital-discovery" className="nav-cta">Digital Discovery</Link>
+        </div>
       </div>
     </nav>
   )

@@ -478,7 +478,7 @@
 
 /* ── Landing Footer ───────────────────────────────────────── */
 .dd-footer {
-  background: var(--ink);
+  background: var(--navy);
   padding: 48px 40px;
 }
 .dd-footer-inner {

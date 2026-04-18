@@ -334,15 +334,20 @@
 
   /* ── Nav ─────────────────────────────────────────────────────── */
   .site-nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 32px;
+    padding: 0 40px;
     border-bottom: 1px solid var(--border);
     background: var(--paper);
     position: sticky;
     top: 0;
     z-index: 50;
+  }
+  .nav-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
   }
   .nav-brand-block { display: flex; flex-direction: column; gap: 2px; }
   .nav-brand {
@@ -365,11 +370,11 @@
   .nav-link-active { color: var(--ink); background: var(--surface); }
   .nav-cta {
     font-size: 13px;
-    color: var(--paper);
-    background: var(--navy);
+    color: #fff;
+    background: #000;
     padding: 6px 14px;
     margin-left: 8px;
-    transition: opacity 120ms;
+    transition: background 150ms;
   }
   .nav-cta:hover { opacity: 0.85; }
 
@@ -383,69 +388,70 @@
     font-size: 11px;
     color: var(--muted);
     letter-spacing: 0.01em;
-    text-align: left;
+    text-align: right;
   }
 
   /* ── Footer ──────────────────────────────────────────────────── */
   .site-footer {
-    border-top: none;
     background: var(--navy);
-    padding: 40px 32px 32px;
-    margin-top: auto;
+    padding: 48px 40px;
   }
-  .footer-inner {
-    max-width: 860px;
+  .footer-cols {
+    max-width: 1080px;
     margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 32px;
-    padding-bottom: 28px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 40px;
+    padding-bottom: 36px;
     border-bottom: 1px solid rgba(255,255,255,0.12);
   }
-  .footer-brand { display: flex; flex-direction: column; gap: 6px; }
-  .footer-wordmark {
+  .footer-col-label {
     font-family: var(--font-geist-mono), monospace;
-    font-size: 15px;
-    font-weight: 500;
-    color: #fff;
-    letter-spacing: -0.01em;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+    margin-bottom: 14px;
   }
-  .footer-tagline { font-size: 12px; color: rgba(255,255,255,0.5); }
-  .footer-nav {
-    display: flex;
-    gap: 4px;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-  }
-  .footer-nav-link {
-    font-size: 12px;
+  .footer-col-link {
+    display: block;
+    font-size: 13px;
     color: rgba(255,255,255,0.55);
-    padding: 4px 10px;
-    border-radius: 4px;
-    transition: color 120ms, background 120ms;
+    margin-bottom: 8px;
+    transition: color 120ms;
   }
-  .footer-nav-link:hover { color: #fff; background: rgba(255,255,255,0.08); }
-  .footer-copy {
-    max-width: 860px;
-    margin: 20px auto 0;
-    font-size: 11px;
-    color: rgba(255,255,255,0.4);
+  .footer-col-link:hover { color: #fff; }
+  .footer-col-text { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.65; }
+  .footer-cta-btn {
+    display: inline-flex;
+    background: #fff;
+    color: var(--navy);
+    font-size: 12px;
+    padding: 10px 20px;
+    letter-spacing: 0.02em;
+    font-weight: 500;
+    transition: opacity 120ms;
+  }
+  .footer-cta-btn:hover { opacity: 0.9; color: var(--navy); }
+  .footer-bottom {
+    max-width: 1080px;
+    margin: 24px auto 0;
     display: flex;
-    gap: 16px;
+    justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    justify-content: space-between;
+    gap: 12px;
   }
-  .footer-legal-links {
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-    justify-content: flex-end;
+  .footer-copy-text { font-size: 11px; color: rgba(255,255,255,0.3); }
+  .footer-legal-links { display: flex; gap: 16px; flex-wrap: wrap; }
+  .footer-legal-link { font-size: 11px; color: rgba(255,255,255,0.3); transition: color 120ms; }
+  .footer-legal-link:hover { color: rgba(255,255,255,0.7); }
+  .site-notice p { color: rgba(255,255,255,0.35); text-align: right; }
+  @media (max-width: 768px) {
+    .site-footer { padding: 40px 24px; }
+    .footer-cols { grid-template-columns: 1fr; gap: 32px; }
+    .footer-bottom { flex-direction: column; align-items: flex-start; }
   }
-  .footer-copy a { color: rgba(255,255,255,0.4); }
-  .footer-copy a:hover { color: rgba(255,255,255,0.8); }
-  .site-notice p { color: rgba(255,255,255,0.4); }
 
   /* ── Prose (privacy policy, long-form pages) ─────────────────── */
   .prose { max-width: 640px; }
@@ -473,9 +479,9 @@
   /* ── Page Shell ──────────────────────────────────────────────── */
   .page {
     min-height: 100vh;
-    max-width: 860px;
+    max-width: 1080px;
     margin: 0 auto;
-    padding: 48px 32px 80px;
+    padding: 48px 40px 80px;
   }
   @media (max-width: 640px) { .page { padding: 32px 16px 60px; } }
 
@@ -484,21 +490,24 @@
   .tagline { color: var(--muted); font-size: 14px; line-height: 1.6; }
 
   .page-eyebrow {
+    font-family: var(--font-geist-mono), monospace;
     font-size: 10px;
     font-weight: 400;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: #BBBBBB;
-    margin-bottom: 12px;
+    color: var(--muted);
+    margin-bottom: 20px;
     display: flex;
     align-items: center;
     gap: 12px;
   }
-  .page-eyebrow::after {
+  .page-eyebrow::before {
     content: '';
-    flex: 1;
+    width: 24px;
     height: 1px;
-    background: var(--border);
+    background: var(--navy);
+    display: block;
+    flex-shrink: 0;
   }
 
   .section { margin-top: 40px; }
@@ -532,6 +541,9 @@
 
   /* ── Search / Citation Input ─────────────────────────────────── */
   .search-form { display: flex; flex-direction: column; gap: 12px; }
+  .search-row { display: flex; gap: 0; max-width: 50%; }
+  .search-row .citation-input { flex: 1; }
+  .search-row .submit-btn { flex-shrink: 0; }
   .citation-input {
     width: 100%;
     border: 1px solid var(--border);
@@ -874,7 +886,7 @@
 
   /* ── Compare Page ────────────────────────────────────────────── */
   .compare-page {
-    max-width: 1280px;
+    max-width: 1080px;
   }
 
   .compare-form { display: flex; flex-direction: column; gap: 8px; }
