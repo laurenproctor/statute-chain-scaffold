@@ -43,7 +43,7 @@ export default async function RequestsPage() {
     <main className="page">
       <header className="site-header">
         <p className="page-eyebrow">Ingest Console</p>
-        <h1>Load request queue.</h1>
+        <h1>Load Request Queue</h1>
         <p className="tagline">{rows.length} pending request{rows.length !== 1 ? 's' : ''}. Ingest or ignore each below.</p>
       </header>
 

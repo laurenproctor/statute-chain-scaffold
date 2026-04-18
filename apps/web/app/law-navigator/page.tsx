@@ -568,7 +568,7 @@ export default function LawNavigatorPage() {
     <main className="page">
       <header className="site-header">
         <p className="page-eyebrow">Law Navigator</p>
-        <h1>Resolve any statute or citation.</h1>
+        <h1>Resolve Any Statute or Citation</h1>
         <p className="tagline">Enter a section reference to trace its full chain of linked authorities.</p>
       </header>
 

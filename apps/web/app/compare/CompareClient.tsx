@@ -421,7 +421,7 @@ export function CompareClient() {
     <main className="page compare-page">
       <header className="site-header">
         <p className="page-eyebrow">Compare Laws</p>
-        <h1>Find where statutes align and diverge.</h1>
+        <h1>Find Where Statutes Align and Diverge</h1>
         <p className="tagline">Enter two references to compare their scope, status, and linked authorities.</p>
       </header>
 
