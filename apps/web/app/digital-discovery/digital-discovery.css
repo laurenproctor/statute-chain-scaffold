@@ -26,6 +26,17 @@
   display: block;
   flex-shrink: 0;
 }
+.dd-eyebrow-centered {
+  justify-content: center;
+}
+.dd-eyebrow-centered::after {
+  content: '';
+  width: 24px;
+  height: 1px;
+  background: var(--navy);
+  display: block;
+  flex-shrink: 0;
+}
 
 /* ── Headings ─────────────────────────────────────────────── */
 .dd-h1 {

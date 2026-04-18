@@ -4,9 +4,11 @@ export default function BrowsePage() {
   return (
     <main className="page">
       <header className="site-header">
-        <p className="page-eyebrow">Browse Codes</p>
-        <h1>Browse Statutes by Jurisdiction</h1>
-        <p className="tagline">Navigate loaded provisions by code, article, and section.</p>
+        <div style={{ maxWidth: '66.666%' }}>
+          <p className="page-eyebrow">Browse Codes</p>
+          <h1>Browse Statutes by Jurisdiction</h1>
+          <p className="tagline">Navigate loaded provisions by code, article, and section.</p>
+        </div>
       </header>
 
       <section className="section">

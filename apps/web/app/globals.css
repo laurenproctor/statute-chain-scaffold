@@ -539,6 +539,17 @@
     display: block;
     flex-shrink: 0;
   }
+  .page-eyebrow-centered {
+    justify-content: center;
+  }
+  .page-eyebrow-centered::after {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: var(--navy);
+    display: block;
+    flex-shrink: 0;
+  }
 
   .section { margin-top: 40px; }
   .section-title {

@@ -67,9 +67,11 @@ export default async function CorpusPage() {
   return (
     <main className="page">
       <header className="site-header">
-        <p className="page-eyebrow">Corpus Status</p>
-        <h1>Ingested Provisions and Reference Graph</h1>
-        <p className="tagline">All statutes loaded in the system, with source and coverage metadata.</p>
+        <div style={{ maxWidth: '66.666%' }}>
+          <p className="page-eyebrow">Corpus Status</p>
+          <h1>Ingested Provisions and Reference Graph</h1>
+          <p className="tagline">All statutes loaded in the system, with source and coverage metadata.</p>
+        </div>
       </header>
 
       {data.error ? (

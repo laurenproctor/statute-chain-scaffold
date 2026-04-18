@@ -341,7 +341,7 @@ function FinalCTA() {
   return (
     <section className="dd-final-cta" id="contact">
       <div className="dd-final-cta-inner">
-        <p className="dd-eyebrow" style={{ justifyContent: 'center' }}>Get Started</p>
+        <p className="dd-eyebrow dd-eyebrow-centered">Get Started</p>
         <h2 className="dd-h2">Get Clear Answers<br />From Complex Data</h2>
         <p className="dd-final-body">
           Tell us about your matter. We'll recommend scope, timing, and next steps — with no
@@ -360,54 +360,6 @@ function FinalCTA() {
   )
 }
 
-function LandingFooter() {
-  return (
-    <footer className="dd-footer">
-      <div className="dd-footer-inner">
-        <div>
-          <p className="dd-footer-col-label">Greyledge Digital Discovery</p>
-          <p className="dd-footer-col-text">
-            A clarity engine for law. We help legal teams collect, process, and review digital
-            evidence with speed and precision.
-          </p>
-        </div>
-        <div>
-          <p className="dd-footer-col-label">Services</p>
-          <Link href="#" className="dd-footer-col-link">Data Preservation & Collection</Link>
-          <Link href="#" className="dd-footer-col-link">Processing & Early Case Assessment</Link>
-          <Link href="#" className="dd-footer-col-link">Search, Analytics & Timelines</Link>
-          <Link href="#" className="dd-footer-col-link">Review Preparation</Link>
-          <Link href="#" className="dd-footer-col-link">Production & Delivery</Link>
-        </div>
-        <div>
-          <p className="dd-footer-col-label">Contact</p>
-          <p className="dd-footer-col-text" style={{ marginBottom: 12 }}>
-            discovery@greyledge.com
-          </p>
-          <p className="dd-footer-col-text" style={{ marginBottom: 16 }}>
-            Available for urgent and time-sensitive matters.
-          </p>
-          <Link href="#contact" className="dd-btn-primary" style={{ fontSize: 12, padding: '10px 20px', background: '#fff', color: 'var(--navy)', borderColor: '#fff' }}>
-            Request Consultation
-          </Link>
-        </div>
-      </div>
-      <div className="dd-footer-bottom">
-        <span className="dd-footer-copy">
-          &copy; {new Date().getFullYear()} Greyledge LLC. All rights reserved.
-        </span>
-        <div className="dd-footer-notices">
-          <span className="dd-footer-notice"><Link href="/privacy" style={{ color: 'inherit' }}>Privacy Policy</Link></span>
-          <span className="dd-footer-notice"><Link href="/terms" style={{ color: 'inherit' }}>Terms of Service</Link></span>
-          <span className="dd-footer-notice"><Link href="/cookies" style={{ color: 'inherit' }}>Cookie Policy</Link></span>
-          <span className="dd-footer-notice"><Link href="/disclaimer" style={{ color: 'inherit' }}>Disclaimer</Link></span>
-          <span className="dd-footer-notice"><Link href="/acceptable-use" style={{ color: 'inherit' }}>Acceptable Use</Link></span>
-        </div>
-      </div>
-    </footer>
-  )
-}
-
 export default function DigitalDiscoveryPage() {
   return (
     <div className="dd">
@@ -420,7 +372,6 @@ export default function DigitalDiscoveryPage() {
       <Urgent />
       <BetterAlternative />
       <FinalCTA />
-      <LandingFooter />
     </div>
   )
 }
