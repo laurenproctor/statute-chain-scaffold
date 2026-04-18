@@ -570,40 +570,39 @@ export default function LawNavigatorPage() {
         <p className="page-eyebrow">Law Navigator</p>
         <h1>Resolve Any Statute or Citation</h1>
         <p className="tagline">Enter a section reference to trace its full chain of linked authorities.</p>
-      </header>
-
-      <form className="search-form" onSubmit={handleSubmit}>
-        <div className="search-row">
-          <input
-            className="citation-input"
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="e.g. 21 U.S.C. § 802 or NY Penal Law 220.16"
-            autoFocus
-            spellCheck={false}
-          />
-          <button
-            className="submit-btn"
-            type="submit"
-            disabled={loading || !input.trim()}
-          >
-            {loading ? 'resolving…' : 'Resolve →'}
-          </button>
-        </div>
-        <div className="example-pills">
-          {['21 U.S.C. § 802', 'NY Penal Law 220.16', '21 U.S.C. § 812'].map((ex) => (
+        <form className="search-form search-form-hero" onSubmit={handleSubmit}>
+          <div className="search-row">
+            <input
+              className="citation-input citation-input-hero"
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="e.g. 21 U.S.C. § 802 or NY Penal Law 220.16"
+              autoFocus
+              spellCheck={false}
+            />
             <button
-              key={ex}
-              type="button"
-              className="example-pill"
-              onClick={() => setInput(ex)}
+              className="submit-btn"
+              type="submit"
+              disabled={loading || !input.trim()}
             >
-              {ex}
+              {loading ? 'resolving…' : 'Resolve →'}
             </button>
-          ))}
-        </div>
-      </form>
+          </div>
+          <div className="example-pills example-pills-hero">
+            {['21 U.S.C. § 802', 'NY Penal Law 220.16', '21 U.S.C. § 812'].map((ex) => (
+              <button
+                key={ex}
+                type="button"
+                className="example-pill example-pill-hero"
+                onClick={() => setInput(ex)}
+              >
+                {ex}
+              </button>
+            ))}
+          </div>
+        </form>
+      </header>
 
       {parsePreview && !result && (
         <section className="section">
