@@ -346,8 +346,9 @@
   }
   .nav-brand-block { display: flex; flex-direction: column; gap: 2px; }
   .nav-brand {
-    font-size: 13px;
+    font-size: 17px;
     font-weight: 500;
+    font-family: var(--font-geist-mono), monospace;
     color: var(--ink);
     letter-spacing: -0.01em;
   }
@@ -362,6 +363,82 @@
   }
   .nav-link:hover { color: var(--ink); opacity: 1; background: var(--surface); }
   .nav-link-active { color: var(--ink); background: var(--surface); }
+
+  /* ── Footer ──────────────────────────────────────────────────── */
+  .site-footer {
+    border-top: 1px solid var(--border);
+    background: var(--paper);
+    padding: 40px 32px 32px;
+    margin-top: auto;
+  }
+  .footer-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 32px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--border);
+  }
+  .footer-brand { display: flex; flex-direction: column; gap: 6px; }
+  .footer-wordmark {
+    font-family: var(--font-geist-mono), monospace;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .footer-tagline { font-size: 12px; color: var(--muted); }
+  .footer-nav {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  .footer-nav-link {
+    font-size: 12px;
+    color: var(--muted);
+    padding: 4px 10px;
+    border-radius: 4px;
+    transition: color 120ms, background 120ms;
+  }
+  .footer-nav-link:hover { color: var(--ink); background: var(--surface); }
+  .footer-copy {
+    max-width: 860px;
+    margin: 20px auto 0;
+    font-size: 11px;
+    color: var(--muted);
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .footer-copy a { color: var(--muted); }
+  .footer-copy a:hover { color: var(--ink); }
+
+  /* ── Prose (privacy policy, long-form pages) ─────────────────── */
+  .prose { max-width: 640px; }
+  .prose h2 {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    margin: 32px 0 8px;
+    letter-spacing: 0.01em;
+  }
+  .prose p, .prose li {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.75;
+    margin-bottom: 10px;
+  }
+  .prose ul {
+    padding-left: 20px;
+    margin-bottom: 10px;
+  }
+  .prose li { margin-bottom: 4px; }
+  .prose a { color: var(--navy); }
+  .prose a:hover { opacity: 0.7; }
 
   /* ── Page Shell ──────────────────────────────────────────────── */
   .page {

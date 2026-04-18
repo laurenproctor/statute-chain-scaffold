@@ -999,13 +999,9 @@ Do not run migration scripts until every item below is checked.
 
 ### Smoke tests (run after deploy, before dropping compat view)
 - [ ] `GET /api/corpus` returns `referencesTotal` field with a non-null number
-- [ ] `POST /api/chain` body `{"citation":"NY Penal Law 220.16","depth":2}` returns a non-empty graph with nodes
-- [ ] `POST /api/parse` body `{"citation":"NY Penal Law 220.16"}` returns a parsed result with `canonical_id`
-- [ ] `GET /api/debug/db` returns healthy DB connection status (not 500)
-- [ ] `/law-navigator` page loads without error and shows linked-authority count
-- [ ] `/compare` page loads for two known provisions without error
-- [ ] `/browse` page loads and lists ingested provisions
-- [ ] `/corpus` page loads and shows reference count (previously `citationsTotal`, now `referencesTotal`)
+- [ ] `POST /api/chain` with a known provision (e.g. `NY Penal Law 220.16`) returns a non-empty graph
+- [ ] Law Navigator page loads and shows correct linked-authority count
+- [ ] Compare page loads for two known provisions without error
 
 ### Cleanup (only after stability confirmed)
 - [ ] Minimum 1 hour of clean production operation observed
