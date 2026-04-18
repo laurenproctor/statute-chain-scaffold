@@ -567,6 +567,7 @@ export default function LawNavigatorPage() {
   return (
     <main className="page">
       <header className="site-header">
+        <div style={{ maxWidth: '66.666%' }}>
         <p className="page-eyebrow">Law Navigator</p>
         <h1>Resolve Any Statute or Citation</h1>
         <p className="tagline">Enter a section reference to trace its full chain of linked authorities.</p>
@@ -602,6 +603,7 @@ export default function LawNavigatorPage() {
             ))}
           </div>
         </form>
+        </div>
       </header>
 
       {parsePreview && !result && (

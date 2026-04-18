@@ -420,9 +420,11 @@ export function CompareClient() {
   return (
     <main className="page compare-page">
       <header className="site-header">
-        <p className="page-eyebrow">Compare Laws</p>
-        <h1>Find Where Statutes Align and Diverge</h1>
-        <p className="tagline">Enter two references to compare their scope, status, and linked authorities.</p>
+        <div style={{ maxWidth: '66.666%' }}>
+          <p className="page-eyebrow">Compare Laws</p>
+          <h1>Find Where Statutes Align and Diverge</h1>
+          <p className="tagline">Enter two references to compare their scope, status, and linked authorities.</p>
+        </div>
       </header>
 
       <form className="compare-form" onSubmit={handleSubmit}>
