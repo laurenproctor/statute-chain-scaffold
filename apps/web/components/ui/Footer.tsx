@@ -16,7 +16,7 @@ export function Footer() {
           <Link href="/expand-references" className="footer-col-link">Expand References</Link>
           <Link href="/browse" className="footer-col-link">Browse Authorities</Link>
           <Link href="/compare" className="footer-col-link">Compare Laws</Link>
-          <Link href="/corpus" className="footer-col-link">Corpus Status</Link>
+          <Link href="/resources" className="footer-col-link">Resources</Link>
           <Link href="/digital-discovery" className="footer-col-link">Digital Discovery</Link>
         </div>
         <div>

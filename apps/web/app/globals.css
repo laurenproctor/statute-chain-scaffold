@@ -378,6 +378,77 @@
   }
   .nav-cta:hover { opacity: 0.85; }
 
+  .nav-dropdown-container { position: relative; }
+  .nav-dropdown-trigger {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  .nav-dropdown-chevron {
+    font-size: 14px;
+    font-weight: 600;
+    transition: transform 120ms;
+    display: inline-block;
+    margin-left: 4px;
+    color: var(--ink);
+  }
+  .nav-dropdown-trigger:hover .nav-dropdown-chevron { transform: translateY(2px); }
+
+  .nav-mega-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 24px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 48px;
+    min-width: 500px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    z-index: 1000;
+  }
+  .mega-menu-column { }
+  .mega-menu-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+  }
+  .mega-menu-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 8px;
+    margin: 0 -8px;
+    text-decoration: none;
+    border-bottom: 1px solid var(--border);
+    transition: background-color 120ms;
+  }
+  .mega-menu-item:last-child { border-bottom: none; }
+  .mega-menu-item:hover { background-color: var(--surface); }
+  .mega-menu-item-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .mega-menu-item-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+  .mega-menu-item-desc {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
   /* ── Site Notice ─────────────────────────────────────────────── */
   .site-notice {
   }
@@ -628,6 +699,33 @@
     transition: border-color 120ms, color 120ms;
   }
   .example-chip:hover { border-color: var(--ink); color: var(--ink); }
+
+  .substance-item {
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--ink);
+    font-size: 13px;
+    border-radius: 2px;
+    transition: background-color 120ms, border-color 120ms;
+  }
+  .substance-item:hover { background: var(--paper); border-color: var(--ink); }
+
+  .mode-selector { display: flex; gap: 12px; border-bottom: 1px solid var(--border); }
+  .mode-tab {
+    font-size: 13px;
+    font-weight: 500;
+    padding: 12px 0;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: color 120ms, border-color 120ms;
+    margin-bottom: -1px;
+  }
+  .mode-tab:hover { color: var(--ink); }
+  .mode-tab.active { color: var(--ink); border-bottom-color: var(--ink); }
 
   .form-controls { display: flex; }
   .submit-btn {

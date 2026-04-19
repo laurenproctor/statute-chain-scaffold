@@ -1,0 +1,2129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Greyledge · Cocaine · Substance analysis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink:      #111111;
+    --paper:    #FFFFFF;
+    --surface:  #F8F8F6;
+    --border:   #E7E7E7;
+    --muted:    #666666;
+    --navy:     #1D2D50;
+    --positive: #1F6B4F;
+    --conflict: #8D2E35;
+    --gold:     #8C6A2B;
+    --sans:     'Geist', system-ui, sans-serif;
+    --mono:     'Geist Mono', ui-monospace, monospace;
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+  body {
+    font-family: var(--sans);
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.7;
+    font-size: 14px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  a { color: inherit; text-decoration: none; transition: opacity 120ms; }
+  a:hover { opacity: 0.7; }
+
+  /* ─────────────────────────────────────────────────────────
+     TOPBAR
+  ───────────────────────────────────────────────────────── */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 40px;
+    border-bottom: 1px solid var(--border);
+    background: var(--paper);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .topbar-left { display: flex; align-items: center; gap: 28px; }
+  .wordmark {
+    font-size: 13px;
+    letter-spacing: 0.14em;
+    color: var(--ink);
+  }
+  .breadcrumb {
+    font-size: 11px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .breadcrumb .sep { color: #CCCCCC; }
+  .breadcrumb .current { color: var(--ink); }
+
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .method-badge {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 120ms, border-color 120ms;
+  }
+  .method-badge:hover {
+    color: var(--ink);
+    border-color: var(--ink);
+    opacity: 1;
+  }
+  .method-badge .v {
+    font-family: var(--mono);
+    color: var(--ink);
+  }
+
+  /* ─────────────────────────────────────────────────────────
+     PAGE LAYOUT
+  ───────────────────────────────────────────────────────── */
+  main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
+  @media (max-width: 720px) {
+    .topbar { padding: 14px 20px; }
+    .topbar-left { gap: 12px; }
+    main { padding: 0 20px; }
+  }
+
+  /* ─────────────────────────────────────────────────────────
+     SUBSTANCE IDENTITY — NAVY HERO
+  ───────────────────────────────────────────────────────── */
+  .identity-wrap {
+    background: var(--navy);
+    position: relative;
+    overflow: hidden;
+    width: 100vw;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    left: 50%;
+    right: 50%;
+    padding: 0;
+  }
+  .identity-wrap > * {
+    margin-left: 40px;
+    margin-right: 40px;
+  }
+  .identity-wrap::before {
+    content: '';
+    position: absolute;
+    right: -60px; top: -80px;
+    width: 520px; height: 520px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .identity-wrap::after {
+    content: '';
+    position: absolute;
+    right: 40px; top: 40px;
+    width: 340px; height: 340px;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .identity {
+    padding: 96px 0 80px;
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+  }
+  .identity-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 20px;
+  }
+  .identity h1 {
+    font-size: clamp(56px, 7vw, 88px);
+    font-weight: 400;
+    line-height: 1.0;
+    letter-spacing: -0.02em;
+    color: var(--paper);
+    margin-bottom: 24px;
+  }
+  .identity-sub {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.65);
+    max-width: 680px;
+    line-height: 1.7;
+    margin-bottom: 56px;
+  }
+  .identity-meta {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    max-width: 900px;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  }
+  .identity-meta-cell {
+    padding: 24px 24px 24px 0;
+    border-right: 1px solid rgba(255, 255, 255, 0.15);
+  }
+  .identity-meta-cell:last-child { border-right: none; padding-right: 0; }
+  /* FIX: only add left padding to cells that are NOT first-in-row.
+     In the 4-column grid (desktop), cells 2, 3, 4 get left padding.
+     The mobile override below corrects this for 2-column layout. */
+  .identity-meta-cell:nth-child(n+2) { padding-left: 24px; }
+  .identity-meta-cell .lbl {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.4);
+    display: block;
+    margin-bottom: 10px;
+  }
+  .identity-meta-cell .val {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.4;
+  }
+  .identity-meta-cell .val.mono {
+    font-family: var(--mono);
+    font-size: 12px;
+  }
+  .identity-meta-cell .val a {
+    color: rgba(255, 255, 255, 0.85);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+    padding-bottom: 1px;
+    transition: border-color 120ms, color 120ms;
+  }
+  .identity-meta-cell .val a:hover {
+    color: var(--paper);
+    border-bottom-color: var(--paper);
+    opacity: 1;
+  }
+
+  @media (max-width: 900px) {
+    .identity-wrap { margin: 0 -20px; padding: 0 20px; }
+    .identity-wrap::before { width: 360px; height: 360px; right: -80px; top: -100px; }
+    .identity-wrap::after { width: 220px; height: 220px; right: 20px; top: 30px; }
+    .identity { padding: 72px 0 60px; }
+    .identity-meta { grid-template-columns: 1fr 1fr; }
+    /* FIX for alignment: reset the desktop rule that adds left-padding
+       to cells 2/3/4, then re-apply only to cells that are NOT first
+       in the 2-column layout (even-numbered cells: 2, 4). */
+    .identity-meta-cell:nth-child(n+2) { padding-left: 0; }
+    .identity-meta-cell:nth-child(even) { padding-left: 24px; }
+    .identity-meta-cell { border-right: none; border-bottom: 1px solid rgba(255, 255, 255, 0.15); }
+    .identity-meta-cell:nth-child(odd) { border-right: 1px solid rgba(255, 255, 255, 0.15); }
+    .identity-meta-cell:nth-last-child(-n+2) { border-bottom: none; }
+  }
+
+  /* ─────────────────────────────────────────────────────────
+     INTERACTIVE ELEMENTS
+     External links · internal cross-refs · tooltips
+  ───────────────────────────────────────────────────────── */
+
+  /* External links — citations, source statutes */
+  .cs-link.ext {
+    border-bottom: 1px solid currentColor;
+    border-bottom-color: rgba(128, 128, 128, 0.3);
+    padding-bottom: 1px;
+    transition: border-color 120ms, opacity 120ms;
+    cursor: pointer;
+    position: relative;
+  }
+  .cs-link.ext::after {
+    content: '↗';
+    font-size: 0.8em;
+    margin-left: 3px;
+    opacity: 0.6;
+  }
+  .cs-link.ext:hover {
+    border-bottom-color: currentColor;
+    opacity: 1;
+  }
+
+  /* Internal cross-references — to methodology, glossary, other pages */
+  .cs-link:not(.ext) {
+    border-bottom: 1px dotted currentColor;
+    border-bottom-color: rgba(128, 128, 128, 0.5);
+    padding-bottom: 1px;
+    cursor: pointer;
+    transition: border-color 120ms, opacity 120ms;
+  }
+  .cs-link:not(.ext):hover {
+    border-bottom-color: currentColor;
+    border-bottom-style: solid;
+    opacity: 1;
+  }
+
+  /* Tooltips — terms, metrics, flag names, numeric derivations */
+  .cs-term {
+    cursor: help;
+    border-bottom: 1px dotted currentColor;
+    border-bottom-color: rgba(128, 128, 128, 0.4);
+    padding-bottom: 1px;
+    transition: border-color 120ms;
+  }
+  .cs-term:hover {
+    border-bottom-color: currentColor;
+  }
+
+  /* Navy context needs higher contrast on dotted underlines */
+  .identity-wrap .cs-link:not(.ext),
+  .identity-wrap .cs-link.ext,
+  .identity-wrap .cs-term {
+    border-bottom-color: rgba(255, 255, 255, 0.35);
+  }
+  .identity-wrap .cs-link:not(.ext):hover,
+  .identity-wrap .cs-link.ext:hover,
+  .identity-wrap .cs-term:hover {
+    border-bottom-color: var(--paper);
+  }
+
+  /* Tooltip popover — shared behavior */
+  .tooltip-popover {
+    position: absolute;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 10px 14px;
+    font-size: 12px;
+    line-height: 1.5;
+    letter-spacing: 0;
+    text-transform: none;
+    font-weight: 400;
+    font-family: var(--sans);
+    max-width: 280px;
+    z-index: 1000;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 120ms, transform 120ms;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+  }
+  .tooltip-popover.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .tooltip-popover::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: 16px;
+    width: 10px;
+    height: 10px;
+    background: var(--ink);
+    transform: rotate(45deg);
+  }
+  .tooltip-popover .tooltip-label {
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 4px;
+    display: block;
+  }
+
+  /* ─────────────────────────────────────────────────────────
+     SECTION LABELS (matches brand guidelines)
+  ───────────────────────────────────────────────────────── */
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #BBBBBB;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .section-label .num {
+    font-family: var(--mono);
+    color: var(--muted);
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .section {
+    padding: 64px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ─────────────────────────────────────────────────────────
+     VERDICT BLOCK (binary first, score beneath)
+  ───────────────────────────────────────────────────────── */
+  .verdict {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 48px;
+    align-items: start;
+    padding: 40px 0 0;
+  }
+  .verdict-binary {
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin-bottom: 16px;
+    max-width: 720px;
+  }
+  .verdict-binary .direction {
+    color: var(--conflict);
+  }
+  .verdict-score {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .verdict-score-value {
+    font-family: var(--mono);
+    font-size: 32px;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+  .verdict-score-label {
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .verdict-narrative {
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.75;
+    max-width: 680px;
+  }
+  .verdict-narrative strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .verdict-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    min-width: 220px;
+  }
+  .verdict-right .method-used {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: right;
+  }
+  .verdict-right .method-used .v {
+    font-family: var(--mono);
+    color: var(--ink);
+  }
+  .use-cases {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+    margin-top: 16px;
+  }
+  .use-cases-label {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .use-case {
+    font-size: 11px;
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    color: var(--ink);
+  }
+
+  @media (max-width: 900px) {
+    .verdict { grid-template-columns: 1fr; gap: 24px; }
+    .verdict-right { align-items: flex-start; }
+    .use-cases { align-items: flex-start; }
+  }
+
+  /* ─────────────────────────────────────────────────────────
+     SCOPE FLAGS STRIP
+  ───────────────────────────────────────────────────────── */
+  .flags-strip {
+    margin-top: 48px;
+    padding: 24px 28px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+  }
+  .flags-strip-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .flags-strip-title {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .flags-strip-count {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .flags-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .flag-item {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 24px;
+    padding: 12px 0;
+    border-top: 1px solid var(--border);
+  }
+  .flag-item:first-child { border-top: none; padding-top: 0; }
+  .flag-item-tag {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .flag-item-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  @media (max-width: 720px) {
+    .flag-item { grid-template-columns: 1fr; gap: 8px; }
+  }
+
+  /* ─────────────────────────────────────────────────────────
+     EVIDENCE MATRIX (three cards)
+  ───────────────────────────────────────────────────────── */
+  .evidence-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 48px;
+  }
+  .ev-card {
+    background: var(--paper);
+    padding: 28px;
+  }
+  .ev-card-lbl {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+
+  /* Detected terms — with base/mod/effective */
+  .term-stack {
+    display: flex;
+    flex-direction: column;
+  }
+  .term-row {
+    display: grid;
+    grid-template-columns: 1fr 60px 70px;
+    gap: 12px;
+    align-items: baseline;
+    padding: 12px 0;
+    border-top: 1px solid var(--border);
+  }
+  .term-row:first-child { border-top: none; padding-top: 0; }
+  .term-name {
+    font-size: 13px;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .term-name-sub {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 400;
+    margin-top: 2px;
+    font-family: var(--mono);
+  }
+  .term-derivation {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    text-align: right;
+    line-height: 1.4;
+  }
+  .term-effective {
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--ink);
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .term-bar-row {
+    grid-column: 1 / -1;
+    margin-top: -4px;
+    margin-bottom: 4px;
+  }
+  .term-bar {
+    height: 2px;
+    background: var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .term-bar-fill {
+    height: 100%;
+    background: var(--ink);
+  }
+  .term-row.negated .term-name,
+  .term-row.negated .term-effective { color: var(--muted); text-decoration: line-through; }
+  .term-row.negated .term-bar-fill { background: var(--muted); opacity: 0.4; }
+  .boilerplate-note {
+    padding: 12px 0 0;
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-top: 4px;
+  }
+  .boilerplate-note strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .negation-note {
+    padding: 10px 0 0;
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.6;
+    font-style: italic;
+  }
+
+  /* Score breakdown */
+  .breakdown {
+    display: flex;
+    flex-direction: column;
+  }
+  .breakdown-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 10px 0;
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+  }
+  .breakdown-row:first-child { border-top: none; padding-top: 0; }
+  .breakdown-row .lbl { color: var(--muted); }
+  .breakdown-row .val {
+    font-family: var(--mono);
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .breakdown-row.total {
+    border-top: 2px solid var(--ink);
+    padding-top: 14px;
+    margin-top: 6px;
+  }
+  .breakdown-row.total .lbl {
+    color: var(--ink);
+    font-weight: 500;
+    font-size: 13px;
+  }
+  .breakdown-row.total .val {
+    font-size: 16px;
+    color: var(--ink);
+  }
+
+  /* Context narrative */
+  .context-body {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+  .context-body strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .context-body p { margin-bottom: 14px; }
+  .context-body p:last-child { margin-bottom: 0; }
+
+  @media (max-width: 900px) {
+    .evidence-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ─────────────────────────────────────────────────────────
+     SCOPE COMPARISON GRID
+  ───────────────────────────────────────────────────────── */
+  .scope-grid-wrap {
+    margin-top: 32px;
+  }
+  .scope-grid {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .scope-grid thead th {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 400;
+    text-align: left;
+    padding: 0 16px 14px 0;
+    border-bottom: 1px solid var(--ink);
+    vertical-align: bottom;
+  }
+  .scope-grid thead th.dim-col {
+    width: 28%;
+  }
+  .scope-grid thead th.state-col,
+  .scope-grid thead th.fed-col {
+    width: 36%;
+  }
+  .scope-grid thead th .jur-name {
+    font-size: 13px;
+    color: var(--ink);
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
+    margin-bottom: 4px;
+    display: block;
+  }
+  .scope-grid thead th .jur-cite {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  .scope-grid tbody td {
+    padding: 18px 16px 18px 0;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    font-size: 13px;
+    line-height: 1.55;
+  }
+  .scope-grid tbody tr:last-child td { border-bottom: none; }
+  .scope-grid .dim {
+    color: var(--ink);
+    font-weight: 500;
+    font-size: 13px;
+  }
+  .scope-grid .dim-sub {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 400;
+    margin-top: 2px;
+  }
+  .scope-grid .cell {
+    color: var(--ink);
+  }
+  .scope-grid .cell-flag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+  .scope-grid .cell-flag.broader { color: var(--conflict); }
+  .scope-grid .cell-flag.parity  { color: var(--positive); }
+  .scope-grid .cell-flag.neutral { color: var(--muted); }
+  .scope-grid .cell-flag::before {
+    content: '';
+    display: block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+  .scope-grid .cell-flag.broader::before { background: var(--conflict); }
+  .scope-grid .cell-flag.parity::before  { background: var(--positive); }
+  .scope-grid .cell-flag.neutral::before { background: #CCCCCC; }
+  .scope-grid .cell-body {
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--ink);
+  }
+  .scope-grid .cell-sub {
+    font-size: 11px;
+    color: var(--muted);
+    font-style: italic;
+    margin-top: 4px;
+  }
+
+  @media (max-width: 720px) {
+    .scope-grid,
+    .scope-grid thead,
+    .scope-grid tbody,
+    .scope-grid tr,
+    .scope-grid th,
+    .scope-grid td {
+      display: block;
+    }
+    .scope-grid thead { display: none; }
+    .scope-grid tbody tr {
+      border-bottom: 1px solid var(--border);
+      padding: 16px 0;
+    }
+    .scope-grid tbody td {
+      border-bottom: none;
+      padding: 6px 0;
+    }
+    .scope-grid tbody td::before {
+      content: attr(data-label);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 4px;
+    }
+  }
+
+  /* ─────────────────────────────────────────────────────────
+     PROVISION TEXT PANES (state + federal side by side)
+  ───────────────────────────────────────────────────────── */
+  .provisions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 32px;
+  }
+  .provision-pane {
+    background: var(--paper);
+    padding: 36px 32px;
+  }
+  .provision-head {
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .provision-jur {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .provision-title {
+    font-size: 17px;
+    font-weight: 500;
+    line-height: 1.35;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+  .provision-cite {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .provision-text {
+    font-size: 14px;
+    line-height: 1.85;
+    color: var(--ink);
+    max-width: 62ch;
+  }
+  .provision-text p { margin-bottom: 14px; }
+  .provision-text p:last-child { margin-bottom: 0; }
+  .hl-isomer {
+    background: rgba(141, 46, 53, 0.08);
+    color: var(--conflict);
+    padding: 1px 4px;
+    border-radius: 2px;
+  }
+  .hl-substance {
+    background: rgba(29, 45, 80, 0.08);
+    color: var(--navy);
+    padding: 1px 4px;
+    border-radius: 2px;
+  }
+  .hl-negated {
+    background: var(--surface);
+    color: var(--muted);
+    padding: 1px 4px;
+    border-radius: 2px;
+    text-decoration: line-through;
+  }
+  .provision-related {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+  .provision-related-label {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .related-provision {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 10px 0;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+  }
+  .related-provision:first-child { border-top: none; padding-top: 0; }
+  .related-provision .name { color: var(--ink); }
+  .related-provision .cite {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+  }
+  .legend-row {
+    display: flex;
+    gap: 18px;
+    margin-top: 24px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .legend-swatch {
+    width: 14px;
+    height: 10px;
+    border-radius: 2px;
+  }
+  .legend-swatch.isomer { background: rgba(141, 46, 53, 0.15); }
+  .legend-swatch.substance { background: rgba(29, 45, 80, 0.15); }
+  .legend-swatch.negated { background: var(--surface); border: 1px solid var(--border); }
+
+  @media (max-width: 900px) {
+    .provisions { grid-template-columns: 1fr; }
+    .provision-pane { padding: 28px 24px; }
+  }
+
+  /* ─────────────────────────────────────────────────────────
+     PRECEDENT ANCHORS (supporting, not determinative)
+  ───────────────────────────────────────────────────────── */
+  .anchors {
+    margin-top: 32px;
+  }
+  .anchors-intro {
+    font-size: 13px;
+    color: var(--muted);
+    max-width: 620px;
+    line-height: 1.7;
+    margin-bottom: 28px;
+    font-style: italic;
+  }
+  .anchor-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .anchor {
+    background: var(--paper);
+    padding: 24px 28px;
+  }
+  .anchor-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 8px;
+  }
+  .anchor-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    font-style: italic;
+  }
+  .anchor-tag {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .anchor-cite {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+  .anchor-body {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  @media (max-width: 900px) {
+    .anchor-list { grid-template-columns: 1fr; }
+  }
+
+  /* ─────────────────────────────────────────────────────────
+     VERIFICATION SECTION
+  ───────────────────────────────────────────────────────── */
+  .verification-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 36px 40px;
+    margin-top: 32px;
+  }
+  .verification-head {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 32px;
+    align-items: start;
+    margin-bottom: 28px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--border);
+  }
+  .verification-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border: 1px solid var(--positive);
+    color: var(--positive);
+    margin-bottom: 14px;
+  }
+  .verification-status::before {
+    content: '';
+    display: block;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--positive);
+  }
+  .verification-title {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1.35;
+    margin-bottom: 10px;
+  }
+  .verification-tagline {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 540px;
+  }
+  .verification-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: flex-end;
+    text-align: right;
+    min-width: 200px;
+  }
+  .verification-timestamp {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .verification-log-link {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 2px;
+    margin-top: 6px;
+  }
+  .verification-log-link:hover {
+    border-bottom-color: var(--ink);
+    opacity: 1;
+  }
+
+  .verification-sources {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    margin-bottom: 24px;
+    border: 1px solid var(--border);
+  }
+  .vs-cell {
+    background: var(--paper);
+    padding: 20px;
+  }
+  .vs-cell-label {
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .vs-cell-name {
+    font-size: 13px;
+    color: var(--ink);
+    font-weight: 500;
+    margin-bottom: 6px;
+    line-height: 1.35;
+  }
+  .vs-cell-count {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .vs-cell-count .ok {
+    color: var(--positive);
+  }
+
+  .verification-explainer {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 680px;
+  }
+  .verification-explainer strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  @media (max-width: 900px) {
+    .verification-head { grid-template-columns: 1fr; gap: 20px; }
+    .verification-meta { align-items: flex-start; text-align: left; }
+    .verification-sources { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 720px) {
+    .verification-block { padding: 28px 24px; }
+    .verification-sources { grid-template-columns: 1fr; }
+  }
+
+  /* Inline verification checkmark next to citations */
+  .verified-mark {
+    display: inline-block;
+    margin-left: 4px;
+    color: var(--positive);
+    font-size: 0.85em;
+    cursor: help;
+    vertical-align: baseline;
+    opacity: 0.7;
+    transition: opacity 120ms;
+  }
+  .verified-mark:hover {
+    opacity: 1;
+  }
+
+  /* ─────────────────────────────────────────────────────────
+     METHODOLOGY FOOTER
+  ───────────────────────────────────────────────────────── */
+  .method-footer {
+    padding: 80px 0 120px;
+    max-width: 820px;
+  }
+  .method-footer-label {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #BBBBBB;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .method-footer-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .method-footer p {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.75;
+    margin-bottom: 14px;
+  }
+  .method-footer-links {
+    display: flex;
+    gap: 24px;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+  .method-footer-links a {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink);
+    padding-bottom: 2px;
+    border-bottom: 1px solid var(--border);
+    transition: border-color 120ms;
+  }
+  .method-footer-links a:hover {
+    border-bottom-color: var(--ink);
+    opacity: 1;
+  }
+
+  /* ─────────────────────────────────────────────────────────
+     ANIMATION
+  ───────────────────────────────────────────────────────── */
+  .fade-up {
+    animation: fadeUp 400ms ease-out both;
+  }
+  @keyframes fadeUp {
+    from { transform: translateY(8px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
+
+  /* ─────────────────────────────────────────────────────────
+     SITE NAV & FOOTER
+  ───────────────────────────────────────────────────────── */
+  .site-nav {
+    padding: 0 40px;
+    border-bottom: 1px solid var(--border);
+    background: var(--paper);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1400px;
+    margin: 0 auto;
+    height: 60px;
+  }
+  .nav-brand {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .nav-links {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+  .nav-link {
+    font-size: 13px;
+    color: var(--muted);
+    padding: 6px 12px;
+    border-radius: 4px;
+    transition: color 120ms, background 120ms;
+    cursor: pointer;
+    background: none;
+    border: none;
+    text-decoration: none;
+  }
+  .nav-link:hover { color: var(--ink); background: var(--surface); }
+  .nav-link-active { color: var(--ink); background: var(--surface); }
+  .nav-cta {
+    font-size: 13px;
+    color: #fff;
+    background: #000;
+    padding: 6px 14px;
+    margin-left: 8px;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background 150ms;
+  }
+  .nav-cta:hover { opacity: 0.85; }
+
+  .site-footer {
+    background: var(--navy);
+    padding: 48px 0;
+    margin-top: 80px;
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
+  }
+  .footer-cols {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+    max-width: 1400px;
+    margin: 0 auto 40px;
+    padding: 0 40px;
+  }
+  .footer-cols {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+    max-width: 1400px;
+    margin: 0 auto 40px;
+  }
+  .footer-col-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 12px;
+  }
+  .footer-col-text {
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+  .footer-col-link {
+    display: block;
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    margin-bottom: 10px;
+    transition: color 120ms;
+  }
+  .footer-col-link:hover { color: #fff; }
+  .footer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255,255,255,0.2);
+  }
+  .footer-copy-text {
+    font-size: 12px;
+    color: rgba(255,255,255,0.6);
+  }
+  .footer-legal-links {
+    display: flex;
+    gap: 24px;
+  }
+  .footer-legal-link {
+    font-size: 12px;
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+    transition: color 120ms;
+  }
+  .footer-legal-link:hover { color: rgba(255,255,255,0.9); }
+
+  @media (max-width: 768px) {
+    .footer-cols { grid-template-columns: 1fr; gap: 32px; }
+    .footer-bottom { flex-direction: column; align-items: flex-start; gap: 16px; }
+  }
+
+</style>
+</head>
+<body>
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">Greyledge</a>
+    <div class="nav-links">
+      <a href="/expand-references" class="nav-link">Expand References</a>
+      <a href="/compare" class="nav-link">Compare Laws</a>
+      <a href="/browse" class="nav-link">Browse Codes</a>
+      <a href="/resources" class="nav-link">Resources</a>
+      <a href="/digital-discovery" class="nav-cta">Digital Discovery</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════ TOPBAR ═══════════════ -->
+<header class="topbar">
+  <div class="topbar-left">
+    <span class="wordmark">GREYLEDGE</span>
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="#">Substances</a>
+      <span class="sep">›</span>
+      <span class="current">Cocaine</span>
+    </nav>
+  </div>
+  <div class="topbar-right">
+    <a href="isomer-analysis-methodology-changelog.html" class="method-badge" title="View methodology changelog">
+      <span>METHODOLOGY</span>
+      <span class="v">v.02</span>
+    </a>
+  </div>
+</header>
+
+<main class="fade-up">
+
+  <!-- ═══════════════ SUBSTANCE IDENTITY ═══════════════ -->
+  <div class="identity-wrap">
+    <section class="identity">
+      <div class="identity-eyebrow">Substance analysis</div>
+      <h1>Cocaine</h1>
+      <p class="identity-sub">
+        Coca leaf alkaloid and its primary metabolite ecgonine. Analysis
+        compares New York Public Health Law scheduling against the federal
+        Controlled Substances Act, surfacing how the two statutes treat
+        chemical scope language for this substance.
+      </p>
+
+      <div class="identity-meta">
+        <div class="identity-meta-cell">
+          <span class="lbl">Schedule class</span>
+          <span class="val">
+            <a href="#" class="cs-link" data-coming-soon="Link to Schedule II overview page">Schedule II</a>
+          </span>
+        </div>
+        <div class="identity-meta-cell">
+          <span class="lbl">Chemical family</span>
+          <span class="val">
+            <span class="cs-term" data-tooltip="A class of alkaloids containing a tropane ring. Includes cocaine, atropine, and scopolamine.">Tropane alkaloid</span>
+          </span>
+        </div>
+        <div class="identity-meta-cell">
+          <span class="lbl">State provision</span>
+          <span class="val mono">
+            <a href="#" class="cs-link ext" data-coming-soon="Link to NY Senate official statute text">N.Y. Pub. Health § 3306(II)(b)(4)</a>
+          </span>
+        </div>
+        <div class="identity-meta-cell">
+          <span class="lbl">Federal comparator</span>
+          <span class="val mono">
+            <a href="#" class="cs-link ext" data-coming-soon="Link to Cornell LII statute text">21 U.S.C. § 812(b)(2)</a>
+          </span>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ═══════════════ VERDICT ═══════════════ -->
+  <section class="section">
+    <div class="section-label">
+      <span class="num">01</span>
+      <span>Scope determination</span>
+    </div>
+
+    <div class="verdict">
+      <div>
+        <div class="verdict-binary">
+          New York scope is <span class="direction">broader than federal</span>
+        </div>
+        <div class="verdict-score">
+          <span class="verdict-score-value">0.82</span>
+          <span class="verdict-score-label">Confidence</span>
+        </div>
+        <p class="verdict-narrative">
+          New York Public Health Law
+          <a href="#" class="cs-link ext" data-coming-soon="Link to NY Senate § 3306">§ 3306(II)(b)(4)</a><span class="verified-mark cs-term" data-tooltip="Citation verified against NY Open Legislation on 2026-04-18.">✓</span>
+          reaches
+          <strong>all salts, isomers, and salts of isomers</strong> of
+          cocaine and ecgonine without qualifying the isomer term. Federal
+          scheduling under the Controlled Substances Act limits isomer
+          coverage to the levorotatory form per
+          <strong><a href="#" class="cs-link ext" data-coming-soon="Link to 21 U.S.C. § 802(14)">21 U.S.C. § 802(14)(A)</a></strong><span class="verified-mark cs-term" data-tooltip="Citation verified against GovInfo on 2026-04-18.">✓</span>.
+          The
+          <span class="cs-term" data-tooltip="A term scoped in statutory text without optical/positional/geometric qualifier. Interpretation determines how broadly it reaches.">unqualified state term</span>
+          is the primary scope driver; ecgonine naming and
+          derivative language provide secondary broadening signals.
+        </p>
+      </div>
+
+      <div class="verdict-right">
+        <span class="method-used">Analyzed under <span class="v">v.02</span></span>
+
+        <div class="use-cases">
+          <span class="use-cases-label">Relevant for</span>
+          <span class="use-case">
+            <span class="cs-term" data-tooltip="Analytical framework comparing the minimum conduct criminalized by a state statute against the federal generic offense definition.">Categorical approach</span>
+          </span>
+          <span class="use-case">
+            <span class="cs-term" data-tooltip="Scope mismatches affect whether a state conviction triggers immigration consequences — removal, denial of cancellation, inadmissibility, or naturalization bars.">Immigration consequences</span>
+          </span>
+          <span class="use-case">
+            <span class="cs-term" data-tooltip="Litigation contesting whether a statute's scope exceeds its constitutional or statutory authority.">Scope litigation</span>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scope flags -->
+    <div class="flags-strip">
+      <div class="flags-strip-header">
+        <span class="flags-strip-title">Scope flags · categorical indicators</span>
+        <span class="flags-strip-count">1 triggered</span>
+      </div>
+      <div class="flags-list">
+        <div class="flag-item">
+          <div class="flag-item-tag">
+            <a href="isomer-analysis-methodology-2024-04-17-v2.html#s07" class="cs-link" data-coming-soon="Scroll to Scope Flags section in methodology v.02">Interpretive contingency</a>
+          </div>
+          <div class="flag-item-desc">
+            Unqualified "isomers" language admits a split reading — either
+            the generic chemistry definition covering all four isomer
+            types, or the narrower federal
+            <a href="#" class="cs-link ext" data-coming-soon="Link to 21 U.S.C. § 802(14)">§ 802(14)</a>
+            definition. The confidence score accounts for this contingency, but the flag
+            makes the interpretive question explicit so it is not hidden
+            inside a number.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ EVIDENCE MATRIX ═══════════════ -->
+  <section class="section">
+    <div class="section-label">
+      <span class="num">02</span>
+      <span>Evidence</span>
+    </div>
+
+    <div class="evidence-grid">
+
+      <!-- Detected terms -->
+      <div class="ev-card">
+        <div class="ev-card-lbl">Detected terms — weighted</div>
+        <div class="term-stack">
+          <div class="term-row">
+            <div>
+              <div class="term-name">
+                <a href="isomer-analysis-methodology-2024-04-17-v2.html#s04" class="cs-link" data-coming-soon="Link to term definition in methodology">Isomers (unqualified)</a>
+              </div>
+              <div class="term-name-sub">Schedule II context</div>
+            </div>
+            <div class="term-derivation">
+              <span class="cs-term" data-tooltip="Base weight reflects the term's typical textual mismatch before substance-class adjustment.">base 0.60</span><br>
+              <span class="cs-term" data-tooltip="Schedule II context modifier for unqualified isomer language. Increases the effective weight because federal narrows to optical only for this schedule class.">+ 0.10</span>
+            </div>
+            <div class="term-effective">0.70</div>
+            <div class="term-bar-row"><div class="term-bar"><div class="term-bar-fill" style="width:70%"></div></div></div>
+          </div>
+
+          <div class="term-row">
+            <div>
+              <div class="term-name">
+                <a href="isomer-analysis-methodology-2024-04-17-v2.html#s04" class="cs-link" data-coming-soon="Link to term definition in methodology">Derivative</a>
+              </div>
+              <div class="term-name-sub">Schedule II context</div>
+            </div>
+            <div class="term-derivation">
+              <span class="cs-term" data-tooltip="Base weight reflects the term's typical textual mismatch before substance-class adjustment.">base 0.45</span><br>
+              <span class="cs-term" data-tooltip="Schedule II context modifier for derivative language. Reduces the effective weight because federal § 812(b)(2) already uses 'derivative' language for coca leaf products — parity exists.">− 0.20</span>
+            </div>
+            <div class="term-effective">0.25</div>
+            <div class="term-bar-row"><div class="term-bar"><div class="term-bar-fill" style="width:25%"></div></div></div>
+          </div>
+
+          <div class="term-row negated">
+            <div>
+              <div class="term-name">Decocainized</div>
+              <div class="term-name-sub">
+                <span class="cs-term" data-tooltip="Term appears within a 'shall not include' clause and is excluded from the weighted sum per negation detection logic.">Negated — "shall not include"</span>
+              </div>
+            </div>
+            <div class="term-derivation">—</div>
+            <div class="term-effective">—</div>
+          </div>
+
+          <div class="boilerplate-note">
+            <strong>Boilerplate scheduling language also detected:</strong>
+            salts of isomers (0.25), compound / preparation (0.10).
+            Grouped here and de-emphasized per methodology — both terms
+            have near-complete federal parity and contribute minimally
+            to scope broadening.
+          </div>
+
+          <div class="negation-note">
+            One term negated and excluded from the weighted sum.
+            "Decocainized" appears in a "shall not include" clause that
+            preserves the full breadth of the active isomer language.
+          </div>
+        </div>
+      </div>
+
+      <!-- Score derivation -->
+      <div class="ev-card">
+        <div class="ev-card-lbl">Score derivation</div>
+        <div class="breakdown">
+          <div class="breakdown-row">
+            <span class="lbl">
+              <span class="cs-term" data-tooltip="Sum of effective weights (base × modifier) for all detected active terms, before normalization.">Base weighted sum</span>
+            </span>
+            <span class="val">0.413</span>
+          </div>
+          <div class="breakdown-row">
+            <span class="lbl">
+              <span class="cs-term" data-tooltip="Substance-class adjustments applied per the context modifier table in methodology v.02 § 06.">Context modifiers</span>
+            </span>
+            <span class="val">+0.080</span>
+          </div>
+          <div class="breakdown-row">
+            <span class="lbl">
+              <span class="cs-term" data-tooltip="Weight of negated terms, excluded from the score. Zero here because the only negated term ('decocainized') has no independent scope weight.">Negation adjustment</span>
+            </span>
+            <span class="val">−0.000</span>
+          </div>
+          <div class="breakdown-row">
+            <span class="lbl">
+              <span class="cs-term" data-tooltip="Small upward adjustment applied when curated precedent matches on substance and overlapping term set. Modest by design — does not override textual signal.">Precedent anchor</span>
+            </span>
+            <span class="val">+0.070</span>
+          </div>
+          <div class="breakdown-row">
+            <span class="lbl">
+              <span class="cs-term" data-tooltip="Scales the raw weighted sum against the theoretical maximum for the detected term set, producing a 0-to-1 confidence score.">Normalization</span>
+            </span>
+            <span class="val">×1.00</span>
+          </div>
+          <div class="breakdown-row total">
+            <span class="lbl">Final confidence</span>
+            <span class="val">0.82</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Key divergence -->
+      <div class="ev-card">
+        <div class="ev-card-lbl">Key divergence</div>
+        <div class="context-body">
+          <p>
+            New York's use of <strong>unqualified "isomers"</strong> is
+            the primary scope driver. The term carries no
+            optical/positional/geometric qualifier, which under a broad
+            reading reaches all four isomer sub-types.
+          </p>
+          <p>
+            Federal § 802(14)(A) narrows the term to the
+            <strong>optical isomer only</strong> for Schedule II,
+            producing a textual gap for dextrorotatory cocaine variants
+            and any non-optical stereoisomer forms.
+          </p>
+          <p>
+            The "shall not include" clause applies narrowly to
+            decocainized leaves, not to any isomer term — preserving the
+            full breadth of the scope language above it.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════ SCOPE COMPARISON ═══════════════ -->
+  <section class="section">
+    <div class="section-label">
+      <span class="num">03</span>
+      <span>Scope comparison — provision by provision</span>
+    </div>
+
+    <div class="scope-grid-wrap">
+      <table class="scope-grid">
+        <thead>
+          <tr>
+            <th class="dim-col">Dimension</th>
+            <th class="state-col">
+              <span class="jur-name">New York</span>
+              <span class="jur-cite">Pub. Health § 3306(II)(b)(4)</span>
+            </th>
+            <th class="fed-col">
+              <span class="jur-name">Federal</span>
+              <span class="jur-cite">21 U.S.C. § 812(b)(2) · § 802(14)(A)</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr>
+            <td class="dim" data-label="Dimension">
+              Isomer scope
+              <div class="dim-sub">Primary scope driver</div>
+            </td>
+            <td class="cell" data-label="New York">
+              <div class="cell-flag broader">Broader</div>
+              <div class="cell-body">All isomers (unqualified). Reaches optical, positional, geometric, and any ambiguous form.</div>
+            </td>
+            <td class="cell" data-label="Federal">
+              <div class="cell-flag parity">Defined</div>
+              <div class="cell-body">Optical isomer only, per § 802(14)(A). Levorotatory form is the default for Schedule II.</div>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="dim" data-label="Dimension">
+              Ecgonine coverage
+              <div class="dim-sub">Metabolite naming</div>
+            </td>
+            <td class="cell" data-label="New York">
+              <div class="cell-flag broader">Broader</div>
+              <div class="cell-body">Expressly named alongside cocaine as a scope target.</div>
+            </td>
+            <td class="cell" data-label="Federal">
+              <div class="cell-flag neutral">Not named</div>
+              <div class="cell-body">Not separately enumerated in § 812(b)(2).</div>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="dim" data-label="Dimension">
+              Derivative language
+              <div class="dim-sub">Boilerplate or scope-expanding?</div>
+            </td>
+            <td class="cell" data-label="New York">
+              <div class="cell-flag parity">Parity</div>
+              <div class="cell-body">"Any chemically equivalent preparation" — present.</div>
+              <div class="cell-sub">Context modifier applied: −0.20 for Schedule II</div>
+            </td>
+            <td class="cell" data-label="Federal">
+              <div class="cell-flag parity">Parity</div>
+              <div class="cell-body">"Derivative" language present for coca leaf products — federal parity.</div>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="dim" data-label="Dimension">
+              Salts of isomers
+              <div class="dim-sub">Standard boilerplate</div>
+            </td>
+            <td class="cell" data-label="New York">
+              <div class="cell-flag parity">Parity</div>
+              <div class="cell-body">Included.</div>
+            </td>
+            <td class="cell" data-label="Federal">
+              <div class="cell-flag parity">Parity</div>
+              <div class="cell-body">Included.</div>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="dim" data-label="Dimension">
+              Decocainized leaves
+              <div class="dim-sub">Negation clause</div>
+            </td>
+            <td class="cell" data-label="New York">
+              <div class="cell-flag parity">Excluded</div>
+              <div class="cell-body">Explicitly excluded via "shall not include" clause.</div>
+              <div class="cell-sub">Negation confirmed — applies only to leaves, not isomer terms</div>
+            </td>
+            <td class="cell" data-label="Federal">
+              <div class="cell-flag neutral">Not addressed</div>
+              <div class="cell-body">No explicit federal exclusion.</div>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══════════════ PROVISION TEXTS ═══════════════ -->
+  <section class="section">
+    <div class="section-label">
+      <span class="num">04</span>
+      <span>Statutory text</span>
+    </div>
+
+    <div class="provisions">
+
+      <!-- STATE PANE -->
+      <div class="provision-pane">
+        <div class="provision-head">
+          <div class="provision-jur">New York · primary provision</div>
+          <div class="provision-title">Schedule II — coca leaves, cocaine, and ecgonine</div>
+          <div class="provision-cite">
+            <a href="#" class="cs-link ext" data-coming-soon="Link to NY Senate official statute text">N.Y. Pub. Health Law § 3306 · Schedule II(b)(4)</a>
+          </div>
+        </div>
+
+        <div class="provision-text">
+          <p>
+            Coca leaves and any salt, <span class="hl-isomer">compound</span>,
+            <span class="hl-isomer">derivative</span>, or
+            <span class="hl-isomer">preparation</span> of coca leaves, and
+            any salt, <span class="hl-isomer">compound</span>,
+            <span class="hl-isomer">derivative</span>, or
+            <span class="hl-isomer">preparation</span> thereof which is
+            chemically equivalent or identical with any of these
+            substances including <span class="hl-substance">cocaine</span>
+            and <span class="hl-substance">ecgonine</span>, their salts,
+            <span class="hl-isomer">isomers</span>, and
+            <span class="hl-isomer">salts of isomers</span>, except that
+            the substances shall not include:
+          </p>
+          <p>
+            (A) <span class="hl-negated">decocainized</span> coca leaves
+            or extraction of coca leaves, which extractions do not contain
+            <span class="hl-substance">cocaine</span> or
+            <span class="hl-substance">ecgonine</span>; or
+          </p>
+          <p>(B) {123I} ioflupane.</p>
+        </div>
+
+        <div class="provision-related">
+          <div class="provision-related-label">Related provisions</div>
+          <div class="related-provision">
+            <span class="name">
+              <a href="#" class="cs-link" data-coming-soon="Link to Greyledge analysis for § 3302">Definitions for Article 33</a>
+            </span>
+            <span class="cite">§ 3302</span>
+          </div>
+          <div class="related-provision">
+            <span class="name">
+              <a href="#" class="cs-link" data-coming-soon="Link to Greyledge analysis for Schedule II general provisions">Schedule II general provisions</a>
+            </span>
+            <span class="cite">§ 3306(II)(a)</span>
+          </div>
+          <div class="related-provision">
+            <span class="name">
+              <a href="#" class="cs-link" data-coming-soon="Link to Greyledge analysis for N.Y. Penal § 220.00(5)">Penal Law cross-reference</a>
+            </span>
+            <span class="cite">N.Y. Penal § 220.00(5)</span>
+          </div>
+        </div>
+
+        <div class="legend-row">
+          <div class="legend-item"><span class="legend-swatch isomer"></span>Scope term</div>
+          <div class="legend-item"><span class="legend-swatch substance"></span>Named substance</div>
+          <div class="legend-item"><span class="legend-swatch negated"></span>Negated term</div>
+        </div>
+      </div>
+
+      <!-- FEDERAL PANE -->
+      <div class="provision-pane">
+        <div class="provision-head">
+          <div class="provision-jur">Federal · comparator</div>
+          <div class="provision-title">CSA Schedule II & isomer definition</div>
+          <div class="provision-cite">
+            <a href="#" class="cs-link ext" data-coming-soon="Link to Cornell LII statute text">21 U.S.C. § 812(b)(2) · § 802(14)(A)</a>
+          </div>
+        </div>
+
+        <div class="provision-text">
+          <p>
+            <strong>§ 812(b)(2) Schedule II (listing).</strong> Unless
+            specifically excepted or unless listed in another schedule,
+            any of the following substances whether produced directly or
+            indirectly by extraction from substances of vegetable origin,
+            or independently by means of chemical synthesis, or by a
+            combination of extraction and chemical synthesis: coca leaves
+            and any salt, <span class="hl-isomer">compound</span>,
+            <span class="hl-isomer">derivative</span>, or
+            <span class="hl-isomer">preparation</span> of coca leaves, and
+            any salt, <span class="hl-isomer">compound</span>,
+            <span class="hl-isomer">derivative</span>, or
+            <span class="hl-isomer">preparation</span> thereof which is
+            chemically equivalent or identical with any of these
+            substances…
+          </p>
+          <p>
+            <strong>§ 802(14) "Isomer" defined.</strong> As used in this
+            subchapter — (A) The term "isomer" means the
+            <span class="hl-isomer">optical isomer</span>, except as used
+            in schedule I(c) and paragraph (C) of this subsection.
+          </p>
+          <p>
+            (C) [For Schedule I hallucinogens only:] the term "isomer"
+            means any <span class="hl-isomer">optical, positional, or
+            geometric isomer</span>.
+          </p>
+        </div>
+
+        <div class="provision-related">
+          <div class="provision-related-label">Related provisions</div>
+          <div class="related-provision">
+            <span class="name">
+              <a href="#" class="cs-link ext" data-coming-soon="Link to Cornell LII § 802(6)">Definitions — controlled substance</a>
+            </span>
+            <span class="cite">§ 802(6)</span>
+          </div>
+          <div class="related-provision">
+            <span class="name">
+              <a href="#" class="cs-link ext" data-coming-soon="Link to Cornell LII § 813">Federal Analogue Act</a>
+            </span>
+            <span class="cite">§ 813</span>
+          </div>
+          <div class="related-provision">
+            <span class="name">
+              <a href="#" class="cs-link ext" data-coming-soon="Link to U.S. Sentencing Commission guidelines">Sentencing guidelines — drug equivalency</a>
+            </span>
+            <span class="cite">U.S.S.G. § 2D1.1</span>
+          </div>
+        </div>
+
+        <div class="legend-row">
+          <div class="legend-item"><span class="legend-swatch isomer"></span>Scope term</div>
+          <div class="legend-item"><span class="legend-swatch substance"></span>Named substance</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════ PRECEDENT ANCHORS ═══════════════ -->
+  <section class="section">
+    <div class="section-label">
+      <span class="num">05</span>
+      <span>Precedent anchors</span>
+    </div>
+
+    <div class="anchors">
+      <p class="anchors-intro">
+        Matched precedents from the curated case database. Anchors
+        contribute a small upward adjustment to the confidence score but
+        are not determinative — the score remains driven by textual
+        mismatch. Anchors sharpen confidence where courts have already
+        ruled, but cannot override the underlying scope analysis.
+      </p>
+
+      <div class="anchor-list">
+
+        <div class="anchor">
+          <div class="anchor-head">
+            <span class="anchor-name">
+              <a href="#" class="cs-link ext" data-coming-soon="Link to CourtListener or Justia case page">Harbin v. Sessions</a><span class="verified-mark cs-term" data-tooltip="Case citation verified against CourtListener on 2026-04-18.">✓</span>
+            </span>
+            <span class="anchor-tag">Categorical approach</span>
+          </div>
+          <div class="anchor-cite">5th Cir. 2017 · No. 16-60272</div>
+          <p class="anchor-body">
+            Court held that a state cocaine statute using unqualified
+            isomer language was categorically broader than the federal
+            CSA definition because it encompassed cocaine variants not
+            covered federally. Directly on point for unqualified
+            "isomers" language in Schedule II provisions.
+          </p>
+        </div>
+
+        <div class="anchor">
+          <div class="anchor-head">
+            <span class="anchor-name">
+              <a href="#" class="cs-link ext" data-coming-soon="Link to CourtListener or Justia case page">Moncrieffe v. Holder</a><span class="verified-mark cs-term" data-tooltip="Case citation verified against CourtListener on 2026-04-18.">✓</span>
+            </span>
+            <span class="anchor-tag">Framework</span>
+          </div>
+          <div class="anchor-cite">569 U.S. 184 · 2013</div>
+          <p class="anchor-body">
+            Affirmed that the
+            <span class="cs-term" data-tooltip="Analytical framework comparing the minimum conduct criminalized by a state statute against the federal generic offense definition.">categorical approach</span>
+            requires comparing the
+            minimum conduct criminalized by the state statute against the
+            federal generic offense. Establishes the analytical framework
+            under which the isomer scope question is evaluated.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ VERIFICATION ═══════════════ -->
+  <section class="section" id="verification">
+    <div class="section-label">
+      <span class="num">06</span>
+      <span>Verification</span>
+    </div>
+
+    <div class="verification-block">
+      <div class="verification-head">
+        <div>
+          <div class="verification-status">Verified</div>
+          <div class="verification-title">
+            All citations and statute text verified against authoritative sources
+          </div>
+          <div class="verification-tagline">
+            Every case citation, statute reference, and block-quoted
+            statutory text on this page was checked against the
+            authoritative public source listed below. The scope analysis
+            itself and the confidence score are not third-party
+            verifiable — see
+            <a href="verification.html" class="cs-link" data-coming-soon="Read full verification documentation">what verification means</a>.
+          </div>
+        </div>
+        <div class="verification-meta">
+          <div class="vs-cell-label">Last verified</div>
+          <div class="verification-timestamp">2026-04-18T17:55:00-05:00</div>
+          <a href="#" class="verification-log-link cs-link" data-coming-soon="View full verification log for this page">View log →</a>
+        </div>
+      </div>
+
+      <div class="verification-sources">
+        <div class="vs-cell">
+          <div class="vs-cell-label">Source</div>
+          <div class="vs-cell-name">CourtListener</div>
+          <div class="vs-cell-count">
+            <span class="cs-term" data-tooltip="Number of case citations on this page that matched their authoritative source.">
+              <span class="ok">2 of 2</span> cases verified
+            </span>
+          </div>
+        </div>
+        <div class="vs-cell">
+          <div class="vs-cell-label">Source</div>
+          <div class="vs-cell-name">GovInfo</div>
+          <div class="vs-cell-count">
+            <span class="cs-term" data-tooltip="Federal statute citations and block-quoted text matched against the Government Publishing Office's authoritative version.">
+              <span class="ok">3 of 3</span> federal cites verified
+            </span>
+          </div>
+        </div>
+        <div class="vs-cell">
+          <div class="vs-cell-label">Source</div>
+          <div class="vs-cell-name">NY Open Legislation</div>
+          <div class="vs-cell-count">
+            <span class="cs-term" data-tooltip="New York statute citations and block-quoted text matched against the NY Senate's authoritative version.">
+              <span class="ok">3 of 3</span> NY cites verified
+            </span>
+          </div>
+        </div>
+        <div class="vs-cell">
+          <div class="vs-cell-label">Source</div>
+          <div class="vs-cell-name">PubChem</div>
+          <div class="vs-cell-count">
+            <span class="cs-term" data-tooltip="Chemical identifiers and classification claims matched against the NIH's chemistry database.">
+              <span class="ok">2 of 2</span> chem refs verified
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <p class="verification-explainer">
+        <strong>What this means.</strong> Verification covers discrete,
+        externally checkable facts — citations and quoted text — not the
+        methodology or the analytical conclusions drawn from them. The
+        scope determination, the weight assignments, the confidence
+        score, and the narrative analysis are work product reviewed by
+        qualified counsel, not verified against an API. For the full
+        scope of what is and is not covered, see
+        <a href="verification.html" class="cs-link" data-coming-soon="Read full verification transparency document">our verification transparency document</a>.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══════════════ METHODOLOGY FOOTER ═══════════════ -->
+  <footer class="method-footer">
+    <div class="method-footer-label">Methodology</div>
+    <p>
+      This analysis was generated under Greyledge methodology
+      <strong style="color: var(--ink);">v.02</strong>, which scores
+      textual mismatch between state and federal scheduling language
+      along three dimensions: chemistry, federal text, and gap. The
+      confidence score is a triage signal, not a legal determination.
+      It measures how strongly the text supports a broadening argument,
+      not the likelihood any particular court will agree.
+    </p>
+    <p style="color: var(--muted); font-style: italic;">
+      Not legal advice. For litigation decisions, consult counsel
+      familiar with the relevant jurisdiction and precedent.
+    </p>
+
+    <div class="method-footer-links">
+      <a href="isomer-analysis-methodology-2024-04-17-v2.html">Read methodology v.02 →</a>
+      <a href="isomer-analysis-methodology-changelog.html">View changelog →</a>
+      <a href="verification.html">Verification documentation →</a>
+    </div>
+  </footer>
+
+<footer class="site-footer">
+  <div class="footer-cols">
+    <div>
+      <p class="footer-col-label">Greyledge</p>
+      <p class="footer-col-text">A clarity engine for law. Search, compare, and trace relationships across statutes, regulations, rules, and legal sources in one structured workspace.</p>
+    </div>
+    <div>
+      <p class="footer-col-label">Platform</p>
+      <a href="/expand-references" class="footer-col-link">Expand References</a>
+      <a href="/browse" class="footer-col-link">Browse Authorities</a>
+      <a href="/compare" class="footer-col-link">Compare Laws</a>
+      <a href="/resources" class="footer-col-link">Resources</a>
+      <a href="/digital-discovery" class="footer-col-link">Digital Discovery</a>
+    </div>
+    <div>
+      <p class="footer-col-label">Reports</p>
+      <a href="/isomer-analysis-methodology-2024-04-17-v2.html" class="footer-col-link">Isomer Methodology v2</a>
+      <a href="/isomer-analysis-methodology-changelog.html" class="footer-col-link">Methodology Changelog</a>
+      <a href="/isomer-analysis-2004-ny-vs-federal-v01-ai-unweighted.html" class="footer-col-link">2004 NY vs Federal v01</a>
+      <a href="/isomer-analysis-2004-ny-vs-federal-v02-ai-weighted.html" class="footer-col-link">2004 NY vs Federal v02</a>
+      <a href="/brand-guidelines.html" class="footer-col-link">Brand Guidelines</a>
+      <a href="/cocaine-2026.html" class="footer-col-link">Cocaine Report 2026</a>
+      <a href="/methamphetamine-2026.html" class="footer-col-link">Methamphetamine Report 2026</a>
+      <a href="/verification.html" class="footer-col-link">Verification</a>
+    </div>
+    <div>
+      <p class="footer-col-label">Contact</p>
+      <p class="footer-col-text" style="margin-bottom:12px">hello@greyledge.com</p>
+      <p class="footer-col-text">Not legal advice. Research infrastructure.</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy-text">&copy; 2026 Greyledge LLC. All rights reserved.</span>
+    <div class="footer-legal-links">
+      <a href="/privacy" class="footer-legal-link">Privacy Policy</a>
+      <a href="/terms" class="footer-legal-link">Terms of Service</a>
+      <a href="/cookies" class="footer-legal-link">Cookie Policy</a>
+      <a href="/disclaimer" class="footer-legal-link">Disclaimer</a>
+      <a href="/acceptable-use" class="footer-legal-link">Acceptable Use</a>
+    </div>
+  </div>
+</footer>
+
+</main>
+
+<script>
+  // ═══════════ TOOLTIPS ═══════════
+  // Attach a single shared popover element; show on hover/focus of .cs-term
+  // or elements with data-tooltip attributes.
+  (function() {
+    const popover = document.createElement('div');
+    popover.className = 'tooltip-popover';
+    document.body.appendChild(popover);
+
+    let hideTimer;
+
+    function showTooltip(el, text, label) {
+      clearTimeout(hideTimer);
+      popover.innerHTML = (label ? '<span class="tooltip-label">' + label + '</span>' : '') + text;
+
+      // Position below and slightly right of the element
+      const rect = el.getBoundingClientRect();
+      const scrollY = window.scrollY || document.documentElement.scrollTop;
+      const scrollX = window.scrollX || document.documentElement.scrollLeft;
+
+      popover.style.top = (rect.bottom + scrollY + 12) + 'px';
+      popover.style.left = (rect.left + scrollX) + 'px';
+      popover.classList.add('visible');
+    }
+
+    function hideTooltip() {
+      hideTimer = setTimeout(() => popover.classList.remove('visible'), 60);
+    }
+
+    // Tooltip terms (cs-term with data-tooltip)
+    document.querySelectorAll('[data-tooltip]').forEach(el => {
+      el.addEventListener('mouseenter', () => showTooltip(el, el.dataset.tooltip));
+      el.addEventListener('mouseleave', hideTooltip);
+      el.addEventListener('focus', () => showTooltip(el, el.dataset.tooltip));
+      el.addEventListener('blur', hideTooltip);
+    });
+
+    // Coming soon links — show the destination preview on hover,
+    // intercept click with a message so users understand it's not live.
+    document.querySelectorAll('[data-coming-soon]').forEach(el => {
+      el.addEventListener('mouseenter', () => showTooltip(el, el.dataset.comingSoon, 'Coming soon'));
+      el.addEventListener('mouseleave', hideTooltip);
+      el.addEventListener('focus', () => showTooltip(el, el.dataset.comingSoon, 'Coming soon'));
+      el.addEventListener('blur', hideTooltip);
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+      });
+    });
+  })();
+</script>
+
+</body>
+</html>

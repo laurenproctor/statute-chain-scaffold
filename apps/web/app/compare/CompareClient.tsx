@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import type { ParsedCitation, ResolvedProvision, ChainGraph } from '@statute-chain/types'
@@ -372,6 +373,7 @@ export function CompareClient() {
   const [rightInput, setRightInput] = useState(params.get('right') ?? '')
   const [left,  setLeft]  = useState<SideState>({ result: null, error: null, loading: false })
   const [right, setRight] = useState<SideState>({ result: null, error: null, loading: false })
+  const [selectedMode, setSelectedMode] = useState<'across-jurisdictions' | 'across-time' | 'related-provisions'>('across-jurisdictions')
 
   // Auto-run on mount if URL params present
   useEffect(() => {
@@ -421,12 +423,76 @@ export function CompareClient() {
     <main className="page compare-page">
       <header className="site-header">
         <div style={{ maxWidth: '66.666%' }}>
-          <p className="page-eyebrow">Compare Laws</p>
+          <p className="page-eyebrow">
+            Compare Laws {selectedMode && `/ ${selectedMode === 'across-jurisdictions' ? 'Across Jurisdictions' : selectedMode === 'across-time' ? 'Across Time' : 'Related Provisions'}`}
+          </p>
           <h1>See How Laws Align, Diverge, and Change</h1>
           <p className="tagline">Compare two references and surface scope differences, definitional mismatches, and changes over time, with every linked authority resolved in place.</p>
           <p className="scope-label">Works for statutes, regulations, contracts, treaties, and model codes.</p>
         </div>
       </header>
+
+      <div style={{ borderBottom: '1px solid var(--border)', paddingBottom: 16, marginBottom: 32 }}>
+        <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
+          <button
+            style={{
+              padding: '8px 16px',
+              border: '1px solid var(--border)',
+              background: 'var(--paper)',
+              color: 'var(--ink)',
+              fontSize: 13,
+              cursor: 'pointer',
+              borderRadius: 2,
+            }}
+          >
+            Compare Laws
+          </button>
+          <Link
+            href="/compare-laws/controlled-substances"
+            style={{
+              padding: '8px 16px',
+              border: '1px solid var(--border)',
+              background: 'var(--surface)',
+              color: 'var(--muted)',
+              fontSize: 13,
+              textDecoration: 'none',
+              borderRadius: 2,
+              transition: 'background-color 120ms, color 120ms',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'var(--paper)'
+              e.currentTarget.style.color = 'var(--ink)'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'var(--surface)'
+              e.currentTarget.style.color = 'var(--muted)'
+            }}
+          >
+            Compare Substances
+          </Link>
+        </div>
+      </div>
+
+      <div className="mode-selector" style={{ marginBottom: 32 }}>
+        <button
+          className={`mode-tab ${selectedMode === 'across-jurisdictions' ? 'active' : ''}`}
+          onClick={() => setSelectedMode('across-jurisdictions')}
+        >
+          Across Jurisdictions
+        </button>
+        <button
+          className={`mode-tab ${selectedMode === 'across-time' ? 'active' : ''}`}
+          onClick={() => setSelectedMode('across-time')}
+        >
+          Across Time
+        </button>
+        <button
+          className={`mode-tab ${selectedMode === 'related-provisions' ? 'active' : ''}`}
+          onClick={() => setSelectedMode('related-provisions')}
+        >
+          Related Provisions
+        </button>
+      </div>
 
       <form className="compare-form" onSubmit={handleSubmit}>
         <div className="compare-inputs">
