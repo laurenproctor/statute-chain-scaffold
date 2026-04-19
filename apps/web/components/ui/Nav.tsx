@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 const LINKS = [
-  { href: '/law-navigator', label: 'Law Navigator'   },
+  { href: '/legal-cross-reference-expander', label: 'Legal Cross-Reference Expander'   },
   { href: '/compare',      label: 'Compare Laws'    },
   { href: '/browse',       label: 'Browse Codes'    },
   { href: '/corpus',       label: 'Corpus'          },

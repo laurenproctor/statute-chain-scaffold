@@ -568,9 +568,9 @@ export default function LawNavigatorPage() {
     <main className="page">
       <header className="site-header">
         <div style={{ maxWidth: '66.666%' }}>
-        <p className="page-eyebrow">Law Navigator</p>
-        <h1>Resolve Any Statute or Citation</h1>
-        <p className="tagline">Enter a section reference to trace its full chain of linked authorities.</p>
+        <p className="page-eyebrow">Legal Cross-Reference Expander</p>
+        <h1>Expand Legal Cross-References</h1>
+        <p className="tagline">Enter a statute, regulation, contract, treaty, or model code reference to trace its full chain of linked authorities.</p>
         <form className="search-form search-form-hero" onSubmit={handleSubmit}>
           <div className="search-row">
             <input
