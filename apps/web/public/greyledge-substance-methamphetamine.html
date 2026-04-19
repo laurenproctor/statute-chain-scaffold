@@ -116,8 +116,16 @@
     background: var(--navy);
     position: relative;
     overflow: hidden;
-    margin: 0 -40px;
-    padding: 0 40px;
+    width: 100vw;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    left: 50%;
+    right: 50%;
+    padding: 0;
+  }
+  .identity-wrap > * {
+    margin-left: 40px;
+    margin-right: 40px;
   }
   .identity-wrap::before {
     content: '';
@@ -1331,9 +1339,144 @@
     from { transform: translateY(8px); opacity: 0; }
     to   { transform: translateY(0);    opacity: 1; }
   }
+
+  /* ─────────────────────────────────────────────────────────
+     SITE NAV & FOOTER
+  ───────────────────────────────────────────────────────── */
+  .site-nav {
+    padding: 0 40px;
+    border-bottom: 1px solid var(--border);
+    background: var(--paper);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1400px;
+    margin: 0 auto;
+    height: 60px;
+  }
+  .nav-brand {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .nav-links {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+  .nav-link {
+    font-size: 13px;
+    color: var(--muted);
+    padding: 6px 12px;
+    border-radius: 4px;
+    transition: color 120ms, background 120ms;
+    cursor: pointer;
+    background: none;
+    border: none;
+    text-decoration: none;
+  }
+  .nav-link:hover { color: var(--ink); background: var(--surface); }
+  .nav-link-active { color: var(--ink); background: var(--surface); }
+  .nav-cta {
+    font-size: 13px;
+    color: #fff;
+    background: #000;
+    padding: 6px 14px;
+    margin-left: 8px;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background 150ms;
+  }
+  .nav-cta:hover { opacity: 0.85; }
+
+  .site-footer {
+    background: var(--navy);
+    padding: 48px 0;
+    margin-top: 80px;
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
+  }
+  .footer-cols {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+    max-width: 1400px;
+    margin: 0 auto 40px;
+    padding: 0 40px;
+  }
+  .footer-col-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 12px;
+  }
+  .footer-col-text {
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+  .footer-col-link {
+    display: block;
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    margin-bottom: 10px;
+    transition: color 120ms;
+  }
+  .footer-col-link:hover { color: #fff; }
+  .footer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255,255,255,0.2);
+    padding: 0 40px;
+  }
+  .footer-copy-text {
+    font-size: 12px;
+    color: rgba(255,255,255,0.6);
+  }
+  .footer-legal-links {
+    display: flex;
+    gap: 24px;
+  }
+  .footer-legal-link {
+    font-size: 12px;
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+    transition: color 120ms;
+  }
+  .footer-legal-link:hover { color: rgba(255,255,255,0.9); }
+
+  @media (max-width: 768px) {
+    .footer-cols { grid-template-columns: 1fr; gap: 32px; }
+    .footer-bottom { flex-direction: column; align-items: flex-start; gap: 16px; }
+  }
+
 </style>
 </head>
 <body>
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">Greyledge</a>
+    <div class="nav-links">
+      <a href="/expand-references" class="nav-link">Expand References</a>
+      <a href="/compare" class="nav-link">Compare Laws</a>
+      <a href="/browse" class="nav-link">Browse Codes</a>
+      <a href="/resources" class="nav-link">Resources</a>
+      <a href="/digital-discovery" class="nav-cta">Digital Discovery</a>
+    </div>
+  </div>
+</nav>
 
 <!-- ═══════════════ TOPBAR ═══════════════ -->
 <header class="topbar">
@@ -1346,7 +1489,7 @@
     </nav>
   </div>
   <div class="topbar-right">
-    <a href="greyledge-methodology-changelog.html" class="method-badge" title="View methodology changelog">
+    <a href="isomer-analysis-methodology-changelog.html" class="method-badge" title="View methodology changelog">
       <span>METHODOLOGY</span>
       <span class="v">v.02</span>
     </a>
@@ -1466,7 +1609,7 @@
       <div class="flags-list">
         <div class="flag-item">
           <div class="flag-item-tag">
-            <a href="greyledge-isomer-analysis-methodology-v02.html#s07" class="cs-link" data-coming-soon="Scroll to Scope Flags section in methodology v.02">Schedule placement mismatch</a>
+            <a href="isomer-analysis-methodology-2024-04-17-v2.html#s07" class="cs-link" data-coming-soon="Scroll to Scope Flags section in methodology v.02">Schedule placement mismatch</a>
           </div>
           <div class="flag-item-desc">
             New York schedules all methamphetamine in Schedule II. Federal
@@ -1483,7 +1626,7 @@
 
         <div class="flag-item">
           <div class="flag-item-tag">
-            <a href="greyledge-isomer-analysis-methodology-v02.html#s07" class="cs-link" data-coming-soon="Scroll to Scope Flags section in methodology v.02">Realistic probability burden</a>
+            <a href="isomer-analysis-methodology-2024-04-17-v2.html#s07" class="cs-link" data-coming-soon="Scroll to Scope Flags section in methodology v.02">Realistic probability burden</a>
           </div>
           <div class="flag-item-desc">
             Under
@@ -1500,7 +1643,7 @@
 
         <div class="flag-item">
           <div class="flag-item-tag">
-            <a href="greyledge-isomer-analysis-methodology-v02.html#s07" class="cs-link" data-coming-soon="Scroll to Scope Flags section in methodology v.02">L-methamphetamine reality</a>
+            <a href="isomer-analysis-methodology-2024-04-17-v2.html#s07" class="cs-link" data-coming-soon="Scroll to Scope Flags section in methodology v.02">L-methamphetamine reality</a>
           </div>
           <div class="flag-item-desc">
             Methamphetamine has two optical isomers. The dextrorotatory form
@@ -1534,7 +1677,7 @@
           <div class="term-row">
             <div>
               <div class="term-name">
-                <a href="greyledge-isomer-analysis-methodology-v02.html#s04" class="cs-link" data-coming-soon="Link to term definition in methodology">Isomers (unqualified)</a>
+                <a href="isomer-analysis-methodology-2024-04-17-v2.html#s04" class="cs-link" data-coming-soon="Link to term definition in methodology">Isomers (unqualified)</a>
               </div>
               <div class="term-name-sub">Schedule II · federal parity</div>
             </div>
@@ -1549,7 +1692,7 @@
           <div class="term-row">
             <div>
               <div class="term-name">
-                <a href="greyledge-isomer-analysis-methodology-v02.html#s04" class="cs-link" data-coming-soon="Link to term definition in methodology">Salts of isomers</a>
+                <a href="isomer-analysis-methodology-2024-04-17-v2.html#s04" class="cs-link" data-coming-soon="Link to term definition in methodology">Salts of isomers</a>
               </div>
               <div class="term-name-sub">Boilerplate · both sides</div>
             </div>
@@ -2085,7 +2228,7 @@
             authoritative public source listed below. The scope analysis
             itself and the confidence score are not third-party
             verifiable — see
-            <a href="greyledge-verification.html" class="cs-link" data-coming-soon="Read full verification documentation">what verification means</a>.
+            <a href="verification.html" class="cs-link" data-coming-soon="Read full verification documentation">what verification means</a>.
           </div>
         </div>
         <div class="verification-meta">
@@ -2142,7 +2285,7 @@
         score, and the narrative analysis are work product reviewed by
         qualified counsel, not verified against an API. For the full
         scope of what is and is not covered, see
-        <a href="greyledge-verification.html" class="cs-link" data-coming-soon="Read full verification transparency document">our verification transparency document</a>.
+        <a href="verification.html" class="cs-link" data-coming-soon="Read full verification transparency document">our verification transparency document</a>.
       </p>
     </div>
   </section>
@@ -2165,12 +2308,54 @@
     </p>
 
     <div class="method-footer-links">
-      <a href="greyledge-isomer-analysis-methodology-v02.html">Read methodology v.02 →</a>
-      <a href="greyledge-methodology-changelog.html">View changelog →</a>
-      <a href="greyledge-verification.html">Verification documentation →</a>
+      <a href="isomer-analysis-methodology-2024-04-17-v2.html">Read methodology v.02 →</a>
+      <a href="isomer-analysis-methodology-changelog.html">View changelog →</a>
+      <a href="verification.html">Verification documentation →</a>
     </div>
   </footer>
 
+<footer class="site-footer">
+  <div class="footer-cols">
+    <div>
+      <p class="footer-col-label">Greyledge</p>
+      <p class="footer-col-text">A clarity engine for law. Search, compare, and trace relationships across statutes, regulations, rules, and legal sources in one structured workspace.</p>
+    </div>
+    <div>
+      <p class="footer-col-label">Platform</p>
+      <a href="/expand-references" class="footer-col-link">Expand References</a>
+      <a href="/browse" class="footer-col-link">Browse Authorities</a>
+      <a href="/compare" class="footer-col-link">Compare Laws</a>
+      <a href="/resources" class="footer-col-link">Resources</a>
+      <a href="/digital-discovery" class="footer-col-link">Digital Discovery</a>
+    </div>
+    <div>
+      <p class="footer-col-label">Reports</p>
+      <a href="/isomer-analysis-methodology-2024-04-17-v2.html" class="footer-col-link">Isomer Methodology v2</a>
+      <a href="/isomer-analysis-methodology-changelog.html" class="footer-col-link">Methodology Changelog</a>
+      <a href="/isomer-analysis-2004-ny-vs-federal-v01-ai-unweighted.html" class="footer-col-link">2004 NY vs Federal v01</a>
+      <a href="/isomer-analysis-2004-ny-vs-federal-v02-ai-weighted.html" class="footer-col-link">2004 NY vs Federal v02</a>
+      <a href="/brand-guidelines.html" class="footer-col-link">Brand Guidelines</a>
+      <a href="/cocaine-2026.html" class="footer-col-link">Cocaine Report 2026</a>
+      <a href="/methamphetamine-2026.html" class="footer-col-link">Methamphetamine Report 2026</a>
+      <a href="/verification.html" class="footer-col-link">Verification</a>
+    </div>
+    <div>
+      <p class="footer-col-label">Contact</p>
+      <p class="footer-col-text" style="margin-bottom:12px">hello@greyledge.com</p>
+      <p class="footer-col-text">Not legal advice. Research infrastructure.</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy-text">&copy; 2026 Greyledge LLC. All rights reserved.</span>
+    <div class="footer-legal-links">
+      <a href="/privacy" class="footer-legal-link">Privacy Policy</a>
+      <a href="/terms" class="footer-legal-link">Terms of Service</a>
+      <a href="/cookies" class="footer-legal-link">Cookie Policy</a>
+      <a href="/disclaimer" class="footer-legal-link">Disclaimer</a>
+      <a href="/acceptable-use" class="footer-legal-link">Acceptable Use</a>
+    </div>
+  </div>
+</footer>
 </main>
 
 <script>
