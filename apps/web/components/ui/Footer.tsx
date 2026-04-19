@@ -21,11 +21,11 @@ export function Footer() {
         </div>
         <div>
           <p className="footer-col-label">Reports</p>
-          <a href="/isomer-analysis-methodology-2024.04.17-v2.html" className="footer-col-link" target="_blank" rel="noopener noreferrer">Isomer Methodology v2</a>
-          <a href="/isomer-analysis-methodology-changelog.html" className="footer-col-link" target="_blank" rel="noopener noreferrer">Methodology Changelog</a>
-          <a href="/isomer-analysis-2004-ny-vs-federal-v01-ai-unweighted.html" className="footer-col-link" target="_blank" rel="noopener noreferrer">2004 NY vs Federal v01</a>
-          <a href="/isomer-analysis-2004-ny-vs-federal-v02-ai-weighted.html" className="footer-col-link" target="_blank" rel="noopener noreferrer">2004 NY vs Federal v02</a>
-          <a href="/brand-guidelines.html" className="footer-col-link" target="_blank" rel="noopener noreferrer">Brand Guidelines</a>
+          <a href="/isomer-analysis-methodology-2024.04.17-v2" className="footer-col-link" target="_blank" rel="noopener noreferrer">Isomer Methodology v2</a>
+          <a href="/isomer-analysis-methodology-changelog" className="footer-col-link" target="_blank" rel="noopener noreferrer">Methodology Changelog</a>
+          <a href="/isomer-analysis-2004-ny-vs-federal-v01-ai-unweighted" className="footer-col-link" target="_blank" rel="noopener noreferrer">2004 NY vs Federal v01</a>
+          <a href="/isomer-analysis-2004-ny-vs-federal-v02-ai-weighted" className="footer-col-link" target="_blank" rel="noopener noreferrer">2004 NY vs Federal v02</a>
+          <a href="/brand-guidelines" className="footer-col-link" target="_blank" rel="noopener noreferrer">Brand Guidelines</a>
         </div>
         <div>
           <p className="footer-col-label">Contact</p>
