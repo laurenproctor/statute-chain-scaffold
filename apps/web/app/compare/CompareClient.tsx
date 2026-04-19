@@ -422,8 +422,9 @@ export function CompareClient() {
       <header className="site-header">
         <div style={{ maxWidth: '66.666%' }}>
           <p className="page-eyebrow">Compare Laws</p>
-          <h1>Find Where Statutes Align and Diverge</h1>
-          <p className="tagline">Enter two references to compare their scope, status, and linked authorities.</p>
+          <h1>See How Laws Align, Diverge, and Change</h1>
+          <p className="tagline">Compare two references and surface scope differences, definitional mismatches, and changes over time, with every linked authority resolved in place.</p>
+          <p className="tagline">Works for statutes, regulations, contracts, treaties, and model codes.</p>
         </div>
       </header>
 
