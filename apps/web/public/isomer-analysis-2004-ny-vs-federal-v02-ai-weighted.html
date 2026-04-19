@@ -804,9 +804,32 @@
   .footer-legal-link:hover { color: rgba(255,255,255,0.7); }
   @media (max-width: 768px) { .site-footer { padding: 40px 24px; } .footer-cols { grid-template-columns: 1fr; gap: 32px; } .footer-bottom { flex-direction: column; align-items: flex-start; } }
 
+
+  /* ── Site Nav ── */
+  .site-nav { padding: 0 40px; border-bottom: 1px solid #E7E7E7; background: #fff; position: sticky; top: 0; z-index: 50; }
+  .nav-inner { max-width: 1080px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 16px 0; }
+  .nav-brand { font-size: 17px; font-weight: 500; font-family: "Geist Mono", monospace; color: #111; letter-spacing: -0.01em; text-decoration: none; }
+  .nav-links { display: flex; gap: 4px; align-items: center; }
+  .nav-link { font-size: 13px; color: #666; padding: 6px 12px; border-radius: 4px; text-decoration: none; transition: color 120ms, background 120ms; }
+  .nav-link:hover { color: #111; background: #F8F8F6; }
+  .nav-cta { font-size: 13px; color: #fff; background: #000; padding: 6px 14px; margin-left: 8px; text-decoration: none; transition: opacity 150ms; }
+  .nav-cta:hover { opacity: 0.85; }
+
 </style>
 </head>
 <body>
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">Greyledge</a>
+    <div class="nav-links">
+      <a href="/law-navigator" class="nav-link">Law Navigator</a>
+      <a href="/compare" class="nav-link">Compare Laws</a>
+      <a href="/browse" class="nav-link">Browse Codes</a>
+      <a href="/corpus" class="nav-link">Corpus</a>
+      <a href="/digital-discovery" class="nav-cta">Digital Discovery</a>
+    </div>
+  </div>
+</nav>
 
 <nav class="doc-nav" aria-label="Analysis sections">
   <span class="wordmark">GREYLEDGE</span>
