@@ -615,6 +615,20 @@
   }
   .example-pill:hover { border-color: var(--ink); color: var(--ink); }
 
+  .example-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .example-chip {
+    font-size: 12px;
+    padding: 5px 12px;
+    border: 1px solid var(--border);
+    background: var(--paper);
+    color: var(--muted);
+    border-radius: 2px;
+    cursor: pointer;
+    font-family: var(--font-geist-mono), monospace;
+    transition: border-color 120ms, color 120ms;
+  }
+  .example-chip:hover { border-color: var(--ink); color: var(--ink); }
+
   .form-controls { display: flex; }
   .submit-btn {
     font-family: var(--font-geist-sans), sans-serif;
@@ -1294,10 +1308,11 @@
     color: var(--muted);
     cursor: pointer;
     font-size: 15px;
-    transition: color 120ms;
+    transition: color 120ms, background 120ms, border-color 120ms;
     align-self: end;
+    border-radius: 4px;
   }
-  .swap-btn:hover { color: var(--ink); }
+  .swap-btn:hover { color: var(--ink); background: var(--surface); border-color: var(--ink); }
 
   .compare-columns {
     display: grid;

@@ -301,7 +301,7 @@ function SidePanel({ label, side, authorityCount }: { label: string; side: SideS
       <div className="compare-side compare-side-missing">
         <div className="compare-side-label">{label}</div>
         <p className="compare-missing-msg">
-          {side.error ?? 'Enter a statute reference above to compare.'}
+          {side.error ?? 'Enter a reference above to compare.'}
         </p>
       </div>
     )
@@ -436,7 +436,7 @@ export function CompareClient() {
               className="citation-input"
               value={leftInput}
               onChange={e => setLeftInput(e.target.value)}
-              placeholder="e.g. NY Penal Law 220.16"
+              placeholder="e.g. 21 U.S.C. § 812"
               spellCheck={false}
             />
           </div>
@@ -451,10 +451,34 @@ export function CompareClient() {
               className="citation-input"
               value={rightInput}
               onChange={e => setRightInput(e.target.value)}
-              placeholder="e.g. NY Penal Law 220.18"
+              placeholder="e.g. NY Public Health Law § 3306"
               spellCheck={false}
             />
           </div>
+        </div>
+
+        <div className="example-chips" style={{ marginTop: 16 }}>
+          <button
+            type="button"
+            className="example-chip"
+            onClick={() => { setLeftInput('21 U.S.C. § 812'); setRightInput('NY Public Health Law § 3306') }}
+          >
+            21 U.S.C. § 812 vs. NY Public Health Law § 3306
+          </button>
+          <button
+            type="button"
+            className="example-chip"
+            onClick={() => { setLeftInput('NY Penal Law 220.16'); setRightInput('NY Penal Law 220.16') }}
+          >
+            NY Penal Law 220.16 (2019) vs. NY Penal Law 220.16 (2024)
+          </button>
+          <button
+            type="button"
+            className="example-chip"
+            onClick={() => { setLeftInput('NY Penal Law 220.16'); setRightInput('NY Penal Law 220.18') }}
+          >
+            NY Penal Law 220.16 vs. NY Penal Law 220.18
+          </button>
         </div>
 
         <div className="form-controls" style={{ marginTop: 10 }}>
