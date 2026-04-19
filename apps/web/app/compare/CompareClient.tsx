@@ -424,7 +424,7 @@ export function CompareClient() {
           <p className="page-eyebrow">Compare Laws</p>
           <h1>See How Laws Align, Diverge, and Change</h1>
           <p className="tagline">Compare two references and surface scope differences, definitional mismatches, and changes over time, with every linked authority resolved in place.</p>
-          <p className="tagline">Works for statutes, regulations, contracts, treaties, and model codes.</p>
+          <p className="scope-label">Works for statutes, regulations, contracts, treaties, and model codes.</p>
         </div>
       </header>
 
