@@ -13,7 +13,7 @@ export function Footer() {
         </div>
         <div>
           <p className="footer-col-label">Platform</p>
-          <Link href="/legal-cross-reference-expander" className="footer-col-link">Legal Cross-Reference Expander</Link>
+          <Link href="/expand-references" className="footer-col-link">Expand References</Link>
           <Link href="/browse" className="footer-col-link">Browse Authorities</Link>
           <Link href="/compare" className="footer-col-link">Compare Laws</Link>
           <Link href="/corpus" className="footer-col-link">Corpus Status</Link>

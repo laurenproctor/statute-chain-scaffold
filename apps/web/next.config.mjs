@@ -6,6 +6,13 @@ const config = {
     '@statute-chain/parser',
     '@statute-chain/types',
   ],
+  redirects: async () => [
+    {
+      source: '/legal-cross-reference-expander',
+      destination: '/expand-references',
+      permanent: true,
+    },
+  ],
   webpack(webpackConfig) {
     // ESM packages use `.js` extensions in imports; webpack needs to map them to `.ts`
     webpackConfig.resolve.extensionAlias = {

@@ -1,7 +1,7 @@
 import { Suspense } from 'react'
 import { CompareClient } from './CompareClient'
 
-export const metadata = { title: 'Compare — Legal Cross-Reference Expander' }
+export const metadata = { title: 'Compare — Expand References' }
 
 export default function ComparePage() {
   return (

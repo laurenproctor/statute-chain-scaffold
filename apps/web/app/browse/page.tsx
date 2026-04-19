@@ -1,4 +1,4 @@
-export const metadata = { title: 'Browse Codes — Legal Cross-Reference Expander' }
+export const metadata = { title: 'Browse Codes — Expand References' }
 
 export default function BrowsePage() {
   return (
@@ -16,7 +16,7 @@ export default function BrowsePage() {
           <p className="browse-coming-label">Coming soon</p>
           <p className="muted" style={{ fontSize: 13, marginTop: 6 }}>
             Hierarchical browsing of loaded statutes by jurisdiction, code, and article.
-            Use <a href="/legal-cross-reference-expander" className="attribution-link">Legal Cross-Reference Expander</a> to look up a specific statute section or reference,
+            Use <a href="/expand-references" className="attribution-link">Expand References</a> to look up a specific statute section or reference,
             or <a href="/corpus" className="attribution-link">Corpus Status</a> to see all loaded provisions.
           </p>
         </div>

@@ -92,7 +92,7 @@ export default function HomePage() {
               guidance, and future legal sources in one structured workspace.
             </p>
             <div className="home-btn-row">
-              <Link href="/legal-cross-reference-expander" className="btn btn-primary" style={{ fontSize: 14, padding: '13px 28px' }}>
+              <Link href="/expand-references" className="btn btn-primary" style={{ fontSize: 14, padding: '13px 28px' }}>
                 Start Research
               </Link>
               <Link href="/browse" className="btn btn-secondary" style={{ fontSize: 14, padding: '13px 28px' }}>
@@ -224,7 +224,7 @@ export default function HomePage() {
             The full authority graph is ready. Start with any citation.
           </p>
           <div className="home-btn-row">
-            <Link href="/legal-cross-reference-expander" className="btn btn-primary" style={{ fontSize: 14, padding: '13px 28px' }}>
+            <Link href="/expand-references" className="btn btn-primary" style={{ fontSize: 14, padding: '13px 28px' }}>
               Start Research
             </Link>
             <Link href="/browse" className="btn btn-secondary" style={{ fontSize: 14, padding: '13px 28px' }}>
