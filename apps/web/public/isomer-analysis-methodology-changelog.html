@@ -388,6 +388,21 @@
     from { transform: translateY(8px); opacity: 0; }
     to   { transform: translateY(0);    opacity: 1; }
   }
+
+  /* ── Universal Footer ── */
+  .site-footer { background: #1D2D50; padding: 48px 40px; margin-top: 80px; }
+  .footer-cols { max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 40px; padding-bottom: 36px; border-bottom: 1px solid rgba(255,255,255,0.12); }
+  .footer-col-label { font-family: "Geist Mono", monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 14px; }
+  .footer-col-link { display: block; font-size: 13px; color: rgba(255,255,255,0.55); margin-bottom: 8px; text-decoration: none; transition: color 120ms; }
+  .footer-col-link:hover { color: #fff; }
+  .footer-col-text { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.65; }
+  .footer-bottom { max-width: 1080px; margin: 24px auto 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+  .footer-copy-text { font-size: 11px; color: rgba(255,255,255,0.3); }
+  .footer-legal-links { display: flex; gap: 16px; flex-wrap: wrap; }
+  .footer-legal-link { font-size: 11px; color: rgba(255,255,255,0.3); text-decoration: none; transition: color 120ms; }
+  .footer-legal-link:hover { color: rgba(255,255,255,0.7); }
+  @media (max-width: 768px) { .site-footer { padding: 40px 24px; } .footer-cols { grid-template-columns: 1fr; gap: 32px; } .footer-bottom { flex-direction: column; align-items: flex-start; } }
+
 </style>
 </head>
 <body>
@@ -665,5 +680,44 @@
 
 </main>
 
+<footer class="site-footer">
+  <div class="footer-cols">
+    <div>
+      <p class="footer-col-label">Greyledge</p>
+      <p class="footer-col-text">A clarity engine for law. Search, compare, and trace relationships across statutes, regulations, rules, and legal sources in one structured workspace.</p>
+    </div>
+    <div>
+      <p class="footer-col-label">Platform</p>
+      <a href="/law-navigator" class="footer-col-link">Law Navigator</a>
+      <a href="/browse" class="footer-col-link">Browse Authorities</a>
+      <a href="/compare" class="footer-col-link">Compare Laws</a>
+      <a href="/corpus" class="footer-col-link">Corpus Status</a>
+      <a href="/digital-discovery" class="footer-col-link">Digital Discovery</a>
+    </div>
+    <div>
+      <p class="footer-col-label">Reports</p>
+      <a href="/isomer-analysis-methodology-2024.04.17-v2.html" class="footer-col-link" target="_blank" rel="noopener noreferrer">Isomer Methodology v2</a>
+      <a href="/isomer-analysis-methodology-changelog.html" class="footer-col-link" target="_blank" rel="noopener noreferrer">Methodology Changelog</a>
+      <a href="/isomer-analysis-2004-ny-vs-federal-v01-ai-unweighted.html" class="footer-col-link" target="_blank" rel="noopener noreferrer">2004 NY vs Federal v01</a>
+      <a href="/isomer-analysis-2004-ny-vs-federal-v02-ai-weighted.html" class="footer-col-link" target="_blank" rel="noopener noreferrer">2004 NY vs Federal v02</a>
+      <a href="/brand-guidelines.html" class="footer-col-link" target="_blank" rel="noopener noreferrer">Brand Guidelines</a>
+    </div>
+    <div>
+      <p class="footer-col-label">Contact</p>
+      <p class="footer-col-text" style="margin-bottom:12px">hello@greyledge.com</p>
+      <p class="footer-col-text">Not legal advice. Research infrastructure.</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy-text">&copy; 2026 Greyledge LLC. All rights reserved.</span>
+    <div class="footer-legal-links">
+      <a href="/privacy" class="footer-legal-link">Privacy Policy</a>
+      <a href="/terms" class="footer-legal-link">Terms of Service</a>
+      <a href="/cookies" class="footer-legal-link">Cookie Policy</a>
+      <a href="/disclaimer" class="footer-legal-link">Disclaimer</a>
+      <a href="/acceptable-use" class="footer-legal-link">Acceptable Use</a>
+    </div>
+  </div>
+</footer>
 </body>
 </html>
