@@ -587,7 +587,7 @@ export default function LawNavigatorPage() {
               type="submit"
               disabled={loading || !input.trim()}
             >
-              {loading ? 'resolving…' : 'Resolve →'}
+              {loading ? 'expanding…' : 'Expand Chain →'}
             </button>
           </div>
           <div className="example-pills example-pills-hero">
